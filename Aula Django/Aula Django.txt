@@ -1,0 +1,24 @@
+# Para instalar o Django
+py -m pip install Django
+
+# Para criar um novo projeto
+django-admin startproject lecture3
+
+# para criar um novo app dentro do projeto
+py .\manage.py startapp hello
+
+# Depois do Projeto criado precisa "instalar" ele no projeto
+Abra o setting.py dentro da pasta do projeto e na lista INSTALLED_APPS = [] adicione o seu app
+
+#urls.py do projeto funciona para o escopo do projeto, cada app pode/deve ter seu urls.py exclusivo
+- Dentro da "views.py" crie uma nova função para tratar um request (def index(request) por exemplo)
+- Crie um arquivo urls.py dentro do seu app e defina a url para o seu index
+	urlpatterns = [
+    path("", views.index, name="index"),
+]
+- Faça o link do urls.py do projeto com o urls.py do app 
+	urlpatterns = [
+		path('hello/', include("hello.urls")) 
+	]
+	
+uma nova Vc precisa criar 

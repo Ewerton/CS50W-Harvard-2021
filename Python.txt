@@ -1,0 +1,4 @@
+Phyton Anotações
+
+Python é interpretada, quando vc chama o programa python no terminal ele interpreta os arquivo.py
+

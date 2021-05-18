@@ -1,0 +1,17 @@
+<!-- Informa o Django que este html herda do html principal layout -->
+{% extends "tasks/layout.html" %}
+
+<!-- Informa ao Django que este HTML deverá ser renderizado no bloco chamado body do layout.html -->
+{% block body %}
+<h1>Add a Task</h1>
+<form action="{% url 'tasks:add' %}" method="POST" >
+    <!-- Para prevenir ataques por Cross Site Request Forgering -->
+    {% csrf_token %}
+    <!-- <input type="text" name="task"> -->
+    {{ form }}
+    <input type="submit">
+</form>
+<!-- Vai procurar nas urls (urls.py) qual é a url que tem o nome de 'index' e substituir aqui -->
+<!-- Assim, podemos mudar o HTML sem medo de perder a referencia  -->
+<a href="{% url 'tasks:index' %}">View Tasks</a>
+{% endblock %}

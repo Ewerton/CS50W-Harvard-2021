@@ -1,0 +1,137 @@
+### CSS Prioridades de Styling
+- Inline
+- Id
+- Class
+- Type (fallback)
+
+a,b - Multiple
+a b - All Descendentes
+a > b - Imediate Child
+a+b - Adjacent sibling
+[a=b] - Atributte		a[href="https://facebook.com"]  So o elemento que tem este atributo é estilizado
+a:b - pseudoclass		button:hover {outro estilo}
+a::b - pseudoelement
+
+### Responsive Design
+	Altera o tamanho do viewport pra ser do tamanho do device onde a página está sendo exibida.
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	
+### Media Queries
+Usado para definir estilos diferentes para dispositivos com tamanhos diferentes.
+Pode-se ter tbm media queries para saber se esta em Vertical ou Landscape ou se esta vendo a página em um computador ou tentando imprimir algo
+	@media (min-width: 600px) { 
+	/* Se o tamanho minimo foir 600px ou algo maior que 600px o estilo é aplicado*/
+		body {
+			background-color: red;
+		}
+	}
+	
+	@media (max-width: 599px) { 
+	/* Se o tamanho for 599px ou menor o estilo é aplicado*/
+		body {
+			background-color: blue;
+		}
+	}
+
+### FLEXBOX
+BuiltIn CSS3, permite controlar o fluxo dos elementos em uma pagina, por exemplo:
+- Computador: 
+1 2 3 4 5 6
+
+- Celular
+1 2 3
+4 5 6
+	
+<div id="container">
+	<div Tudo o que estiver aqui dentro vai ser controlado pelo Flexbox />
+	...
+</div>
+
+e no CSS usa o seguinte
+#container{
+	display: flex;
+	flex-wrap: wrap;
+}
+
+Pode ser usar o GrdLayout onde  
+<div id="grid">
+	<div class="gridItem" Tudo o que estiver aqui dentro vai ser controlado pelo GridLayout do flexbox />
+	...
+</div>
+no CSS usa o seguinte
+#grid{
+	display: grid;
+	grid-column-gap: 20px;
+	grid-row-gap: 10px;
+	grid-template-columns: 200px 200px auto; /* Especifica quantas colunas vai ter e a largura delas, aqui as duas primeiras colunas vão ter 200px e a ultima vai preencher o espaço restante */
+}
+O resultado vai ser algo assim
+| Coluna 1 | Coluna 2 |         Coluna 3         |
+Se vc diminuir a tela a terceira coluna encolhe, se vc aumentar a tela a terceira coluna expande
+
+### BOOTSTRAP
+Column Model: Divide a pagina em 12 colunas, então se eu criar várias divs posso definir o tamanho de cada uma até totalizar 12, exemplo:
+<col-3><col-3><col-3><col-3>
+ou então
+<col-3><    col-4   ><col-3>
+
+Permite ainda especificar como cada coluna vai se comportar em cada tamanho de screen, exemplo:
+<div class="col-lg-3 col-sm-6"> /* Esta div vai ter uma coluna de tamanho 3 em telas large e colunas de tamanho 6 em telas small*/
+
+Em telas grandes vai ficar assim
+<col-lg-3><col-lg-3><col-lg-3><col-lg-3>
+
+e se encolher...
+<col-sm-6><col-sm-6>
+<col-sm-6><col-sm-6>
+
+### Sass
+Adiciona funcionalidades ao CSS e permite remover repetições de código que pode acontecer no CSS.
+com Sass podemos criar variaveis, é necessário criar um arquivo .sass.
+Desta forma podemos ter uma UL e um OL com fontes de tamanhos diferentes e cores iguais sem repetir codigo CSS
+variables.scss
+$color: red;
+ul{
+	font-size: 14px
+	color: $color;
+}
+
+ol{
+	font-size: 18px
+	color: $color;
+}
+Browsers não entendem arquivos .scss, não adianta fazer <link rel="stylesheet" href="variables.scss">
+é necessário "compilar" o scss para gerar um CSS. Precisa instalar o programa "sass" e no terminal chamar: sass variables.scss:variables.css para criar o CSS a partir do scss.
+sass -- watch variables.scss:variables.css  // Assim cada vez que o scss for alterado ele será automaticamente recompilado
+
+É possivel também aninhar estilos 
+div{
+	font-size: 18px // tudo dentro da div vai ter fonte 18
+	
+	p{
+		color:blue; Todos os paragrafos dentro da div vão ter cor azul e fonte 18
+	}
+	
+	ul{
+		color: green; // Todas as UL dentro da div vão ter cor verde e fonte 18
+	}
+}
+
+Inheritance
+%message{ // Este é um elemento que pode ser "extendido"
+	font-size: 18;
+	padding: 20px;
+	etc...
+}
+
+.success{
+	@extend %message; // Herda todas as propriedades de %message
+	background-color: green;
+}
+
+.error{
+	@extend %message; // Herda todas as propriedades de %message
+	background-color: red;
+}
+
+

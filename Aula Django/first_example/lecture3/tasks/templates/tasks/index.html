@@ -1,0 +1,21 @@
+<!-- Informa o Django que este html herda do html principal layout -->
+{% extends "tasks/layout.html" %}
+
+<!-- Informa ao Django que este HTML deverá ser renderizado no bloco chamado body do layout.html -->
+{% block body %}
+<h1>Tasks</h1>
+<ul>
+    {% for t in tasks %}
+    <li>{{ t }}</li>
+    
+    <!-- Um template para quando não tem dados -->
+    {% empty %}
+    <li>No tasks</li> 
+    
+    {% endfor %}
+</ul>
+
+<!-- Vai procurar nas urls (urls.py) qual é a url que tem o nome de 'add' e substituir aqui -->
+<!-- Assim, podemos mudar o HTML sem medo de perder a referencia  -->
+<a href="{% url 'tasks:add' %}">Add a New Task</a>
+{% endblock %}
