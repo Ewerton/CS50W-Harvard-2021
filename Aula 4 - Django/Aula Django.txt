@@ -21,4 +21,4 @@ Abra o setting.py dentro da pasta do projeto e na lista INSTALLED_APPS = [] adic
 		path('hello/', include("hello.urls")) 
 	]
 	
-uma nova Vc precisa criar 
+
