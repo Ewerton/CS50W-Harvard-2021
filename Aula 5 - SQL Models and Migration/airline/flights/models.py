@@ -21,3 +21,13 @@ class Flight(models.Model):
 
     def __str__(self):
         return f"{self.id}: {self.origin} to {self.destination}"
+
+class Passenger(models.Model):
+    first = models.CharField(max_length=64)
+    last = models.CharField(max_length=64)
+    # Cria uma "tabela do meio" entre Flight e Passanger. Assim um Flight pode ter vários passageiros e um Passageiro pode ter varios Flights.
+    # flight.passenger permite acessar alista de passageiros de um voo
+    flights = models.ManyToManyField(Flight, blank=True, related_name="passengers")
+
+    def __str__(self):
+        return f"{self.first} {self.last}"

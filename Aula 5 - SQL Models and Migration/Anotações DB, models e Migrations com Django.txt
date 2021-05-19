@@ -1,0 +1,95 @@
+DB, Migrations and MOdels with Django
+# Crie o projeto
+django-admin startproject airline
+
+# crie o App
+py manage.py startapp flights
+
+# cria suas models em flights.models.py, exemplo
+# Create your models here.
+class Flight(models.Model):
+    origin = models.CharField(max_length=64)
+    destination = models.CharField(max_length=64)
+    duration = models.IntegerField()
+	
+# Crie uma migration
+python manage.py makemigrations
+será criado um arquivo dentro da pasta migrations "0001_initial.py"
+
+# Aplicar o migration
+python manage.py migrate
+
+# Vc pode manipualr o banco usando a abstração do Django
+python manage.py shell # para entrar no modo de código do python
+from flights.models import Flight
+f = Flight(origin="New York", destination="London", duration=45)
+f.save()
+# f.delete()
+
+#Pode tambem consultar o banco usando codigo python
+Flight.objects.all() # vai retornar algo como <QuerySet [<Flight: Flight object (1)>]>
+# para retornar algo mais descritivo posso implementar uma espécie de override ToString() do C#
+    def __str__(self):
+        return f"{self.id}: {self.origin} to {self.destination}"
+		
+# Para criar Foreigk keys
+# No model, crie um campo do tipo Foreign Key para origin and destination
+class Flight(models.Model):
+    origin = models.ForeignKey(Airport, on_delete=models.CASCADE, related_name="departures")
+    destination = models.ForeignKey(Airport, on_delete=models.CASCADE, related_name="arrivals")
+# Isso vai criar as colunas origin_id e destination_id na tabela Flights
+
+É possível ainda criar uma "tabela do meio" entre FLight e Passanger
+class Passenger(models.Model):
+    first = models.CharField(max_length=64)
+    last = models.CharField(max_length=64)
+    # Cria uma "tabela do meio" entre Flight e Passanger. Assim um Flight pode ter vários passageiros e um Passageiro pode ter varios Flights.
+    # flight.passenger permite acessar alista de passageiros de um voo
+    flights = models.ManyToManyField(Flight, blank=True, related_name="passengers")
+	
+
+
+Agora pelo interactive shell, posso criar Airports
+>>> from flights.models import *
+>>> jfk = Airport(code="JFK", city="New York")
+>>> jfk.save()
+>>> lhr = Airport(code="LHR", city="London")
+>>> lhr.save()
+>>> cdg = Airport(code="CDG", city="Paris")
+>>> cdg.save()
+>>> nrt = Airport(code="NRT", city="Tokio")
+
+E posso criar Flights usando os Airports criados anteriormente
+>>> f = Flight(origin=jfk, destination=lhr, duration=415)
+>>> f.save()
+
+E posso acessar propriedades de navegação a partir de Flight, por exemplo:
+f.origin.city
+f.origin.code
+lhr.arrivals.all() # que retornará <QuerySet [<Flight: 1: New York (JFK) to London (LHR)>]>
+
+#filtrar airports
+Airport.objects.filter(city="New York") # retorna uma lista de resultados que correspondem ao filtro
+Airport.objects.filter(city="New York").first() # retorna o primeiro da lista
+Airport.objects.get(city="New York") ## se eu tenho certeza ue vai ter 1 só
+
+# Django oference um App para manipular Models
+no urls.py do projeto tem: path('admin/', admin.site.urls) 
+Para acesar esta apicação temos que criar uma admin account
+python manage.py createsuperuser
+Além disso, precisa registrar as models no admin.py do seu App:
+admin.site.register(Airport)
+admin.site.register(Flight)
+admin.site.register(Passenger)
+
+
+
+
+
+
+
+
+
+
+
+
