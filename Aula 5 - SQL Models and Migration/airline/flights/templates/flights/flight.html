@@ -20,5 +20,22 @@
     {% endfor %}
     </ul>
 
+ 
+<h2>Add Passenger</h2>
+
+{% comment %} A Rota "book" precisa de um parametro que é o flight.id então precisa parametrizar isso na URL do action do Form {% endcomment %}
+<form action="{% url 'book' flight.id %}" method="POST">
+    {% csrf_token %}    
+  
+    {% comment %} O nome deste dropdown tem que ser passanger pois o metodos book espera que havera um campo com este nome no form {% endcomment %}
+    <select name="passenger" >
+        {% for passenger in non_passengers %}
+            <option value="{{ passenger.id }}">{{ passenger.last }}, {{ passenger.first }}</option>
+        {% endfor %}
+    </select>
+    <input type="submit">
+</form>
+
     <a href="{% url 'index' %}">Back to Flight List</a>
 {% endblock %}
+
