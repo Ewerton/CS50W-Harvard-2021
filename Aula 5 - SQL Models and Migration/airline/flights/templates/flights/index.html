@@ -4,7 +4,10 @@
 <h1>Flights</h1>
 <ul>
     {% for flight in flights %}
-        <li>Flight {{ flight.id }} : {{ flight.origin }} to {{ flight.destination }} </li>
+        {% comment %} Cria um link que direciona para o Voo de determinado id {% endcomment %}
+        <a href="{% url 'flight' flight.id %}">
+            <li>Flight {{ flight.id }} : {{ flight.origin }} to {{ flight.destination }} </li>
+        </a>
     {% endfor %}
 </ul>
 {% endblock %}
