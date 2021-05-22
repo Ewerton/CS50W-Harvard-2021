@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Collors</title>
+
+		<script>
+			/*
+			//document.addEventListener("DOMContentLoaded", function () {
+			document.addEventListener("DOMContentLoaded", () => {
+				// mesma coisa mas usando arrow functions
+				// faz um for each em todos os elementos button
+				//document.querySelectorAll("button").forEach(function (button) {
+				document.querySelectorAll("button").forEach((button) => {
+					// mesma coisa mas usando arrow functions, a esquerda são os parametros e a direita é o corpo da função
+					// para cada buton, associa uma funçã que passa o proprio botão como parametro.
+					button.onclick = function () {
+						// Acessa o metadado do elemento (data-) atraves da propriedade dataset, se quero acessar o "data-color" aqui devo usar ".dataset.color"
+						document.querySelector("#hello").style.color = button.dataset.color;
+					};
+				});
+			});
+            */
+
+			/*
+            document.addEventListener("DOMContentLoaded", function () {
+				document.querySelector("#red").onclick = function () {
+					document.querySelector("#hello").style.color = "red";
+				};
+
+				document.querySelector("#blue").onclick = function () {
+					document.querySelector("#hello").style.color = "blue";
+				};
+
+				document.querySelector("#green").onclick = function () {
+					document.querySelector("#hello").style.color = "green";
+				};
+			});
+            */
+
+			document.addEventListener("DOMContentLoaded", () => {
+				document.querySelector("select").onchange = function () {
+					// this aponta para o contexto, neste caso a "coisa" que recebeu o evento
+					// Neste caso o item do ComboBox que foi clicado
+					document.querySelector("#hello").style.color = this.value;
+				};
+			});
+		</script>
+	</head>
+	<body>
+		<h1 id="hello">Hello!</h1>
+		<!-- Posso armazenar informação (metadados) à um elemento usando data-algumaCoisa
+        Aqui estou armazenando a cor que quero usar -->
+		<!-- <button data-color="red">Red</button>
+		<button data-color="blue">Blue</button>
+		<button data-color="green">Green</button>
+		<button data-color="yellow">Yellow</button> -->
+		
+        
+        <select name="" id="">
+			<option value="black">Black</option>
+			<option value="red">Red</option>
+			<option value="blue">Blue</option>
+			<option value="green">Green</option>
+			<option value="yellow">Yellow</option>
+		</select>
+	</body>
+</html>

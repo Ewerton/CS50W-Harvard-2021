@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Currency Exchange</title>
+		<script>
+			document.addEventListener("DOMContentLoaded", function () {
+				document.querySelector("form").onsubmit = function () {
+					// Faz um ewebrequest para uma url e retorna uma promisse
+					fetch("http://api.exchangeratesapi.io/v1/latest?access_key=14204cf5db0713753d1a78d809fd0844")
+						.then((response) => response.json()) // Quando a promisse obter retorno
+						.then((data) => {
+							console.log(data);
+							//const eurRate = data.rates.BRL;
+
+							// pega a currency que o usuário digitou
+							const currency = document.querySelector("#currency").value.toUpperCase();
+
+							// acessa essa currency na lista de currency retornadas pela API
+							const rate = data.rates[currency];
+
+							// se for algo valido, mostra na tela
+							if (rate !== undefined) {
+								document.querySelector("#result").innerHTML = `1 USD is equal to ${rate.toFixed(
+									3
+								)} ${currency}.`;
+							} else {
+								document.querySelector("#result").innerHTML = "Invalid currency name";
+							}
+						})
+						.catch((error) => {
+							// Se algo der errado na chamada da API, loga o erro
+							console.log(error);
+						});
+
+					// executando tudo localmente
+					return false;
+				};
+			});
+		</script>
+	</head>
+	<body>
+		<form action="">
+			<input id="currency" placeholder="Currency" type="text" />
+			<input id="submit" type="submit" />
+			<div id="result"></div>
+		</form>
+	</body>
+</html>
