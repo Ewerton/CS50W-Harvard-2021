@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<!-- A biblioteca react em si -->
+		<script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
+
+		<!-- a biblioteca que permite o react manipular o DOM -->
+		<script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
+
+		<!-- Permite traduzir código de uma linguagem para outra -->
+		<!-- Isso porque quando escrevemos codigo react na verdade escrevemos JSX e não javascript puro -->
+		<script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+		<title>Hello</title>
+	</head>
+	<body>
+		<div id="app"></div>
+		<script type="text/babel">
+			class App extends React.Component {
+				render() {
+					// JSX, retornando um HTML
+					return (
+						<div>
+							<h1>Welcome!</h1>
+							Hello!
+						</div>
+					);
+				}
+			}
+
+			ReactDOM.render(<App />, document.querySelector("#app"));
+		</script>
+	</body>
+</html>
