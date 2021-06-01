@@ -123,3 +123,6 @@ STATIC_URL = '/static/'
 
 # Tells Django to use AutoField when no primary key (primary_key=True) is provided in a Model
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+
+LOGIN_REDIRECT_URL = 'index'
+LOGIN_URL = 'login'

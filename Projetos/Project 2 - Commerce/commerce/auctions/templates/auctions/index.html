@@ -1,32 +1,40 @@
-{% extends "auctions/layout.html" %}
+{% extends "auctions/layout.html" %} {% block body %}
+<h2>Active Listings</h2>
 
-{% block body %}
-    <h2>Active Listings</h2>
+<div class="container">
+	{% comment %} If the user is viewing your own listings {% endcomment %}
+	{% if listing_owner %}
+		<h5>Listings from user "{{ listing_owner }}"</h5>
+	{% endif %}
+	
+	{% comment %} If the user is filtering listing from a given category {% endcomment %}
+	{% if from_category %}
+		<h5>Listings from the category "{{ from_category }}"</h5>
+	{% endif %}
 
-    <ul style="list-style-type:none;">
-        {% for listing in listings %} 
-            <div style="border: 1px solid lightgray; margin: 50px; padding: 20px; border-radius: 10px;">
-                <table style="width: 100%;">
-                    <tbody>
-                        <tr>
-                            <td style="width:40px;">
-                                <img src="{{ listing.image_url }}" style="width:80%;"/>
-                            </td>
-                            <td style="width: 60%;"  valign="top">
-                                <h5><a href="{% url 'listing' listing.id %}" >{{ listing.title }}</a></h5>
-                                <div>{{ listing.description }}</div>
-                                <div>Bid: ${{ listing.price }}</div>
-                                <div>Listed by: {{ listing.user }}</div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            
-        {% empty %}
-            <li>No active listings</li>
+	{% for listing in listings %}
+	<div class="listing_row">
+		<div class="row">
+			<div class="col-md-3">
+				<img src="{{ listing.image_url }}" style="width: 80%" />
+			</div>
+			<div class="col-md-9">
+				
+					<h5>
+						<a href="{% url 'listing' listing.id %}">{{ listing.title }}</a>
+						{% if listing.sold %}  
+							<span class="badge rounded-pill bg-danger">SOLD!</span>
+						{% endif %}
+					</h5>
+					<div class="text-muted">{{ listing.description }}</div>
+					<div class="mt-3"><b>Bid:</b> ${{ listing.price }}</div>
+					<div><b>Listed by:</b> {{ listing.user }}</div>
+			</div>
+		</div>
+	</div>
+	{% empty %}
+	<li>No active listings</li>
 
-        {% endfor %}
-    </ul>
-
+	{% endfor %}
+</div>
 {% endblock %}

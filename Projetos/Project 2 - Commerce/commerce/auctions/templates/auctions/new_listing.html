@@ -1,41 +1,91 @@
-{% extends "auctions/layout.html" %}
+{% extends "auctions/layout.html" %} {% block body %}
+<h2>Create Listing</h2>
 
-{% block body %}
-    <h2>Create Listing</h2>
-    
-    <form action="{% url 'new_listing' %}" method="post">
-        {% csrf_token %}
-        
-        <h6>Title of listing</h6>
-        {{ listing_form.title }}
+<form action="{% url 'new_listing' %}" method="post">
+	{% csrf_token %}
+	<div class="container mt-5">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="mb-3">
+                    <label for="title" class="form-label">Title of The Listing</label>
+                     {{ listing_form.title }}
+                    <div id="titleHelp" class="form-text">Use a descriptive yet short title.</div>
+                </div>
+                <div class="mb-3">
+                    <label for="description" class="form-label">Description of The Listing</label>
+                    {{ listing_form.description }}
+                    <div id="descriptionHelp" class="form-text">
+                        Provide as much as needed information about the item you are auctioning.
+                    </div>
+                </div>
+            </div>
+        </div>
 
-        <br><br>
+        <div class="row">
+            <div class="col-md-4">
+               <label for="startBid" class="form-label">Start Bid</label>
+                    {{ listing_form.start_bid }}
+                    <div id="startBidHelp" class="form-text">Provide the start (minimum) value for your listing.</div>
+                </div>
+            <div class="col-md-4">
+                <label for="imageURL" class="form-label">Image URL</label>
+                {{ listing_form.image_url }}
+                <div id="imageURLHelp" class="form-text">Link for an image of the item.</div>
+            </div>
+            <div class="col-md-4">
+                <label for="category" class="form-label">Category</label>
+                {{ listing_form.category }}
+                {% comment %} <select class="form-select" name="category" aria-label="Select a Category">
+                    {% for category in categories %}
+                        <option value="{{ category.id }}">{{ category }}</option>
+                    {% endfor %}
+                </select> {% endcomment %}
+                <div id="categoryHelp" class="form-text">Select a category which best describes your listing.</div>
+            </div>
+        </div>
+		 <div class="row mt-5">
+            <div class="col-md-12">
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+        </div>
 
-        <h6>Description of listing</h6>
-        {{ listing_form.description }}
+		
+	</div>
+</form>
 
-        <br><br>
+{% comment %} <form action="{% url 'new_listing' %}" method="post">
+	{% csrf_token %}
 
-        <h6>Starting bid</h6>
-        {{ listing_form.bid }}
+	<h6>Title of the listing</h6>
+	{{ listing_form.title }}
 
-        <br><br>
+	<br /><br />
 
-        <h6>Image URL</h6>
-        {{ listing_form.image_url }}
+	<h6>Description of listing</h6>
+	{{ listing_form.description }}
 
-        <br><br>
+	<br /><br />
 
-        <h6>Category</h6>
-        <select name="categories">
-            {% for category in categories %}
-                <option value="{{ category.id }}">{{ category }}</option>
-            {% endfor %}
-        </select>
-        
-        <br><br>
+	<h6>Starting bid</h6>
+	{{ listing_form.bid }}
 
-        <input type="submit" class="btn btn-primary">
-    </form>
+	<br /><br />
+
+	<h6>Image URL</h6>
+	{{ listing_form.image_url }}
+
+	<br /><br />
+
+	<h6>Category</h6>
+	<select name="categories">
+		{% for category in categories %}
+		<option value="{{ category.id }}">{{ category }}</option>
+		{% endfor %}
+	</select>
+
+	<br /><br />
+
+	<input type="submit" class="btn btn-primary" />
+</form> {% endcomment %}
 
 {% endblock %}

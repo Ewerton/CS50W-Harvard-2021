@@ -1,69 +1,111 @@
-{% extends "auctions/layout.html" %}
+{% extends "auctions/layout.html" %} 
+{% block body %} 
 
-{% block body %}
-
-{% if user.is_authenticated %}
-<table style="width: 100%;">
-    <tbody>
-        <tr>
-            <td style="width:40px;">
-                <h5>{{ listing.title }}</h5>
-                <img src="{{ listing.image_url }}" style="width:90%;"/>
-            </td>
-            <td style="width: 60%;">
-                <div>{{ listing.description }}</div>
-
+    <div class="listing_row">
+        <div class="row">
+            <div class="col-md-4">
+                <img src="{{ listing.image_url }}" style="width: 90%" />
+            </div>
+            <div class="col-md-8">
+                <h3>{{ listing.title }}</h3>
+                <div class="text-muted">{{ listing.description }}</div>
                 <form action="{% url 'bidding' listing.id %}" method="post">
                     {% csrf_token %}
-                    <div>Bid: $ <input type="number" min="{{ listing.price }}" step="0.01" name="bid" placeholder="{{ listing.price }}">
-                    <input type="submit" class="btn btn-primary"> </div>
+                    <div class="mt-3">
+                        {% if winner %}
+                            <h4>Sold for $ {{ listing.price }}</h4>
+                            <h6>The winner of this auction is <b>{{ winner }}</b><h6>
+                        {% else %}
+                            {% if is_owner %}
+                                <b>Current Price:</b> $ <input type="number" disabled required min="{{ listing.price }}" step="0.01" name="bid" placeholder="{{ listing.price }}" />
+                                <a href="{% url 'close_bidding' listing.id %}">Close bidding</a>
+                            {% else %}
+                                <b>Bid:</b> $
+                                <input type="number" required min="{{ listing.price|add:"1"}}" step="0.01" name="bid" placeholder="{{ listing.price }}" />
+                                {% if user.is_authenticated %}
+                                    <input type="submit" class="btn btn-primary" />
+                                {% else %}
+                                    <div class="d-inline-flex">
+                                        <a href="{% url 'login' %}?next={% firstof request.path '/' %}">[Log In]</a>
+                                        <span>&nbsp;or&nbsp; </span> 
+                                        <a href="{% url 'register' %}?next={% firstof request.path '/' %}">[Register]</a>
+                                        <span >&nbsp;to bid on this listing.</span> 
+                                    </div> 
+                                {% endif %}
+                            {% endif %}
+                        {% endif %}
+                    </div>			
                 </form>
 
-                <br>
-
                 <div>Category: {{ category }}</div>
-                <div>Listed by: {{ listing.user }}</div>
-
-                <div class="checkbox" >
-                    {% if watching %}
-                        <a href="{% url 'remove_watchlist' listing.id %}"> Remove from WatchList</a>
-                    {% else %}
-                        <a href="{% url 'add_watchlist' listing.id %}"> Add to WatchList</a>
+                {% if not is_owner %}
+                    <div><b>Listed by:</b> {{ listing.user }}</div>
+                    {% if user.is_authenticated %}
+                        <div class="checkbox">
+                            {% if is_watching %}
+                            <a href="{% url 'remove_watchlist' listing.id %}"> Remove from WatchList</a>
+                            {% else %}
+                            <a href="{% url 'add_watchlist' listing.id %}"> Add to WatchList</a>
+                            {% endif %}
+                        </div>
                     {% endif %}
-                </div>
-
-                {% if is_owner %}
-                    <a href="{% url 'close_bidding' listing.id %}">Close bidding</a>
-                {% else %}
-                    
                 {% endif %}
-            </td>
-        </tr>
-    </tbody>
-</table>
-
-<hr>
-
-<form action="{% url 'listing' listing.id %}" method="post">
-    {% csrf_token %}
-    <h6>Add comment</h6>
-    <textarea class="form-control" aria-label="With textarea" name="comment" style="width:40%; vertical-align: top;"></textarea>
-    <input type="submit" class="btn btn-primary" style="display: inline-block; margin-top: 10px;">
-</form>
-
-<br> 
-<h6>Comments</h6>
-<ul style="list-style-type: none;">
-    
-    {% for comment in comments %}
-    <div style="border: 1px solid lightgray; margin: 10px; padding: 10px; border-radius: 10px; width: 40%;">
-        <li>{{ comment }}</li>
+            </div>
+        </div>
     </div>
-    {% endfor %}
-</ul>
+    
+    {% if not winner %}
+        <div class="comment_area">
+            <form action="{% url 'listing' listing.id %}" method="post">
+                {% csrf_token %}          
+                
+                {% if user.is_authenticated %}
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h4>Add Comment</h4>
+                        </div>
+                    </div>
 
-{% else %}
-<h6>Please login or create an account</h6>
-{% endif %}
+                    <div class="row">
+                        <div class="col-md-12">
+                            <textarea class="form-control" aria-label="With textarea" name="comment" ></textarea>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-md-12">
+                            <input type="submit" class="btn btn-primary" />
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="d-inline-flex">
+                        <a href="{% url 'login' %}?next={% firstof request.path '/' %}">[Log In]</a>
+                        <span>&nbsp;or&nbsp; </span> 
+                        <a href="{% url 'register' %}?next={% firstof request.path '/' %}">[Register]</a>
+                        <span>&nbsp;to comment on this listing.</span> 
+                    </div> 
+                {% endif %}
+
+            </form>
+
+            <div class="row">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h4>Comments</h4>
+                    </div>
+                </div>
+                {% for comment in comments %}
+                    <div class="row">
+                        <div style="border: 1px solid lightgray; margin: 10px; padding: 10px; border-radius: 10px;">
+                            {{ comment.date|date:'Y-m-d H:i' }} | <b>{{ comment.user.username }}</b> said: <br>
+                            <div class="text-muted ps-3">
+                                {{ comment.comment }}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+                </div>
+            </div>
+        </div>
+    {% endif %}      
 
 {% endblock %}

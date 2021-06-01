@@ -1,4 +1,5 @@
 from django.urls import path
+from django.contrib.auth.decorators import login_required
 
 from . import views
 
@@ -13,6 +14,10 @@ urlpatterns = [
     path("add_watchlist/<str:listing_id>", views.add_watchlist, name="add_watchlist"),
     path("bidding/<str:listing_id>", views.bidding, name="bidding"),
     path("close_bidding/<str:listing_id>", views.close_bidding, name="close_bidding"),
-    path("watch_list/<str:user_id>", views.watchlist, name="watchlist"),
-    path("categories", views.category, name="categories")
+    path("remove_listing/<str:listing_id>", views.remove_listing, name="remove_listing"),
+    path("watch_list", views.watchlist, name="watchlist"),
+    path("categories", views.categories, name="categories"),
+    path("by_category/<str:category_id>", views.by_category, name="by_category"),
+    path("my_listings", views.my_listings, name="my_listings"),
+    path("search", views.search, name="search")
 ]

@@ -1,7 +1,5 @@
 {% extends "auctions/layout.html" %} {% block body %}
 
-<h2>Login</h2>
-
 {% if message %}
 <div>{{ message }}</div>
 {% endif %}
@@ -11,7 +9,7 @@
 
 	<form action="{% url 'login' %}" method="post">
 		{% csrf_token %}
-
+	
 		<div class="form-floating">
 			<input autofocus type="text" class="form-control" id="floatingInput" name="username" placeholder="Username" />
 			<label for="floatingInput">Usename</label>
