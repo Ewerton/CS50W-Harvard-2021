@@ -1,5 +1,7 @@
-document.addEventListener("DOMContentLoaded", function () {
+// Global variable to record the current active view
+var activeView = null;
 
+document.addEventListener("DOMContentLoaded", function () {
 	const btnInbox = document.querySelector("#inbox");
 	btnInbox.addEventListener("click", function () {
 		load_mailbox("inbox");
@@ -24,8 +26,8 @@ document.addEventListener("DOMContentLoaded", function () {
 		animateCSS("#compose-view", "fadeIn");
 	});
 
-  // By default we load the inbox
-  animateCSS("#inbox-view", "fadeIn");
+	// By default we load the inbox
+	animateCSS("#inbox-view", "fadeIn");
 	load_mailbox("inbox");
 });
 
@@ -38,35 +40,25 @@ function load_mailbox(mailbox) {
 	activeView.innerHTML = "";
 
 	// Show the mailbox Header
-  var mailBoxHeader = GetMailBoxHeader(mailbox);
-  activeView.appendChild(mailBoxHeader);
+	var mailBoxHeader = GetMailBoxHeader(mailbox);
+	activeView.appendChild(mailBoxHeader);
 
-  var unreadCount = 0;
 	// query the backend about the mailbox selected
 	fetch(`/emails/${mailbox}`)
 		.then((response) => response.json())
 		.then((emails) => {
-			const containerDiv = GetContainerDiv();      
-      
-			for (let email of emails) {			
+			const containerDiv = GetContainerDiv();
 
-        // Compose the html to show the list of emails in the mailbox
+			for (let email of emails) {
+				// Compose the html to show the list of emails in the mailbox
 				// A row with two columns, one for the email data, other for button actions on each email.
-				const row = GetRowDivListEmails();
-
-				// if the email is unread, apply a specific class to the row 
-        if (email.read) {
-					addClass(row, "readedEmail");
-				}
-        else{
-          unreadCount = unreadCount +1;
-        }
+				const row = GetRowDivListEmails(email);
 
 				// Uniquely identifying the row of each email
-        row.id = "mail" + email.id;
-				
-        // Composing the row which shows the email
-        const colEmail = GetColListEmail(email, 10);
+				row.id = "mail" + email.id;
+
+				// Composing the row which shows the email
+				const colEmail = GetColListEmail(email, 10);
 				const colActions = GetColListEmailListActions(email, mailbox, 2);
 				row.appendChild(colEmail);
 				row.appendChild(colActions);
@@ -75,15 +67,19 @@ function load_mailbox(mailbox) {
 				activeView.appendChild(containerDiv);
 
 				// When the user click on the email, it will open the full mail
-				// I am attaching the event to the first col to avoid trigger the load_email 
-        // function when the user clicks on "Archive" or "Mark As Read" button
+				// I am attaching the event to the first col to avoid trigger the load_email
+				// function when the user clicks on "Archive" or "Mark As Read" button
 				colEmail.addEventListener("click", () => load_email(email));
+
+				//animateCSS("#" + row.id, "fadeInLeft");
 			}
 
-      UpdateUnreadMailCount(unreadCount, mailbox);
+			UpdateUnreadMailCount(mailbox);
 		});
+}
 
-   
+function sleep(ms) {
+	return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 function compose_email() {
@@ -145,33 +141,48 @@ function load_email(email) {
 	});
 }
 
-function GetMailBoxHeader(mailbox){
-  var container = GetContainerDiv();
-  var row = GetRow();
-  var col = GetCol(12);
-  var content = document.createElement("div");
-  addClass(content, "d-flex align-items-center")
-  content.innerHTML = `<h3>${mailbox.charAt(0).toUpperCase() + mailbox.slice(1)}</h3>`;
-  content.innerHTML += "<span id='unreadCount" + mailbox + "' class='badge bg-secondary ms-3'></span>";
+function GetMailBoxHeader(mailbox) {
+	var container = GetContainerDiv();
+	var row = GetRow();
+	var col = GetCol(12);
+	var content = document.createElement("div");
+	addClass(content, "d-flex align-items-center");
+	content.innerHTML = `<h3>${mailbox.charAt(0).toUpperCase() + mailbox.slice(1)}</h3>`;
+	content.innerHTML += "<span id='unreadCount" + mailbox + "' class='badge bg-secondary ms-3'></span>";
 
-  col.appendChild(content);
-  row.appendChild(col);
-  container.appendChild(row);
+	col.appendChild(content);
+	row.appendChild(col);
+	container.appendChild(row);
 
-  return container;
+	return container;
 }
 
-function UpdateUnreadMailCount(count, mailbox){
-  var elem = document.querySelector("#unreadCount"+ mailbox);
-  elem.textContent=count;
+function UpdateUnreadMailCount(mailbox) {
+	var count = document.querySelectorAll("#" + activeView.id + " .emailUnread").length;
+
+	var elem = document.querySelector("#unreadCount" + mailbox);
+	if (count == 0) {
+		elem.textContent = " No email to read.";
+	}
+
+	if (count == 1) {
+		elem.textContent = count + " unreaded email.";
+	} else {
+		elem.textContent = count + " unreaded emails.";
+	}
+
+	//addClass(elem, "delay-2s");
+	animateCSS("#" + elem.id, "heartBeat", "2");
+
+	//elem.classList.add('animate__animated', 'animate__heartBeat', 'animate__delay-2s');
+	//elem.classList.remove('animate__animated', 'animate__heartBeat', 'animate__delay-2s');
 }
 
 /**** Whole page toggles ****/
 
 // Apply a CSS class to show which view in selected
 function ToggleButtonAsPressed(mailbox) {
-
-  removeClass(document.querySelector("#inbox"), "active");
+	removeClass(document.querySelector("#inbox"), "active");
 	removeClass(document.querySelector("#sent"), "active");
 	removeClass(document.querySelector("#archived"), "active");
 	removeClass(document.querySelector("#compose"), "active");
@@ -204,7 +215,6 @@ function ToggleView(mailbox) {
 	document.querySelector("#archive-view").style.display = "none";
 	document.querySelector("#read-view").style.display = "none";
 
-	var activeView = null;
 	// Show only one view.
 	switch (mailbox) {
 		case "inbox":
@@ -256,9 +266,14 @@ function GetCol(size) {
 /**** Elements for the "List Mails" in some mailbox ****/
 
 // Gets a div which hosts each email in a list of emails
-function GetRowDivListEmails() {
+function GetRowDivListEmails(email) {
 	const rowDiv = GetRow();
 	addClass(rowDiv, "mail_row shadow");
+
+	if (!email.read) {
+		addClass(rowDiv, "emailUnread");
+	}
+
 	return rowDiv;
 }
 
@@ -266,10 +281,6 @@ function GetRowDivListEmails() {
 function GetColListEmail(email, size) {
 	const colDivConteudo = GetCol(size);
 	addClass(colDivConteudo, "colDivEmail");
-
-	if (!email.read) {
-		addClass(colDivConteudo, "emailUnread");
-	}
 
 	colDivConteudo.innerHTML += "From: " + email.sender + "<br />";
 	colDivConteudo.innerHTML += "Subject: " + email.subject + "<br />";
@@ -296,40 +307,60 @@ function GetBtnReadUnread(email, mailbox) {
 	addClass(elementWrapper, "float-end");
 
 	const btnReadUnread = document.createElement("button");
-	if (email.read) {
-		addClass(btnReadUnread, "btn btn-sm btn-outline-secondary");
-		btnReadUnread.textContent = "Mark as Unread";
-	} else {
-		addClass(btnReadUnread, "btn btn-sm btn-outline-success");
-		btnReadUnread.textContent = "Mark as Read";
-	}
+	btnReadUnread.id = "btnReadUnread" + email.id;
+
+	elementWrapper.appendChild(btnReadUnread);
+
+	// Styling the initial state of the button.
+	ApplyReadUnreadStylingToButton(email, btnReadUnread);
 
 	// Add the click to archive the mail
 	btnReadUnread.addEventListener("click", () => {
-		
-    // Apply some animation to the item
-    var name = "#mail" + email.id;
-    console.log(name);
-    if (email.read){
-      animateCSS(name, "flipInX");
-    }
-    else{
-      animateCSS(name, "flipOutX");
-    }
-
-
-    fetch("/emails/" + `${email.id}`, {
+		fetch("/emails/" + `${email.id}`, {
 			method: "PUT",
 			body: JSON.stringify({
 				read: !email.read,
 			}),
-		}).then(() => load_mailbox(mailbox));
+		}).then(() => {
+			// I will just "hack" this property to avoid querying the backend again,
+			email.read = !email.read;
+			ApplyReadUnreadStylingToButton(email, btnReadUnread);
+
+			var elemRow = document.querySelector("#mail" + email.id);
+			ApplyReadUnreadStylingToEmailRow(email, elemRow);
+
+			UpdateUnreadMailCount(mailbox);
+			//load_mailbox(mailbox);
+		});
 	});
 
-	elementWrapper.appendChild(btnReadUnread);
 	return elementWrapper;
 }
 
+function ApplyReadUnreadStylingToButton(email, button) {
+	if (email.read) {
+		// Styling the read/unread button
+		removeClass(button, "btn-outline-success");
+		addClass(button, "btn btn-sm btn-outline-secondary");
+		button.textContent = "Mark as Unread";
+	} else {
+		// Styling the read/unread button
+		removeClass(button, "btn-outline-secondary");
+		addClass(button, "btn btn-sm btn-outline-success");
+		button.textContent = "Mark as Read";
+	}
+}
+
+function ApplyReadUnreadStylingToEmailRow(email, elemRow) {
+	//Styling and animating the row
+	if (email.read) {
+		removeClass(elemRow, "emailUnread");
+		animateCSS("#" + elemRow.id, "flipInX");
+	} else {
+		addClass(elemRow, "emailUnread");
+		animateCSS("#" + elemRow.id, "flipOutX");
+	}
+}
 
 //Gets a div which hosts the "Archive" button for each email in a list of emails
 function GetBtnArchive(email, mailbox) {
@@ -344,18 +375,16 @@ function GetBtnArchive(email, mailbox) {
 
 		// Add the click to archive the mail
 		archiveButton.addEventListener("click", () => {
-			
-      // Apply some animation to the item
-      var name = "#mail" + email.id;
-			console.log(name);
+			// Apply some animation to the item
+			var name = "#mail" + email.id;
 			animateCSS(name, "fadeOutRight");
 
-      fetch("/emails/" + `${email.id}`, {
+			fetch("/emails/" + `${email.id}`, {
 				method: "PUT",
 				body: JSON.stringify({
 					archived: !email.archived,
 				}),
-			}).then(() => {				
+			}).then(() => {
 				load_mailbox(mailbox);
 			});
 		});
@@ -367,7 +396,6 @@ function GetBtnArchive(email, mailbox) {
 }
 
 /**** Elements for the "Read Email" view ****/
-
 
 //Gets a div which hosts the whole email item in a list of emails
 function GetReadMailWrapperDiv() {
@@ -430,7 +458,8 @@ function GetBtnReply(email) {
 		document.querySelector("#compose-recipients").value = email.sender;
 		document.querySelector("#compose-subject").value =
 			email.subject.slice(0, 4) == "Re: " ? "Re: " + email.subject.slice(4) : "Re: " + email.subject;
-		document.querySelector("#compose-body").value = "On " + email.timestamp + " " + email.sender + " wrote " + email.body;
+		document.querySelector("#compose-body").value =
+			"On " + email.timestamp + " " + email.sender + " wrote " + email.body;
 	});
 
 	elementWrapper.appendChild(btnReply);
@@ -455,18 +484,25 @@ function elemHasClass(elem, clazz) {
 }
 
 // Some animations using the animate.css
-const animateCSS = (element, animation, prefix = "animate__") =>
+const animateCSS = (element, animation, duration = "0", prefix = "animate__") =>
 	// We create a Promise and return it
 	new Promise((resolve, reject) => {
 		const animationName = `${prefix}${animation}`;
+    const animationDuration = `${prefix}delay-${duration}s`;
 		const node = document.querySelector(element);
 
 		node.classList.add(`${prefix}animated`, animationName);
-
+		if (duration != "0") {
+			node.classList.add(`${prefix}animated`, animationDuration);
+		}
+    
 		// When the animation ends, we clean the classes and resolve the Promise
 		function handleAnimationEnd(event) {
 			event.stopPropagation();
 			node.classList.remove(`${prefix}animated`, animationName);
+      if (duration != "0") {
+        node.classList.remove(`${prefix}animated`, animationDuration);
+      }
 			resolve("Animation ended");
 		}
 
