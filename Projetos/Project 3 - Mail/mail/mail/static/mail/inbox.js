@@ -171,11 +171,7 @@ function UpdateUnreadMailCount(mailbox) {
 		elem.textContent = count + " unreaded emails.";
 	}
 
-	//addClass(elem, "delay-2s");
 	animateCSS("#" + elem.id, "heartBeat", "2");
-
-	//elem.classList.add('animate__animated', 'animate__heartBeat', 'animate__delay-2s');
-	//elem.classList.remove('animate__animated', 'animate__heartBeat', 'animate__delay-2s');
 }
 
 /**** Whole page toggles ****/
@@ -367,8 +363,7 @@ function GetBtnArchive(email, mailbox) {
 	const elementWrapper = GetRow();
 	addClass(elementWrapper, "float-end");
 
-	if (mailbox === "inbox" || mailbox === "archive") {
-		// Sent mails cant be archived!
+	if (mailbox === "inbox" || mailbox === "archive") { // Sent mails cant be archived!		
 		const archiveButton = document.createElement("button");
 		archiveButton.textContent = email.archived ? "Unarchive" : "Archive";
 		addClass(archiveButton, "btn btn-sm btn-outline-danger");
@@ -483,7 +478,7 @@ function elemHasClass(elem, clazz) {
 	return new RegExp("( |^)" + clazz + "( |$)").test(elem.className);
 }
 
-// Some animations using the animate.css
+// Apply animations using the animate.css
 const animateCSS = (element, animation, duration = "0", prefix = "animate__") =>
 	// We create a Promise and return it
 	new Promise((resolve, reject) => {
