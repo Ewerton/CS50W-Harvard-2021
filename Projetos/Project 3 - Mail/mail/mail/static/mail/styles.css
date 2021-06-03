@@ -1,3 +1,114 @@
+/* Generic Classes */
+main{
+    margin-top: 20px;
+}
+
 textarea {
     min-height: 400px;
 }
+
+.form-control{
+    margin: 3px;
+}
+
+
+/* List emails in the mailboxes classes */
+.mail_row{
+   border-radius: .50rem!important;
+   background-color: #fff!important;
+   padding: 1rem!important;
+   margin-bottom: 1rem!important;
+   margin-left: 15px;
+   cursor: pointer; 
+}
+
+.mail_row:hover{
+    transition:all .8s ease;
+    /*background-color: rgb(217, 226, 255)!important;*/
+    border: 1px solid rgb(165, 158, 207) ;
+ }
+
+ .colDivActions  button{
+     margin: 4px;
+     width: 120px;
+ }
+
+ .emailUnread{
+    font-weight: bold;
+ }
+
+.readedEmail{
+    background-color: rgb(240, 240, 240)!important;
+}
+ /* Compose email Classes */
+ #compose-view form{
+    margin-left: 15px;
+ }
+
+
+ /* Read email Classes */
+ .readmail_wrapper{
+    border-radius: .50rem!important;
+    background-color: #fff!important;
+    padding: 1rem!important;
+    margin-bottom: 1rem!important;
+    margin-left: 15px;
+    line-height: 2.2;
+ }
+
+ .readmail_row{
+    border-radius: .50rem!important;
+    background-color: #fff!important;
+    padding: 1rem!important;
+    margin-bottom: 1rem!important;
+    margin-left: 15px;
+ }
+
+ .colReadEmail{
+
+ }
+
+ .mail_body{
+     margin-top: 20px;
+     margin-left: 20px;
+     color: #6c757d!important;
+ }
+
+
+/* Classes for the login Form */
+
+.signInWrapper {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    padding-top: 100px;
+    padding-bottom: 40px;
+  }
+
+ .form-signin {
+    width: 100%;
+    max-width: 330px;
+    padding: 15px;
+    margin: auto;
+  }
+  
+  .form-signin .checkbox {
+    font-weight: 400;
+  }
+  
+  .form-signin .form-floating:focus-within {
+    z-index: 2;
+  }
+  
+  .form-signin input[type="email"] {
+    margin-bottom: -1px;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+  
+  .form-signin input[type="password"] {
+    margin-bottom: 10px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+  }
+  
