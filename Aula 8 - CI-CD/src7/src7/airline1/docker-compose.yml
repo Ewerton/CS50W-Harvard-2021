@@ -1,0 +1,19 @@
+# Exemplo completo de docker compose https://gist.github.com/ju2wheels/1885539d63dbcfb20729
+
+# Versão do Docker Compose
+version: '3'
+
+# Serviços que este compose cria, neste caso um container para o banco e um para a WEB
+services:
+    db:
+        image: postgres # Nome da imagem baseada na imagem padrão do postgres
+        environment:
+            POSTGRES_USER: postgres
+            POSTGRES_PASSWORD: postgres 
+
+    web:
+        build: . # o ponto indica que este serviço será baseado no dockerfile que esta no diretorio corrente
+        volumes:
+            - .:/usr/src/app # O Diretorio onde esta a aplicação
+        ports:
+            - "8000:8000" # a porta 8000 do container mapeia para o porta 8000 da maquina local (rodando o container)
