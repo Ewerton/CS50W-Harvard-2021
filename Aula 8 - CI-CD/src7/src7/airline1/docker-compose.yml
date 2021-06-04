@@ -9,7 +9,9 @@ services:
         image: postgres # Nome da imagem baseada na imagem padrão do postgres
         environment:
             POSTGRES_USER: postgres
-            POSTGRES_PASSWORD: postgres 
+            POSTGRES_PASSWORD: postgres
+        networks:
+          - postgres-pgadmin-network
 
     web:
         build: . # o ponto indica que este serviço será baseado no dockerfile que esta no diretorio corrente
@@ -17,3 +19,29 @@ services:
             - .:/usr/src/app # O Diretorio onde esta a aplicação
         ports:
             - "8000:8000" # a porta 8000 do container mapeia para o porta 8000 da maquina local (rodando o container)
+        depends_on:
+            - db
+        networks:
+          - postgres-pgadmin-network
+        environment: # foi criada uma migrations no app "users" que le essas variaveis de ambinete e cria o superuser para o Django
+            DJANGO_DB_NAME: "db"
+            DJANGO_SU_NAME: "admin"
+            DJANGO_SU_EMAIL: "admin@example.com"
+            DJANGO_SU_PASSWORD: "1234"
+
+    pgadmin:
+        image: dpage/pgadmin4
+        environment:
+            PGADMIN_DEFAULT_EMAIL: "ewerton.sc@gmail.com"
+            PGADMIN_DEFAULT_PASSWORD: "PgAdmin2019!"
+        #ports:
+        #    - "16543:80"
+        depends_on:
+            - db
+        networks:
+          - postgres-pgadmin-network
+    
+networks: 
+    postgres-pgadmin-network:
+        driver: bridge
+

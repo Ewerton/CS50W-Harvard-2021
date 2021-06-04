@@ -19,6 +19,7 @@ driver = webdriver.Edge('D:/Webdrivers/msedgedriver.exe')
 - Crie um dockefile para sua aplicação
 - crie um docker-compose para aplicação e banco de dados
 - docker-compose up para rodar o compose (ou então "docker compose up")
+- docker-compose up --build --force-recreate --no-deps (para recriar uma stack caso vc edite o compose)
 
 Se quiser "interagir" com o container:
 - docker ps para pegar o ID do container
