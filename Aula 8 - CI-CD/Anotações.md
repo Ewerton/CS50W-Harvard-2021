@@ -20,6 +20,8 @@ driver = webdriver.Edge('D:/Webdrivers/msedgedriver.exe')
 - crie um docker-compose para aplicação e banco de dados
 - docker-compose up para rodar o compose (ou então "docker compose up")
 - docker-compose up --build --force-recreate --no-deps (para recriar uma stack caso vc edite o compose)
+- docker-compose down -v  (deleta tudo do container)
+- docker-compose up -d (recria os container aproveitando as imagens do cache)
 
 Se quiser "interagir" com o container:
 - docker ps para pegar o ID do container
@@ -34,5 +36,10 @@ docker build -f [docker_file_name] . (don't miss the dot at the end)
 if the name of your file is "dockerfile" (lower case) then you don't need the -f and the filename
 
 
+# Informações Adicionais
 
+O docker-compose criado neste projeto faz o seguinte:
+- cria a aplicação Django (ja faz o migrations e cria um superuser (User:admin, Senha: 1234))
+- Cria um servidor de Banco de Dados Postgres (nome: postgres, host:db, usuário: postgres, senha: postgres)
+- Cria um PgAdmins para administrar o banco pela Web (Url: http://localhost:16543/, Usuario: admin@admin.com, Senha admin) 
 

@@ -13,9 +13,11 @@ echo "Apply database migrations"
 python3 manage.py migrate --noinput || exit 1 # de erro, para a inicialização do container retornando 1 para o S.O
 
 #Creating the superuser
-echo "Creating superuser"
-python3 manage.py createsuperuser --noinput
-# Talvez seja melhor criar um comando personalizado para o manage.py  https://docs.djangoproject.com/en/2.2/howto/custom-management-commands/
+#echo "Creating superuser"
+# COmentei pois criei empty migration no projeto users e nesta migration crio o superuser 
+# usando os valores definidos em variáveis de ambinete definidas no docker compose
+#python3 manage.py createsuperuser --noinput
+
 
 # Start server (The CMD of the dockerfile will call the runserver)
 echo "Starting server"
