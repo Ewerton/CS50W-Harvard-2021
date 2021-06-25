@@ -1,0 +1,19 @@
+{% extends "network/layout.html" %}
+{% comment %} {% load crispy_forms_tags %} {% endcomment %}
+{% block content %}
+<div class="container">
+    <h3 class="white-important">
+        {{  tag_line }}
+    </h3>
+    <form method="POST" class="col-12 col-md-6 no-padding pr-3 pr-md-0">
+        {% csrf_token %}
+        <fieldset class="form-group">
+            {% comment %} {{ form | crispy }} {% endcomment %}
+             {{ form }}
+        </fieldset>
+        <div class="form-group">
+            <button class="btn btn-outline-primary" type="submit">Submit changes</button>
+        </div>
+    </form>
+</div>
+{% endblock content %}

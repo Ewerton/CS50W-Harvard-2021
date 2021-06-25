@@ -1,0 +1,64 @@
+{% extends "network/layout.html" %} 
+{% block content %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <h3>
+                Register a new account
+            </h3>
+        </div>
+    </div>
+    
+     <div class="row justify-content-center">
+        <div class="col-6 mt-5">
+		 <form method="POST" action="{% url 'register-users' %}" enctype="multipart/form-data">
+				{% csrf_token %}
+					<div class="mb-3">
+                        <label for="id_username" class="form-label">Username:</label>
+                        <input type="text" class="form-control" id="id_username" name="username" maxlength="150" required aria-describedby="usernameHelp" >
+                        <div id="usernameHelp" class="form-text">Choose a short and easy to remember.</div>
+                    </div>
+
+					<div class="mb-3">
+                        <label for="id_email" class="form-label">Email:</label>
+                        <input type="email" class="form-control" id="id_email" name="email" required aria-describedby="emailHelp" >
+                        <div id="emailHelp" class="form-text">Type a valid email address.</div>
+                    </div>
+
+					<div class="mb-3">
+                        <label for="id_password1" class="form-label">Password:</label>
+                        <input type="password" class="form-control" id="id_password1" name="password1" required aria-describedby="password1Help" >
+                        <div id="password1Help" class="form-text">Choose a password.</div>
+                    </div>
+
+					<div class="mb-3">
+                        <label for="id_password2" class="form-label">Confirm your Password:</label>
+                        <input type="password" class="form-control" id="id_password2" name="password2" required aria-describedby="password2Help" >
+                        <div id="password2Help" class="form-text">Retype your password.</div>
+                    </div>
+
+					{% comment %} <div class="form-group">
+						<input autofocus class="form-control" type="text" name="username" placeholder="Username" />
+					</div> {% endcomment %}
+					{% comment %} <div class="form-group">
+						<input autofocus class="form-control" type="email" name="email" placeholder="email" />
+					</div> {% endcomment %}
+					{% comment %} <div class="form-group">
+						<input class="form-control" type="password" name="password1" placeholder="Password" />
+					</div> {% endcomment %}
+					{% comment %} <div class="form-group">
+						<input class="form-control" type="password" name="password2" placeholder="Password" />
+					</div> {% endcomment %}
+
+					<button class="btn btn-outline-primary" type="submit">Register</button>
+				</div>
+			</form>
+			<div class="pt-3">
+				<small class="text-muted">
+					Already Have An Account? <a class="ml-2" href="{% url 'login' %}">Sign In</a>
+				</small>
+			</div>
+	</div>
+</div>
+{% endblock content %}

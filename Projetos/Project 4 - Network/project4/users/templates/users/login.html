@@ -1,0 +1,43 @@
+{% extends "network/layout.html" %} 
+{% block content %}
+{% if form.errors %}
+	<div class="alert alert-danger">Your username and password didn't match. Please try again.</div>
+{% endif %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <h3>
+                Log In
+            </h3>
+        </div>
+    </div>
+    
+	<div class="row justify-content-center">
+		<div class="col-6 mt-5">
+			<div class="signInWrapper">
+				<div class="form-signin">
+					<form method="POST" action="{% url 'login' %}" enctype="multipart/form-data">
+						{% csrf_token %}
+
+						<div class="mb-3">
+							<label for="id_username" class="form-label">Username:</label>
+							<input autofocus type="text" class="form-control" id="id_username" name="username" maxlength="150" required aria-describedby="usernameHelp" >
+						</div>
+						<div class="mb-3">
+							<label for="id_username" class="form-label">Password:</label>
+							<input type="password" class="form-control" id="id_username" name="password" required aria-describedby="usernameHelp" >                        
+						</div>
+						<button class="btn btn-outline-primary" type="submit">Login</button>
+					</form>
+					<div class="pt-3">
+						<small class="text-muted">
+							Do you need an account? <a class="ml-2" href="{% url 'register-users' %}">Sign up</a>
+						</small>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock content %}

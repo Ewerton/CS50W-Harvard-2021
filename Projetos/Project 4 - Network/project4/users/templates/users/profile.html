@@ -1,0 +1,45 @@
+{% extends "network/layout.html" %}
+{% comment %} {% load crispy_forms_tags %} {% endcomment %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <h3>
+                Change profile data
+            </h3>
+        </div>
+    </div>
+    
+     <div class="row justify-content-center">
+        <div class="col-6 mt-5">
+                <form method="POST" action="{% url 'profile' %}" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="id_username" class="form-label">Username:</label>
+                        <input value={{uprof.user.username}} type="text" class="form-control" id="id_username" name="username" maxlength="150" required aria-describedby="usernameHelp" >
+                        <div id="usernameHelp" class="form-text">Choose a short and easy to remember.</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="id_email" class="form-label">Email:</label>
+                        <input value={{uprof.user.email}} type="email" class="form-control" id="id_email" name="email" maxlength="250" required aria-describedby="emailHelp">
+                        <div id="emailHelp" class="form-text">Change your email, if you need.</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="id_currentProfilePic" class="form-label">Current Profile Picture:</label>
+                        <div>
+                            <img src="{{uprof.image.url}}" id="id_currentProfilePic"  alt="">
+                        </div>    
+                    </div>
+                    <div class="mb-3">
+                        <label for="id_image" class="form-label">Change Profile Picture:</label>
+                        <div>
+                            <input id="id_image" type="file" name="image" onchange="PreviewUploadedImage(this, 'id_currentProfilePic');" accept="image/*">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Update</button>
+                </form>
+        </div>
+    </div>
+
+</div>
+{% endblock content %}

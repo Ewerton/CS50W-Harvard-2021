@@ -31,10 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'network.apps.NetworkConfig',
-    'users.apps.UsersConfig',
-    #'network', 
-    #'users',
+    'network',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -84,24 +81,24 @@ DATABASES = {
     }
 }
 
-#AUTH_USER_MODEL = "network.users"
+AUTH_USER_MODEL = "network.User"
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
-    # {
-    #     'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    # },
-    # {
-    #     'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    # },
-    # {
-    #     'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    # },
-    # {
-    #     'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    # },
+    {
+        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+    },
 ]
 
 
@@ -122,19 +119,4 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
-
-
 STATIC_URL = '/static/'
-
-PROFILE_PICS_URL = 'static/profile_pics/' # The location to save profile pictures
-
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static/'), #Global Static files
-    os.path.join(BASE_DIR, 'network/static/'), #network app specific static files
-    os.path.join(BASE_DIR, 'users/static/'), #network app specific static files
-]
-
-# CRISPY_TEMPLATE_PACK = 'bootstrap4'
-
-LOGIN_REDIRECT_URL = 'home'
-LOGIN_URL = 'login'
