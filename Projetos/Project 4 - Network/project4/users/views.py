@@ -7,6 +7,9 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from project4 import Utils
 
+from django.contrib.auth import authenticate, login, logout
+from django.http import HttpResponse, HttpResponseRedirect
+from django.urls import reverse
 
 def register(request):
     if request.method == 'POST':
@@ -50,6 +53,33 @@ def register(request):
     else:
         return render(request, 'users/register.html', {
         })
+
+
+def login_view(request):
+    if request.method == "POST":
+
+        # Attempt to sign user in
+        username = request.POST["username"]
+        password = request.POST["password"]
+        user = authenticate(request, username=username, password=password)
+
+        # Check if authentication successful
+        if user is not None:
+            login(request, user)
+            # redirect the user to the previous URL saved in the session that could be the "/" or some custom location
+            return HttpResponseRedirect(reverse("home"))
+        else:
+            messages.error(request, f'Invalid username and/or password.')
+            return render(request, "users/login.html", {
+               # "message": "Invalid username and/or password."
+            })
+    else:
+        return render(request, "users/login.html")
+
+
+def logout_view(request):
+    logout(request)
+    return HttpResponseRedirect(reverse("home"))
 
 
 @login_required
@@ -103,4 +133,5 @@ def SearchView(request):
         context = {
             'results':results
         }
-        return render(request, 'users/search_result.html', context)
+    return render(request, 'users/search_result.html', context)
+

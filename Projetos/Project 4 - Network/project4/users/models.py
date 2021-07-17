@@ -4,6 +4,12 @@ from PIL import Image
 from django.apps import apps
 from django.conf import settings as project_settings
 
+from django.contrib.auth.models import AbstractUser
+
+class User(AbstractUser):
+    #contact = models.CharField(max_length=20, blank=True)#id = models.AutoField(primary_key=True)
+    pass
+
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     profile_pic_folder = project_settings.PROFILE_PICS_URL 

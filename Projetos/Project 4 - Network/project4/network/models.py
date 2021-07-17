@@ -1,7 +1,9 @@
 from django.db import models
 from django.utils import timezone
-from django.contrib.auth.models import User
+#from django.contrib.auth.models import User
+from users.models import User
 from django.urls import reverse
+
 class Post(models.Model):
     content = models.TextField(max_length=1000)
     date_posted = models.DateTimeField(default=timezone.now)
@@ -9,7 +11,7 @@ class Post(models.Model):
     likes= models.IntegerField(default=0)
 
     def __str__(self):
-        return self.content[:4]
+        return f'Post ID: {self.id}  |  Author: {self.author.username}  |  Content: {self.content[:10]}...' 
 
     @property
     def number_of_comments(self):
