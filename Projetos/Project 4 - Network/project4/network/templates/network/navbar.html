@@ -1,0 +1,64 @@
+{% load static %}
+
+<!-- Navbar brand -->
+<a class="navbar-brand" href="/"> 
+    <h2>
+        <img class="d-inline-block align-text-center" width="50" src="{% static 'network/logo.png' %}" />
+        CS50W Social Network
+    </h2>
+</a>
+<!-- Left links -->
+<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+    <li class="nav-item">						
+        <a class="nav-link" href="{% url 'home' %}">
+            <i class="fas fa-home"></i>
+            Home
+        </a>
+    </li>
+    {% if user.is_authenticated %} 
+        <li class="nav-item">						
+            <a class="nav-link" href="{% url 'post-create' %}">
+                <i class="far fa-edit"></i>
+                Create a Post
+            </a>
+        </li>
+    {% endif %}
+    
+    {% if user.is_authenticated %} 
+        <li class="nav-item">						
+            <a class="nav-link" href="{% url 'profile' %}">
+                <i class="far fa-id-card"></i>
+                Profile
+            </a>
+        </li>
+    {% endif %}
+
+    {% if user.is_authenticated %} 
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'logout' %}">
+                <i class="fas fa-sign-out-alt"></i>
+                Logout
+            </a>
+        </li>
+    {% else %}
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'login' %}">
+                <i class="fas fa-user"></i>
+                Login
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'register-users' %}">
+                <i class="fas fa-user-plus"></i>
+                Register
+            </a>
+        </li>
+    {% endif %}
+    
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'about' %}">
+            <i class="fas fa-question"></i>
+            About
+        </a>
+    </li>
+</ul>

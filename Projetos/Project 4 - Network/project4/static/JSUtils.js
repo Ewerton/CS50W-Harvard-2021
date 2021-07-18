@@ -6,8 +6,8 @@ function PreviewUploadedImage(input, imgElemID) {
         reader.onload = function (e) {
             $('#'+imgElemID)
                 .attr('src', e.target.result)
-                .width(150)
-                .height(200);
+                .width(250)
+                .height(250);
         };
 
         reader.readAsDataURL(input.files[0]);

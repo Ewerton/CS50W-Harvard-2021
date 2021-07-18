@@ -9,6 +9,7 @@ from .views import (
     UserPostListView,
     FollowsListView,
     FollowersListView,
+    home,
     postpreference,
     post_list)
 from .import views
@@ -22,7 +23,8 @@ from django.urls import include
 # router.register(r'groups', views.GroupViewSet)
 
 urlpatterns = [
-    path('', PostListView.as_view(), name='home'),
+    #path('', PostListView.as_view(), name='home'),
+    path('', views.home, name='home'),
     path('about/',views.about, name='about'),
     path('post/new/', PostCreateView.as_view(), name='post-create'),
     path('post/<int:pk>/', PostDetailView.as_view(), name='post-detail'),

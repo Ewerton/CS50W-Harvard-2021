@@ -2,27 +2,52 @@ from django.shortcuts import render, get_object_or_404, redirect
 from network.models import Post, Comment, Preference
 from users.models import Follow, Profile
 import sys
-from django.contrib.auth.models import User
+#from django.contrib.auth.models import User
+from users.models import User
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.db.models import Count
 from .forms import NewCommentForm
 from django.contrib.auth.decorators import login_required
 #from .serializers import UserSerializer, GroupSerializer, PostSerializer
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import Group
 #from rest_framework import viewsets
 #from rest_framework import permissions
 #from rest_framework.decorators import api_view
 from django.http.response import JsonResponse
 #from rest_framework.parsers import JSONParser 
 #from rest_framework import status
+from django import template
 
+register = template.Library()
+
+PAGINATION_COUNT = 3
+
+# gets all the posts from a user
+def get_posts(user):
+    posts = Post.objects.filter(author_id=user.id).order_by('-date_posted')
+    return posts
+
+
+def home(request):    
+    #current_user = None
+    post_list = []
+    #who_to_follow = []
+
+    #current_user = User.objects.filter(id=request.user.id).first()
+    #if (current_user != None):
+    #    post_list = get_posts(current_user) 
+    #    who_to_follow = get_who_to_follow(current_user)
+
+    return render(request, "network/home.html", {
+        "post_list": post_list,
+    })
 
 def is_users(post_user, logged_user):
     return post_user == logged_user
 
 
-PAGINATION_COUNT = 3
+
 
 
 class PostListView(LoginRequiredMixin, ListView):
@@ -35,21 +60,23 @@ class PostListView(LoginRequiredMixin, ListView):
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
 
-        all_users = []
+        users_to_follow = []
         data_counter = Post.objects.values('author')\
             .annotate(author_count=Count('author'))\
-            .order_by('-author_count')[:6]
+            .order_by('-author_count')[:6] # User who posts a lot
 
         for aux in data_counter:
-            all_users.append(User.objects.filter(pk=aux['author']).first())
+            if (aux['author'] != self.request.user.id): # if the current user is not the current logged user
+                users_to_follow.append(User.objects.filter(pk=aux['author']).first())
+        
         # if Preference.objects.get(user = self.request.user):
         #     data['preference'] = True
         # else:
         #     data['preference'] = False
         data['preference'] = Preference.objects.all()
         # print(Preference.objects.get(user= self.request.user))
-        data['all_users'] = all_users
-        print(all_users, file=sys.stderr)
+        data['users_to_follow'] = users_to_follow
+        print(users_to_follow, file=sys.stderr)
         return data
 
     def get_queryset(self):

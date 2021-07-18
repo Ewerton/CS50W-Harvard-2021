@@ -10,7 +10,9 @@
 
 		<div class="col-6 text-end">
 			<h6 class="white-important mb-3">
-				{{ page_obj.start_index }} - {{ page_obj.end_index }} of {{ paginator.count }}
+				{% if paginator.count > 0 %}
+					{{ page_obj.start_index }} - {{ page_obj.end_index }} of {{ paginator.count }}
+				{% endif %}
 			</h6>
 		</div>
 	</div>
@@ -19,103 +21,118 @@
 	<div class="row">
 		<div class="col-12 scrollable">
 		
-			{% for post in posts %}
-				<article class="media content-section hovered-tweet">
-					<div class="row">
-						{% comment %} Tweet Title {% endcomment %}
-						{% comment %} User Photo and Name {% endcomment %}
-						<div class="col-6">
-							<img class="rounded-circle m-1" style="width: 20px; height: 20px" src="{{ post.author.profile.image.url }}" />
-							<a class="ms-2 white-important" href="{% url 'user-posts' post.author %}">
-								{{ post.author }}
-							</a>
-						</div>
+			{% if user.is_authenticated %}
+				{% for post in posts %}
+					<article class="media content-section hovered-tweet">
+						<div class="row">
+							{% comment %} Tweet Title {% endcomment %}
+							{% comment %} User Photo and Name {% endcomment %}
+							<div class="col-6">
+								<img class="rounded-circle m-1" style="width: 20px; height: 20px" src="{{ post.author.profile.image.url }}" />
+								<a class="ms-2 white-important" href="{% url 'user-posts' post.author %}">
+									{{ post.author }}
+								</a>
+							</div>
 
-						{% comment %} Tweet Action Buttons {% endcomment %}
-						<div class="col-6 text-end">
-							{% if post.author == user %}
-								<div class="d-inline m-1">
-									<a href="{% url 'post-delete' post.id %}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Delete">
-										<i class="fas fa-trash-alt"></i>
-									</a>
-								</div>
-								<div class="d-inline m-1">
-									<a href="{% url 'post-update' post.id %}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Update">
-										<i class="far fa-edit"></i>
-									</a>
-								</div>
-							{% endif %}
+							{% comment %} Tweet Action Buttons {% endcomment %}
+							<div class="col-6 text-end">
+								{% if post.author == user %}
+									<div class="d-inline m-1">
+										<a href="{% url 'post-delete' post.id %}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Delete">
+											<i class="fas fa-trash-alt"></i>
+										</a>
+									</div>
+									<div class="d-inline m-1">
+										<a href="{% url 'post-update' post.id %}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Update">
+											<i class="far fa-edit"></i>
+										</a>
+									</div>
+								{% endif %}
+							</div>
 						</div>
-					</div>
-					
-					{% comment %} Separator {% endcomment %}
-					<div class="mt-2 mb-2" style="width: 100%; height: 1px; background-color: rgba(255, 255, 255, 0.1)"></div>
+						
+						{% comment %} Separator {% endcomment %}
+						<div class="mt-2 mb-2" style="width: 100%; height: 1px; background-color: rgba(255, 255, 255, 0.1)"></div>
 
-					{% comment %} Tweet Content {% endcomment %}
-					<div class="row">
-						<div class="col-12">
-							<a style="color: rgba(255, 255, 255, 0.5) !important" href="{% url 'post-detail' post.id %}">
-								<p class="mb-4">{{ post.content }}</p>
-							</a>
+						{% comment %} Tweet Content {% endcomment %}
+						<div class="row">
+							<div class="col-12">
+								<a style="color: rgba(255, 255, 255, 0.5) !important" href="{% url 'post-detail' post.id %}">
+									<p class="mb-4">{{ post.content }}</p>
+								</a>
+							</div>
 						</div>
-					</div>
-					
-					{% comment %} Tweet Footer {% endcomment %}
-					<div class="row">
-						<div class="col-6">
-							<div class="d-inline-flex m-1">
+						
+						{% comment %} Tweet Footer {% endcomment %}
+						<div class="row">
+							<div class="col-6">
 								<div class="d-inline-flex m-1">
-									<a href="#" onClick="document.getElementById('likebutton').submit()" >
-										<i class="fas fa-thumbs-up"></i>
+									<div class="d-inline-flex m-1">
+										<a href="#" onClick="document.getElementById('likebutton').submit()" >
+											<i class="fas fa-thumbs-up"></i>
+										</a>
+									</div>
+									<div class="d-inline-flex m-1">
+										{{post.likes}} 
+									</div>
+									
+									<form id="likebutton" method="POST" action="{% url 'postpreference' post.id 1 %}">
+										{% csrf_token %}
+											<input type="hidden" />
+									</form>
+								</div>
+								|
+								<div class="d-inline-flex m-1">
+									<div class="d-inline-flex m-1">
+									<a href="#" onClick="document.getElementById('dislikebutton').submit()" >
+										<i class="fas fa-thumbs-down"></i>
 									</a>
-								</div>
-								<div class="d-inline-flex m-1">
-									{{post.likes}} 
-								</div>
-								
-								<form id="likebutton" method="POST" action="{% url 'postpreference' post.id 1 %}">
-									{% csrf_token %}
+									</div>
+									<div class="d-inline-flex m-1">
+										{{post.dislikes}}
+									</div>
+									<form id="dislikebutton" method="POST" action="{% url 'postpreference' post.id 2 %}">
+										{% csrf_token %}
 										<input type="hidden" />
-								</form>
-							</div>
-							|
-							<div class="d-inline-flex m-1">
-								<div class="d-inline-flex m-1">
-								<a href="#" onClick="document.getElementById('dislikebutton').submit()" >
-									<i class="fas fa-thumbs-down"></i>
-								</a>
+									</form>
 								</div>
+								|
 								<div class="d-inline-flex m-1">
-									{{post.dislikes}}
+									<a href="/post/{{post.id}}/">
+										<i style="font-size: 16px" class="far fa-comment"></i> {{ post.number_of_comments }} comment(s) 
+									</a>
 								</div>
-								<form id="dislikebutton" method="POST" action="{% url 'postpreference' post.id 2 %}">
-									{% csrf_token %}
-									<input type="hidden" />
-								</form>
-							</div>
-							|
-							<div class="d-inline-flex m-1">
-								<a href="/post/{{post.id}}/">
-									<i style="font-size: 16px" class="far fa-comment"></i> {{ post.number_of_comments }} comment(s) 
-								</a>
+
 							</div>
 
+							<div class="col-6 ">
+								<div class="text-end m-2" >
+									<span class="align-middle">{{ post.date_posted | date:"H:i l, d.m.y" }}</span>							
+								</div>	
+							</div>
 						</div>
+					</article>
 
-						<div class="col-6 ">
-							<div class="text-end m-2" >
-								<span class="align-middle">{{ post.date_posted | date:"H:i l, d.m.y" }}</span>							
-							</div>	
-						</div>
-					</div>
-				</article>
-
-			{% empty %}
+				{% empty %}
+					<article class="media content-section hovered-tweet">
+						<h6>No posts yet...</h6>
+					</article>
+				{% endfor %}
+			{% else %}
 				<article class="media content-section hovered-tweet">
-					<h6>No posts yet...</h6>
+					<h6>you need to login to see posts...</h6>
 				</article>
-			{% endfor %}
-
+				<div class="pt-3">
+					<small class="text-muted">
+						Already Have An Account? <a class="ml-2" href="{% url 'login' %}">Sign In</a>
+					</small>
+				</div>
+				<div class="pt-3">
+					<small class="text-muted">
+						Do you need an account? <a class="ml-2" href="{% url 'register-users' %}">Sign up</a>
+					</small>
+				</div>
+			{% endif %}
 		</div>
 	</div>
 

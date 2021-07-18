@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User
+#from django.contrib.auth.models import User
 from PIL import Image
 from django.apps import apps
 from django.conf import settings as project_settings

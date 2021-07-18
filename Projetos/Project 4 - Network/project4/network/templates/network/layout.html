@@ -1,4 +1,8 @@
 {% load static %}
+
+{% comment %} loads the inclusion tags {% endcomment %}
+{% load network_extras %}
+
 <!DOCTYPE html>
 <html lang="en">
 	<head>
@@ -29,76 +33,13 @@
 	<main role="main" class="container-fluid d-flex flex-column min-vh-100">
 		<div class="container-fluid">
 			<div class="row">
-	
 				{% comment %} RIGHT COLUMN {% endcomment %}
 				<div class="col-3 left-column">	
 					<div class="row">
 						{% comment %} Menu {% endcomment %}
 						<div class="col-12">
 							<header class="site-header">
-								<!-- Navbar brand -->
-								<a class="navbar-brand" href="/"> 
-									<h2>
-										<img class="d-inline-block align-text-center" width="50" src="{% static 'network/logo.png' %}" />
-										CS50W Social Network
-									</h2>
-								</a>
-								<!-- Left links -->
-								<ul class="navbar-nav me-auto mb-2 mb-lg-0">
-									<li class="nav-item">						
-										<a class="nav-link" href="{% url 'home' %}">
-											<i class="fas fa-home"></i>
-											Home
-										</a>
-									</li>
-									{% if user.is_authenticated %} 
-										<li class="nav-item">						
-											<a class="nav-link" href="{% url 'post-create' %}">
-												<i class="far fa-edit"></i>
-												Create a Post
-											</a>
-										</li>
-									{% endif %}
-									
-									{% if user.is_authenticated %} 
-										<li class="nav-item">						
-											<a class="nav-link" href="{% url 'profile' %}">
-												<i class="far fa-id-card"></i>
-												Profile
-											</a>
-										</li>
-									{% endif %}
-
-									{% if user.is_authenticated %} 
-										<li class="nav-item">
-											<a class="nav-link" href="{% url 'logout' %}">
-												<i class="fas fa-sign-out-alt"></i>
-												Logout
-											</a>
-										</li>
-									{% else %}
-										<li class="nav-item">
-											<a class="nav-link" href="{% url 'login' %}">
-												<i class="fas fa-user"></i>
-												Login
-											</a>
-										</li>
-										<li class="nav-item">
-											<a class="nav-link" href="{% url 'register-users' %}">
-												<i class="fas fa-user-plus"></i>
-												Register
-											</a>
-										</li>
-									{% endif %}
-									
-									<li class="nav-item">
-										<a class="nav-link" href="{% url 'about' %}">
-											<i class="fas fa-question"></i>
-											About
-										</a>
-									</li>
-								</ul>
-
+								{% navbar %}
 							</header>
 						</div>
 					</div>
@@ -107,103 +48,7 @@
 					<div class="row">
 						<div class="col-12 pt-4">
 							{% if user.is_authenticated %} 
-								<div class="profile-section">
-									<article class="content-section">
-										
-										{% comment %} Profile {% endcomment %}
-										<div class="row">
-											<div class="col-12">
-												<h4 class="white-important p-2">Profile</h4>
-											</div>
-											<div class="col-12">
-												<div class="row">
-													<div class="col-4">
-														<div>
-															{% if user_profile != None %}
-																<img class="rounded-circle mr-3 img-fluid" style="width: 90px; height: 90px" src="{{ user_profile.profile.image.url }}"/>
-															{% else %}
-																<img class="rounded-circle mr-3 img-fluid" style="width: 90px; height: 90px" src="{{ user.profile.image.url }}"/>
-															{% endif %}
-														</div>
-													</div>
-													<div class="col-8">
-														<div>
-															{% if user_profile != None %}
-																<h4 style="text-align: left" class="white-important">{{ user_profile.username }}</h4>
-															{% else %}
-																<h4 style="text-align: left" class="white-important">{{ user.username }}</h4>
-															{% endif %}															
-														</div>
-														<div>
-															{% if user_profile != None %}
-																<h6 style="text-align: left" class="email-profile">{{ user.email }}</h6>
-															{% else %}
-																<h6 style="text-align: left" class="email-profile">{{ user.email }}</h6>
-															{% endif %}
-															
-														</div>
-													</div>
-												</div>
-											</div>
-										</div>
-									
-										{% comment %} Following / Followers {% endcomment %}
-										<div class="row mt-4"> 
-											<div class="col-6">
-												<h5>Followers</h5>
-											</div>
-											<div class="col-6">
-												<h5>Following</h5>
-											</div>	
-										</div>	
-										<div class="row">
-											<div class="col-6">
-												{% if user_profile != None %}
-													<a href="{% url 'user-followers' user_profile.username %}">
-														<h3 class="white-important follow-click">{{ user_profile.profile.followers }}</h3>
-													</a>
-												{% else %}
-													<a href="{% url 'user-followers' user.username %}">
-														<h3 class="white-important follow-click">{{ user.profile.followers }}</h3>
-													</a>
-												{% endif %}
-											</div>
-											<div class="col-6">
-												{% if user_profile != None %}
-													<a href="{% url 'user-follows' user_profile.username %}">
-														<h3 class="white-important follow-click">{{ user_profile.profile.following }}</h3>
-													</a>
-												{% else %}
-													<a href="{% url 'user-follows' user.username %}">
-														<h3 class="white-important follow-click">{{ user.profile.following }}</h3>
-													</a>
-												{% endif %}
-											</div>
-										</div>
-									
-										{% comment %} Tweet / Follow / Unfollow Buttons {% endcomment %}
-										<div class="row mt-4">
-											<div class="col-12 ">
-												{% if user_profile is None %}
-													<a class="btn btn-sm btn-outline-primary mb-4 mr-3" href="{% url 'post-create' %}"> Tweet </a>
-												{% else %}
-													{% if user_profile is not None and user_profile.id != user.id and user.username != '' %}
-														<form method="POST">
-															{% csrf_token %}
-															<div class="form-group">
-																<button style="margin-left: 18px" class="btn btn-sm btn-outline-primary"
-																	name="{% if can_follow %}follow{% else %}unfollow{% endif %}" type="submit">
-																	{% if can_follow %} FOLLOW {% else %} UNFOLLOW {% endif %}
-																</button>
-															</div>
-														</form>
-													{% endif %}
-												{% endif %} 
-											</div>
-										</div>
-									</article>	
-
-								</div>
+								{% profile_card %}
 							{% endif %}
 						</div>
 					</div>
@@ -234,7 +79,7 @@
 							{% endif %} 		
 						{% endfor %} 
 					{% endif %} 
-
+					
 					{% comment %} Main Central Content {% endcomment %}
 					{% block content %}
 					{% endblock %}
@@ -251,9 +96,9 @@
 						<div class="col-12">
 							<form action="{% url 'search' %}" method="post">
 								{% csrf_token %}
-								<div class="search-container">
+								<div class="search-container mb-3">
 									<div class="search">
-										<input required name="search" type="text" id="searchInput" placeholder="Search Network" />
+										<input required name="search" type="text" id="searchInput" placeholder="Search users" />
 										<button type="submit" style="border: 0; background: transparent">
 											<i class="fa fa-search"></i>
 										</button>
@@ -262,52 +107,19 @@
 							</form>
 						</div>
 
-					{% if user.is_authenticated %} 
-						{% comment %} Trends and Who to Follow {% endcomment %}
-						<h3 class="white-important mb-3 mt-4">Trends??</h3>
-						{% if user_profile is None %}
-							<article class="t-section media content-section">
-								<div class="row">
-									<div class="col-12">
-										<h4>Who to follow</h4>
-									</div>
-								</div>
-								<div class="row">
-									<div style="color: red">(excluir eu mesmo)</div>
-									<ul>
-										{% for user in all_users %}											
-											<li>
-												<div class="who-to-follow">
-													<div class="row">
-														<div class="col-12">
-															<div class="d-inline">
-																<img class="rounded-circle mr-2" style="width: 20px; height: 20px" src="{{ user.profile.image.url }}" />
-															</div>
-															<div class="d-inline">
-																<a class="mr-2 white-important" href="{% url 'user-posts' user.username %}">
-																	{{ user.username }}
-																</a>
-															</div>
-														</div>
-														<div class="col-12">
-															<p>{{ user.email }}</p>
-														</div>
-													</div>
-												</div>
-											</li>
-										{% endfor %}
-									</ul>
-								</div>
-							</article>
+						{% if user.is_authenticated %} 
+							{% comment %} Trends and Who to Follow {% endcomment %}
+							{% who_to_follow %}
 						{% endif %} 
-					{% endif %} 
 
+						<h3 class="white-important mb-3 mt-4">Trends??</h3>
 
 
 				</div>
 
 			</div>
 		</div>
+
 	</main>
 
 	<footer class="footer mt-auto py-3">

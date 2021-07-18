@@ -1,0 +1,79 @@
+{% load static %}
+
+ {% if current_user != None %}
+    <div class="profile-section">
+        <article class="content-section">
+            
+            {% comment %} Profile {% endcomment %}
+            <div class="row">
+                <div class="col-12">
+                    <h4 class="white-important p-2">Profile</h4>
+                </div>
+                <div class="col-12">
+                    <div class="row">
+                        <div class="col-auto">
+                            <div>
+                                {% if current_user.profile != None %}
+                                    <img class="rounded-circle mr-3 img-fluid" style="width: 90px; height: 90px" src="{{ current_user.profile.image.url }}"/>
+                                {% else %}
+                                    <img class="rounded-circle mr-3 img-fluid" style="width: 90px; height: 90px" src="{% static "profile_pics/default.png" %}"/>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-8">
+                            <div>                               
+                                <h4 style="text-align: left" class="white-important">{{ current_user.username }}</h4>
+                            </div>
+                            <div>
+                                <h6 style="text-align: left" class="email-profile">{{ current_user.email }}</h6>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+            {% comment %} Following / Followers {% endcomment %}
+            <div class="row mt-4"> 
+                <div class="col-6">
+                    <h5>Followers</h5>
+                </div>
+                <div class="col-6">
+                    <h5>Following</h5>
+                </div>	
+            </div>	
+            <div class="row">
+                <div class="col-6">                   
+                    <a href="{% url 'user-followers' current_user.username %}">
+                        <h3 class="white-important follow-click">{{ current_user.profile.followers }}</h3>
+                    </a>
+                </div>
+                <div class="col-6">
+                    <a href="{% url 'user-follows' current_user.username %}">
+                        <h3 class="white-important follow-click">{{ current_user.profile.following }}</h3>
+                    </a>
+                </div>   
+            </div>
+
+        
+            {% comment %} Tweet / Follow / Unfollow Buttons {% endcomment %}
+            <div class="row mt-4">
+                <div class="col-12 ">
+                    <a class="btn btn-sm btn-outline-primary mb-4 mr-3" href="{% url 'post-create' %}"> Tweet </a>
+
+                    {% if current_user is not None and user_profile.id != user.id and user.username != '' %}
+                        <form method="POST">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <button style="margin-left: 18px" class="btn btn-sm btn-outline-primary"
+                                    name="{% if can_follow %}follow{% else %}unfollow{% endif %}" type="submit">
+                                    {% if can_follow %} FOLLOW {% else %} UNFOLLOW {% endif %}
+                                </button>
+                            </div>
+                        </form>
+                    {% endif %}
+                </div>
+            </div>
+        </article>	
+
+    </div>
+{% endif %}

@@ -4,7 +4,8 @@ from django.shortcuts import render, redirect
 from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
+#from django.contrib.auth.models import User
+from users.models import User
 from project4 import Utils
 
 from django.contrib.auth import authenticate, login, logout
@@ -42,7 +43,8 @@ def register(request):
         if (not Utils.contains_errormessage(request)):
             newUser.username = username
             newUser.email = email
-            newUser.password = pass1
+            #newUser.password = pass1
+            newUser.set_password(pass1)
             newUser.save()
             messages.success(request, f'Account created for {username}.')
             return redirect('login')
@@ -68,6 +70,9 @@ def login_view(request):
             login(request, user)
             # redirect the user to the previous URL saved in the session that could be the "/" or some custom location
             return HttpResponseRedirect(reverse("home"))
+            # return render(request, "network/home.html", {
+            #    # "message": "Invalid username and/or password."
+            # })
         else:
             messages.error(request, f'Invalid username and/or password.')
             return render(request, "users/login.html", {
@@ -127,9 +132,10 @@ def profile(request):
 @login_required
 def SearchView(request):
     if request.method == 'POST':
-        kerko = request.POST.get('search')
-        print(kerko)
-        results = User.objects.filter(username__contains=kerko)
+        search_string = request.POST.get('search')
+        results = User.objects.filter(username__icontains=search_string
+            ).exclude(username=request.user.username) # exclude the current user
+
         context = {
             'results':results
         }

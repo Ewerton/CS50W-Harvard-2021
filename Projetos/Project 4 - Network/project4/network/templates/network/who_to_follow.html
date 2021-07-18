@@ -1,0 +1,32 @@
+<article class="t-section media content-section">
+    <div class="row">
+        <div class="col-12">
+            <h4>Who to follow</h4>
+        </div>
+    </div>
+    <div class="row">
+        <ul>
+            {% for user in users_to_follow %}											
+                <li>
+                    <div class="who-to-follow">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="d-inline">
+                                    <img class="rounded-circle mr-2" style="width: 20px; height: 20px" src="{{ user.profile.image.url }}" />
+                                </div>
+                                <div class="d-inline">
+                                    <a class="mr-2 white-important" href="{% url 'user-posts' user.username %}">
+                                        {{ user.username }}
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <p>{{ user.email }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+</article>
