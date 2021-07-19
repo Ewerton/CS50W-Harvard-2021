@@ -1,4 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
+from django.template.context import Context
 from network.models import Post, Comment, Preference
 from users.models import Follow, Profile
 import sys
@@ -14,10 +15,12 @@ from django.contrib.auth.models import Group
 #from rest_framework import viewsets
 #from rest_framework import permissions
 #from rest_framework.decorators import api_view
-from django.http.response import JsonResponse
+from django.http.response import HttpResponse, JsonResponse
 #from rest_framework.parsers import JSONParser 
 #from rest_framework import status
 from django import template
+from django.template import RequestContext, Template
+from network.templatetags import network_extras
 
 register = template.Library()
 
@@ -365,6 +368,28 @@ def about(request):
 
 def post_list(request):
     pass
+
+
+
+# renders the show_results template
+def test_ajax(request):
+    context = Context({'request': request})
+    return render(request, 'network/results.html' , network_extras.show_results(context) )
+
+# renders the profile_card template
+def get_profilecard(request):
+    context = Context({'request': request})
+    return render(request, 'network/profile_card.html' , network_extras.profile_card(context) )
+
+def get_whotofollow(request):
+    context = Context({'request': request})
+    return render(request, 'network/who_to_follow.html' , network_extras.who_to_follow(context) )
+
+#render_to_string 
+    # return render(request, "network/home.html", {
+    #     "post_list": post_list,
+    # })
+
 
 # @api_view(['GET', 'POST', 'DELETE'])
 # def post_list(request):

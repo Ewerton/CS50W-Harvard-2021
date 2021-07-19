@@ -4,61 +4,85 @@
 <a class="navbar-brand" href="/"> 
     <h2>
         <img class="d-inline-block align-text-center" width="50" src="{% static 'network/logo.png' %}" />
-        CS50W Social Network
+        CS50W Tweets
     </h2>
 </a>
 <!-- Left links -->
 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-    <li class="nav-item">						
-        <a class="nav-link" href="{% url 'home' %}">
-            <i class="fas fa-home"></i>
-            Home
-        </a>
+    <li class="nav-item">
+        <div class="nav-itemdiv">	
+            <a class="nav-link" href="{% url 'home' %}">
+                <i class="fas fa-home"></i>
+                <span class="navbar-text">Home</span>
+            </a>
+        </div
     </li>
     {% if user.is_authenticated %} 
-        <li class="nav-item">						
-            <a class="nav-link" href="{% url 'post-create' %}">
-                <i class="far fa-edit"></i>
-                Create a Post
-            </a>
+        <li class="nav-item">
+            <div class="nav-itemdiv">					
+                <a class="nav-link" href="{% url 'post-create' %}">
+                    <i class="far fa-edit"></i>
+                    <span class="navbar-text">Create a Post</span>
+                </a>
+            </div>
         </li>
     {% endif %}
     
     {% if user.is_authenticated %} 
-        <li class="nav-item">						
-            <a class="nav-link" href="{% url 'profile' %}">
-                <i class="far fa-id-card"></i>
-                Profile
-            </a>
+        <li class="nav-item">
+            <div class="nav-itemdiv">						
+                <a class="nav-link" href="{% url 'profile' %}">
+                    <i class="far fa-id-card"></i>
+                    <span class="navbar-text">Profile (ir para meu perfil)</span>
+                </a>
+            </div>
         </li>
     {% endif %}
 
     {% if user.is_authenticated %} 
         <li class="nav-item">
-            <a class="nav-link" href="{% url 'logout' %}">
-                <i class="fas fa-sign-out-alt"></i>
-                Logout
-            </a>
+            <div class="nav-itemdiv">	
+                <a class="nav-link" href="{% url 'logout' %}">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span class="navbar-text">Logout</span>
+                </a>
+            </div>
         </li>
     {% else %}
         <li class="nav-item">
-            <a class="nav-link" href="{% url 'login' %}">
-                <i class="fas fa-user"></i>
-                Login
-            </a>
+            <div class="nav-itemdiv">
+                <a class="nav-link" href="{% url 'login' %}">
+                    <i class="fas fa-user"></i>
+                    <span class="navbar-text">Login</span>
+                </a>
+            </div>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="{% url 'register-users' %}">
-                <i class="fas fa-user-plus"></i>
-                Register
-            </a>
+            <div class="nav-itemdiv">
+                <a class="nav-link" href="{% url 'register-users' %}">
+                    <i class="fas fa-user-plus"></i>
+                    <span class="navbar-text">Register</span>
+                </a>
+            </div>
         </li>
     {% endif %}
     
+    {% if user.is_authenticated %} 
+        <li class="nav-item">
+            <div class="nav-itemdiv">						
+                <a class="nav-link" href="{% url 'profile' %}">
+                    <i class="fas fa-cog"></i>
+                    <span class="navbar-text">Settings</span>
+                </a>
+            </div>
+        </li>
+    {% endif %}
     <li class="nav-item">
-        <a class="nav-link" href="{% url 'about' %}">
-            <i class="fas fa-question"></i>
-            About
-        </a>
+        <div class="nav-itemdiv">
+            <a class="nav-link" href="{% url 'about' %}">
+                <i class="fas fa-question"></i>
+                <span class="navbar-text">About</span>
+            </a>
+        </div>
     </li>
 </ul>

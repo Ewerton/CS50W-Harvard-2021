@@ -40,10 +40,30 @@ h1, h2, h3, h4, h5, h6 {
 
 .site-header .navbar-nav .nav-link:hover {
   color: rgba(29,161,242,1.00)!important; 
+  
 }
 
 .site-header .navbar-nav .nav-link.active {
   font-weight: 500;
+}
+
+.nav-itemdiv{
+  margin-right: 50px;
+  padding-left: 15px;
+  transition-duration: 0.2s;
+}
+
+.site-header .navbar-nav .nav-itemdiv:hover {
+  /* background-color: rgb(242, 29, 178)!important; */
+  -webkit-transition: background-color ease-in-out .2s;
+  -webkit-transition: border ease-in-out .2s;
+  background-color: rgba(29, 161, 242, 0.1);
+  border-radius: 20px;
+  
+}
+
+.navbar-text{
+  margin-left: 15px;
 }
 
 .content-section {

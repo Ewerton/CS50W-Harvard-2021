@@ -1,3 +1,5 @@
+from datetime import datetime
+from django.template.defaultfilters import date
 from network.models import Post
 from users.models import User
 from django import template
@@ -5,11 +7,12 @@ from django.db.models import Count
 
 register = template.Library()
 
-# @register.inclusion_tag('network/results.html', takes_context=True)
-# def show_results(context):
-#     request = context['request']
-#     choices = ['a', 'b', 'c', request.user.username]
-#     return {'choices': choices}
+
+@register.inclusion_tag('network/results.html', takes_context=True)
+def show_results(context):
+    request = context['request']
+    choices = ['a', 'b', 'c', request.user.username, datetime.now().strftime("%d/%m/%Y %H:%M:%S") ]
+    return {'choices': choices}
 
 @register.inclusion_tag('network/navbar.html', takes_context=True)
 def navbar(context):

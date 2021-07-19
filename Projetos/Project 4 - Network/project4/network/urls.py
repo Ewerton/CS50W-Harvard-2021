@@ -1,4 +1,3 @@
-
 from django.urls import path
 from .views import (
     PostListView,
@@ -37,6 +36,11 @@ urlpatterns = [
     #path('l/', include(router.urls)),
     #path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     #path('api/posts', post_list)
+    #path('ajaxtest', views.test_ajax, name='ajaxtest'),
+    
+    # Ajax Calls
+    path('get_profilecard', views.get_profilecard, name='get_profilecard'),
+    path('get_whotofollow', views.get_whotofollow, name='get_whotofollow'),
 ]
 
 # urlpatterns = [
