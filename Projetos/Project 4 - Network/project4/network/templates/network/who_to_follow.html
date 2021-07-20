@@ -6,24 +6,37 @@
     </div>
     <div class="row">
         <ul>
-            {% for user in users_to_follow %}											
+            {% for userToFollow in users_to_follow %}											
                 <li>
-                    <div class="who-to-follow">
-                        <div class="row">
-                            <div class="col-12">
+                    <div class="who-to-follow" id="divWhoToFollow{{userToFollow.id}}">
+                        <div class="row mt-2">
+                            <div class="col-3">
                                 <div class="d-inline">
-                                    <img class="rounded-circle mr-2" style="width: 20px; height: 20px" src="{{ user.profile.image.url }}" />
+                                    <img class="rounded-circle " style="width: 50px; height: 50px" src="{{ userToFollow.profile.image.url }}" />
                                 </div>
-                                <div class="d-inline">
-                                    <a class="mr-2 white-important" href="{% url 'user-posts' user.username %}">
-                                        {{ user.username }}
+                                
+                            </div>
+                            <div class="col-9">
+                                <div class="">
+                                    <a class="white-important" href="{% url 'user-posts' userToFollow.username %}">
+                                        {{ userToFollow.username }}
                                     </a>
                                 </div>
+                                <div class="">
+                                    <p>{{ userToFollow.email }}</p>
+                                </div>
+                                <div class="">
+                                <button class="btn btn-sm btn-outline-primary"  name="btnFollow"
+                                    data-useridtofollow="{{userToFollow.id}}" 
+                                    data-loggeduserid="{{logged_user.id}}" >
+                                    Follow
+                                </button>
                             </div>
-                            <div class="col-12">
-                                <p>{{ user.email }}</p>
-                            </div>
+                                                    
+                            
                         </div>
+                       
+
                     </div>
                 </li>
             {% endfor %}

@@ -21,6 +21,7 @@ from django.http.response import HttpResponse, JsonResponse
 from django import template
 from django.template import RequestContext, Template
 from network.templatetags import network_extras
+from django.views.decorators.csrf import csrf_exempt
 
 register = template.Library()
 
@@ -377,14 +378,57 @@ def test_ajax(request):
     return render(request, 'network/results.html' , network_extras.show_results(context) )
 
 # renders the profile_card template
+@login_required
 def get_profilecard(request):
     context = Context({'request': request})
     return render(request, 'network/profile_card.html' , network_extras.profile_card(context) )
 
+@login_required
 def get_whotofollow(request):
     context = Context({'request': request})
     return render(request, 'network/who_to_follow.html' , network_extras.who_to_follow(context) )
 
+@csrf_exempt
+@login_required
+def follow_unfollow(request):
+        
+    if request.method != "POST":
+        return JsonResponse({"error": "POST request required."}, status=400)
+    
+    if request.user.id is None:
+        return JsonResponse({"error": "No user logged in."}, status=400)
+    
+    if request.is_ajax() and request.method == 'POST':
+        user_id_to_follow = request.POST['user_id_to_follow']
+    
+    if user_id_to_follow is None: 
+        return JsonResponse({"error": "Id of the user to follow not provided."}, status=400)
+
+    user_to_follow = User.objects.get(pk=user_id_to_follow)
+    if (user_to_follow is None):
+        return JsonResponse({"error": "Can't find the user " + user_id_to_follow + " to follow"}, status=400)
+
+    already_following = Follow.objects.filter(user_id=request.user.id, follow_user_id=user_id_to_follow)
+
+    if not already_following: # Not following, so, follow the user_to_follow        
+        new_relation = Follow(user=request.user, follow_user=user_to_follow)
+        new_relation.save()
+        return JsonResponse(
+            {
+                "operation": "follow", 
+                "message": f"The user {request.user.username} is now following {user_to_follow.username}!"
+            },
+            status=200)
+    else:
+        already_following.delete()
+        return JsonResponse(
+            {
+                "operation": "unfollow", 
+                "Message": f"The user {request.user.username} is not following {user_to_follow.username} anymore!"
+            },
+            status=200)
+    
+    
 #render_to_string 
     # return render(request, "network/home.html", {
     #     "post_list": post_list,

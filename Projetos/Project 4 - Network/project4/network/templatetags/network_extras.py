@@ -1,7 +1,7 @@
 from datetime import datetime
 from django.template.defaultfilters import date
 from network.models import Post
-from users.models import User
+from users.models import Follow, User
 from django import template
 from django.db.models import Count
 
@@ -30,6 +30,9 @@ def profile_card(context):
 @register.inclusion_tag('network/who_to_follow.html', takes_context=True)
 def who_to_follow(context):
     request = context['request']
+
+    users_i_follow = Follow.objects.filter(user_id=request.user.id)
+
     users_to_follow = []
     data_counter = Post.objects.values('author')\
         .annotate(author_count=Count('author'))\
@@ -37,6 +40,12 @@ def who_to_follow(context):
 
     for aux in data_counter:
         if (aux['author'] != request.user.id): # if the current user is not the current logged user
-            users_to_follow.append(User.objects.filter(pk=aux['author']).first())
+            already_following = any(u.follow_user_id == aux['author'] for u in users_i_follow)
+            if already_following:
+                continue
+            else:
+                user_to_follow = User.objects.filter(pk=aux['author']).first()
+                users_to_follow.append(user_to_follow)
     
-    return {"users_to_follow": users_to_follow }
+    return {"users_to_follow": users_to_follow,
+            "logged_user": request.user }

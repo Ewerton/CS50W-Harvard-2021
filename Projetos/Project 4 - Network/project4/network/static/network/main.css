@@ -126,23 +126,15 @@ article {
 }
 
 .btn-outline-primary {
-    border-color: white;
-    color: white !important;
-    padding: 12px 80px 12px 80px;
+    color: #1da1f2;
     font-weight: bold;
-    background-color: #1da1f2;
-    border:0;
+    border-color: rgb(29, 161, 242) ;
     border-radius: 25px; 
 }
 
 .btn-outline-primary:hover {
-  border-color: white;
-  color: white !important;
-  padding: 12px 80px 12px 80px;
-  font-weight: bold;
-  background-color: #135f8f;
-  border:0;
-  border-radius: 25px; 
+  background-color: #135f8f; 
+  /* color: #1da1f2; */
 }
 
 .col-form-label {

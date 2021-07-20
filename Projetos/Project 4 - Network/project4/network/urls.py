@@ -41,6 +41,7 @@ urlpatterns = [
     # Ajax Calls
     path('get_profilecard', views.get_profilecard, name='get_profilecard'),
     path('get_whotofollow', views.get_whotofollow, name='get_whotofollow'),
+    path('follow_unfollow', views.follow_unfollow, name='follow_unfollow'),
 ]
 
 # urlpatterns = [
