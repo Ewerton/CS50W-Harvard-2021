@@ -58,7 +58,7 @@
             {% comment %} Tweet / Follow / Unfollow Buttons {% endcomment %}
             <div class="row mt-4">
                 <div class="col-12 ">
-                    <a class="btn btn-sm btn-outline-primary mb-4 mr-3" href="{% url 'post-create' %}"> Tweet </a>
+                    {% comment %} <a class="btn btn-primary btn-rounded" href="{% url 'post-create' %}"> Tweet </a> {% endcomment %}
 
                     {% if current_user is not None and user_profile.id != user.id and user.username != '' %}
                         <form method="POST">

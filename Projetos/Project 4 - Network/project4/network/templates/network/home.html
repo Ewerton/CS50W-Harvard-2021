@@ -1,28 +1,28 @@
 {% extends "network/layout.html" %} 
+{% load network_extras %}
 {% load static %} 
 {% block content %}
 
 	{% comment %} Title and Tweet count  Row {% endcomment %}
 	<div class="row">
 		<div class="col-6">
-			<h4 class="white-important mb-3">Tweets</h4>
-		</div>
-
-		<div class="col-6 text-end">
-			<h6 class="white-important mb-3">
-				{% if paginator.count > 0 %}
-					{{ page_obj.start_index }} - {{ page_obj.end_index }} of {{ paginator.count }}
-				{% endif %}
-			</h6>
+			<h4 class="white-important m-1">Tweets</h4>
 		</div>
 	</div>
+			
+	<hr>
 
 	{% comment %} Tweets Row {% endcomment %}
 	<div class="row">
-		<div class="col-12 scrollable">
-		
+		<div class="col-12 scrollable">		
 			{% if user.is_authenticated %}
-				{% for post in posts %}
+		
+				{% save_post_template %}				
+
+				<hr>
+				{% comment %} {% post_list_template %} {% endcomment %}
+
+				{% for post in post_list %}
 					<article class="media content-section hovered-tweet">
 						<div class="row">
 							{% comment %} Tweet Title {% endcomment %}
@@ -38,13 +38,24 @@
 							<div class="col-6 text-end">
 								{% if post.author == user %}
 									<div class="d-inline m-1">
-										<a href="{% url 'post-delete' post.id %}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Delete">
-											<i class="fas fa-trash-alt"></i>
+										<a href="javascript:void(0)" 
+											data-bs-toggle="tooltip" 
+											data-bs-placement="bottom" 
+											data-tweetid="{{post.id}}"
+											title="Delete" class="deletePost">
+												<i class="fas fa-trash-alt"></i>
 										</a>
 									</div>
 									<div class="d-inline m-1">
-										<a href="{% url 'post-update' post.id %}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Update">
+										{% comment %} <a href="{% url 'post-update' post.id %}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Update">
 											<i class="far fa-edit"></i>
+										</a> {% endcomment %}
+										<a href="javascript:void(0)" 
+											data-bs-toggle="tooltip" 
+											data-bs-placement="bottom" 
+											data-tweetid="{{post.id}}"
+											title="Update" class="updatePost">
+												<i class="far fa-edit"></i>
 										</a>
 									</div>
 								{% endif %}
@@ -139,6 +150,16 @@
 	{% comment %} Pagination {% endcomment %}
 	<div class="row">
 		<div class="col-12">
+
+		<div class="col-6 text-end">
+			<h6 class="white-important mb-3">
+				{% if paginator.count > 0 %}
+					{{ page_obj.start_index }} - {{ page_obj.end_index }} of {{ paginator.count }}
+				{% endif %}
+			</h6>
+		</div>
+
+
 			{% if is_paginated %} 
 					{% if page_obj.has_previous %}
 						<a class="btn btn-sm btn-outline-secondary mb-4 mr-2" href="?page=1">First</a>

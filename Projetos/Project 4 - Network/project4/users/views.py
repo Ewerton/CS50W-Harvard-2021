@@ -1,5 +1,6 @@
+from users.SearchResult import SearchResult
 from django.contrib.messages.api import error
-from users.models import Profile
+from users.models import Follow, Profile
 from django.shortcuts import render, redirect
 from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm
 from django.contrib import messages
@@ -129,15 +130,51 @@ def profile(request):
 
 
 
+# @login_required
+# def SearchView(request):
+#     if request.method == 'POST':
+#         search_string = request.POST.get('search')
+
+#         query_results = User.objects.filter(username__icontains=search_string)\
+#             .exclude(username=request.user.username) # excludes the current logged user
+             
+#         users_i_follow = Follow.objects.filter(user_id=request.user.id)
+        
+#         results = []
+
+#         for item in query_results:
+#             already_following = any(item.id == u.follow_user_id for u in users_i_follow)
+#             if already_following:
+#                 t = (item, True)               
+#             else:
+#                 t = (item, False)                
+#             results.append(t)
+
+#         context = {
+#             'results':results
+#         }
+#     return render(request, 'users/search_result.html', context)
 @login_required
 def SearchView(request):
     if request.method == 'POST':
         search_string = request.POST.get('search')
-        results = User.objects.filter(username__icontains=search_string
-            ).exclude(username=request.user.username) # exclude the current user
+
+        query_results = User.objects.filter(username__icontains=search_string)\
+            .exclude(username=request.user.username) # excludes the current logged user
+             
+        users_i_follow = Follow.objects.filter(user_id=request.user.id)
+        
+        results = []
+
+        for item in query_results:
+            already_following = any(item.id == u.follow_user_id for u in users_i_follow)
+            if already_following:
+                res = SearchResult(item, True)               
+            else:
+                res = SearchResult(item, True)           
+            results.append(res)
 
         context = {
             'results':results
         }
     return render(request, 'users/search_result.html', context)
-

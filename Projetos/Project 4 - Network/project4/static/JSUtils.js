@@ -1,4 +1,21 @@
 $(document).ready(function () {
+	// Handles the click to delete a post
+	$(".deletePost").click(function (event) {
+		var tweetId = $(this).data("tweetid");
+		DeleteTweet(tweetId);
+	});
+
+	// Handles the click to edit a post
+	$(".updatePost").click(function (event) {
+		var tweetId = $(this).data("tweetid");
+		UpdateTweet(tweetId);
+	});
+
+	$(".newPost").click(function (event) {
+		// var tweetId = $(this).data("tweetid");
+		NewTweet();
+	});
+
 	// Handles the click to Follow a User
 	$("button[name='btnFollow']").click(function (event) {
 		var useridToFollow = $(this).data("useridtofollow");
@@ -12,17 +29,11 @@ $(document).ready(function () {
 			if ($(this).html().includes("Following")) {
 				SetUnfollowStyle($(this));
 			}
-			if ($(this).html().includes("Follow")) {
-				SetFollowStyle($(this));
-			}
 		},
 		function () {
 			// Removes the 'Unfollow' style
 			if ($(this).html().includes("Unfollow")) {
-				SetUnfollowingStyle($(this));
-			}
-			if ($(this).html().includes("Follow")) {
-				SetFollowStyle($(this));
+				SetFollowingStyle($(this));
 			}
 		}
 	);
@@ -34,21 +45,29 @@ $(document).ready(function () {
 
 function SetFollowStyle(elem) {
 	// Applies the 'Following' style
-	//elem.html("Follow");
 	elem.css("background-color", "");
+	elem.css("color", "#1DA1F2");
+	removeClass(elem, "btn-primary");
+	addClass(elem, "btn-outline-primary");
 }
 
-function SetUnfollowingStyle(elem) {
+function SetFollowingStyle(elem) {
 	// Applies the 'Following' style
 	elem.html("Following");
-	elem.css("background-color", "");
+	elem.css("color", "#FFF");
+	elem.css("background-color", "#1DA1F2");
+	removeClass(elem, "btn-outline-primary");
+ 	addClass(elem, "btn-primary");
 }
 
 function SetUnfollowStyle(elem) {
 	// Applies the 'Unfollow' style
 	elem.html("Unfollow");
 	elem.css("background-color", "#CA2355");
-
+	elem.css("color", "#FFF");
+	removeClass(elem, "btn-outline-primary");
+ 	addClass(elem, "btn-primary");
+	
 }
 
 /// If theres a file uploaded in the input, renders it an img control (imgElemID)
@@ -77,6 +96,7 @@ function Reload_user_profile() {
 	});
 }
 
+
 function Reload_navbar() {}
 
 function Reload_who_to_follow() {
@@ -97,11 +117,17 @@ function FollowUser(userIdToFollow) {
 		data: { user_id_to_follow: userIdToFollow },
 		success: function (data) {
 			if (data.operation === "follow") {
-				btn.html("Following"); // Its following so i set the text to "Unfollow"
+				// Its following so i set the text and style to "Unfollow"
+				btn.html("Following");
+				SetFollowingStyle(btn);
 			}
 			if (data.operation === "unfollow") {
-				btn.html("Follow"); // Its not following so i set the text to the normal "Follow" text
+				// Its not following anymore so i set the text and style to the normal "Follow" text
+				btn.html("Follow"); 
+				SetFollowStyle(btn);
 			}
+
+			Reload_user_profile();
 		},
 		error: function (data) {
 			console.log("Error: " + data.responseText);
@@ -109,8 +135,63 @@ function FollowUser(userIdToFollow) {
 	});
 }
 
+function DeleteTweet(tweetId) {
+	if (tweetId > 0) {
+		Swal.fire({
+			title: "Delete Tweet?",
+			text: "This can’t be undone and it will be removed from your profile, the timeline of any accounts that follow you, and from Twitter search results.",
+			showCancelButton: true,
+			confirmButtonColor: "#e02460",
+			confirmButtonText: "Delete",
+		}).then((result) => {
+			if (result.isConfirmed) {
+				$.ajax({
+					url: "/post/" + tweetId + "/del",
+					type: "DELETE",
+					success: function (data) {
+						Swal.fire("Deleted!", "Your tweet has been deleted.", "success");
+						location.reload();
+					},
+					error: function (data) {
+						console.log("Error: " + data.responseText);
+					},
+				});
+			}
+		});
+	}
+}
 
+function NewTweet(tweetId) {
+		$.ajax({
+			url: "/post/save",
+			type: "GET",
+			success: function (data) {
+				Swal.fire({
+					html: data,
+					showCancelButton: false, 
+					showConfirmButton: false,
+					showCloseButton: true
+				  });
+			},
+	});
+}
 
+function UpdateTweet(tweetId) {
+	if (tweetId > 0) {
+		$.ajax({
+			url: "/post/" + tweetId + "/update",
+			type: "GET",
+			success: function (data) {
+				Swal.fire({
+					html: data,
+					showCancelButton: false, 
+					showConfirmButton: false,
+					showCloseButton: true
+				  });
+			},
+		});
+	}
+}
 
 /**** Utilities function ****/
 function addClass(elem, clazz) {

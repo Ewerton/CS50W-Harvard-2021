@@ -8,6 +8,7 @@ from django.db.models import Count
 register = template.Library()
 
 
+
 @register.inclusion_tag('network/results.html', takes_context=True)
 def show_results(context):
     request = context['request']
@@ -15,15 +16,15 @@ def show_results(context):
     return {'choices': choices}
 
 @register.inclusion_tag('network/navbar.html', takes_context=True)
-def navbar(context):
+def navbar_template(context):
     request = context['request']
-    #choices = ['a', 'b', 'c', request.user.username]
-    return {'user': request.user}
+    current_user = get_current_user(request)
+    return {'user': current_user}
 
 @register.inclusion_tag('network/profile_card.html', takes_context=True)
-def profile_card(context):
+def profilecard_template(context):
     request = context['request']
-    current_user = User.objects.filter(id=request.user.id).first()
+    current_user = get_current_user(request)
     return {"current_user": current_user }
 
 # Returns a list of user which posts frequently, except the current logged user
@@ -49,3 +50,26 @@ def who_to_follow(context):
     
     return {"users_to_follow": users_to_follow,
             "logged_user": request.user }
+
+# Render the form to add a new post
+@register.inclusion_tag('network/post_new.html', takes_context=True)
+def save_post_template(context):
+    request = context['request']
+    current_user = get_current_user(request)
+    current_post = None
+    if hasattr(request, 'current_post'):
+        current_post = request.current_post
+    return {
+        "current_user": current_user, 
+        "current_post": current_post 
+        }
+
+
+
+
+# Utility functions
+def get_current_user(request):
+    current_user = None
+    if not (request is None):
+        current_user = User.objects.filter(id=request.user.id).first()
+    return current_user

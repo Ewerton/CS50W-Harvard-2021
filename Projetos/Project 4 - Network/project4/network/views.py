@@ -1,3 +1,5 @@
+from django.utils import timezone
+#import pytz
 from django.shortcuts import render, get_object_or_404, redirect
 from django.template.context import Context
 from network.models import Post, Comment, Preference
@@ -33,14 +35,15 @@ def get_posts(user):
     return posts
 
 
+
 def home(request):    
     #current_user = None
     post_list = []
     #who_to_follow = []
 
-    #current_user = User.objects.filter(id=request.user.id).first()
-    #if (current_user != None):
-    #    post_list = get_posts(current_user) 
+    current_user = User.objects.filter(id=request.user.id).first()
+    if (current_user != None):
+        post_list = get_posts(current_user) 
     #    who_to_follow = get_who_to_follow(current_user)
 
     return render(request, "network/home.html", {
@@ -158,14 +161,14 @@ class PostDetailView(DetailView):
         return self.get(self, request, *args, **kwargs)
 
 
-class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
-    model = Post
-    template_name = 'network/post_delete.html'
-    context_object_name = 'post'
-    success_url = '/'
+# class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+#     model = Post
+#     template_name = 'network/post_delete.html'
+#     context_object_name = 'post'
+#     success_url = '/'
 
-    def test_func(self):
-        return is_users(self.get_object().author, self.request.user)
+#     def test_func(self):
+#         return is_users(self.get_object().author, self.request.user)
 
 
 class PostCreateView(LoginRequiredMixin, CreateView):
@@ -379,12 +382,12 @@ def test_ajax(request):
 
 # renders the profile_card template
 @login_required
-def get_profilecard(request):
+def profilecard(request):
     context = Context({'request': request})
-    return render(request, 'network/profile_card.html' , network_extras.profile_card(context) )
+    return render(request, 'network/profile_card.html' , network_extras.profilecard_template(context) )
 
 @login_required
-def get_whotofollow(request):
+def whotofollow_template(request):
     context = Context({'request': request})
     return render(request, 'network/who_to_follow.html' , network_extras.who_to_follow(context) )
 
@@ -428,7 +431,63 @@ def follow_unfollow(request):
             },
             status=200)
     
+
+@csrf_exempt
+@login_required
+def delete_post(request, postid):
+        
+    if request.method != "DELETE":
+        return JsonResponse({"error": "DELETE request required."}, status=400)
     
+    if request.user.id is None:
+        return JsonResponse({"error": "No user logged in."}, status=400)
+    
+    if request.is_ajax() and request.method == 'DELETE':
+        Post.objects.get(pk=postid).delete()
+        return JsonResponse(
+            {
+                "message": f"Post Deleted!"
+            }, 
+            status=200)
+
+# render the post_new template
+@login_required
+def save_post(request):
+    if request.method == "POST":
+        post_text = request.POST["text_new_tweet"]
+        current_postid = request.POST["current_postid"] # if it is an update operation
+        
+        if (current_postid):
+            post = Post.objects.get(pk=current_postid)
+            post.content = post_text
+            post.save()
+        else:
+            post = Post.objects.create(content=post_text,
+                                    date_posted=timezone.now(),
+                                    author=request.user, 
+                                    likes=0)
+            post.save()
+        return redirect('home')
+    else:    
+        # Get Method
+        context = Context({'request': request})
+        return render(request, 'network/post_new.html' , network_extras.save_post_template(context) )
+
+@csrf_exempt
+@login_required
+def update_post(request, postid): 
+    
+    post = Post.objects.get(pk=postid)
+
+    if request.method == "POST":
+        post_text = request.POST["text_new_tweet"]        
+        post.content = post_text
+        post.save()
+        return redirect('home')
+    else:
+        request.current_post = post
+        return save_post(request)
+
 #render_to_string 
     # return render(request, "network/home.html", {
     #     "post_list": post_list,
@@ -459,4 +518,5 @@ def follow_unfollow(request):
 #     elif request.method == 'DELETE':
 #         count = Post.objects.all().delete()
 #         return JsonResponse({'message': '{} Posts were deleted successfully!'.format(count[0])}, status=status.HTTP_204_NO_CONTENT)
- 
+
+

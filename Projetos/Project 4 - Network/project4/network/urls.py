@@ -4,7 +4,7 @@ from .views import (
     PostDetailView,
     PostCreateView,
     PostUpdateView,
-    PostDeleteView,
+    # PostDeleteView,
     UserPostListView,
     FollowsListView,
     FollowersListView,
@@ -25,11 +25,12 @@ urlpatterns = [
     #path('', PostListView.as_view(), name='home'),
     path('', views.home, name='home'),
     path('about/',views.about, name='about'),
-    path('post/new/', PostCreateView.as_view(), name='post-create'),
+    # path('post/new/', PostCreateView.as_view(), name='post-create'),
+    
     path('post/<int:pk>/', PostDetailView.as_view(), name='post-detail'),
     path('user/<str:username>', UserPostListView.as_view(), name='user-posts'),
-    path('post/<int:pk>/update/', PostUpdateView.as_view(), name='post-update'),
-    path('post/<int:pk>/del/', PostDeleteView.as_view(), name='post-delete'),
+    
+    # path('post/<int:pk>/del/', PostDeleteView.as_view(), name='post-delete'),
     path('user/<str:username>/follows', FollowsListView.as_view(), name='user-follows'),
     path('user/<str:username>/followers', FollowersListView.as_view(), name='user-followers'),
     path('post/<int:postid>/preference/<int:userpreference>', postpreference, name='postpreference'),
@@ -39,9 +40,12 @@ urlpatterns = [
     #path('ajaxtest', views.test_ajax, name='ajaxtest'),
     
     # Ajax Calls
-    path('get_profilecard', views.get_profilecard, name='get_profilecard'),
-    path('get_whotofollow', views.get_whotofollow, name='get_whotofollow'),
+    path('get_profilecard', views.profilecard, name='get_profilecard'),
+    path('get_whotofollow', views.whotofollow_template, name='get_whotofollow'),
     path('follow_unfollow', views.follow_unfollow, name='follow_unfollow'),
+    path('post/save/', views.save_post, name='post-create'),
+    path('post/<int:postid>/update/', views.update_post, name='post-update'),
+    path('post/<int:postid>/del/', views.delete_post, name='post-delete'),
 ]
 
 # urlpatterns = [

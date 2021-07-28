@@ -1,19 +1,42 @@
-{% extends "network/layout.html" %}
-{% comment %} {% load crispy_forms_tags %} {% endcomment %}
-{% block content %}
-<div class="container">
-    <h3 class="white-important">
-        {{  tag_line }}
-    </h3>
-    <form method="POST" class="col-12 col-md-6 no-padding pr-3 pr-md-0">
-        {% csrf_token %}
-        <fieldset class="form-group">
-            {% comment %} {{ form | crispy }} {% endcomment %}
-             {{ form }}
-        </fieldset>
-        <div class="form-group">
-            <button class="btn btn-outline-primary" type="submit">Submit changes</button>
+{% comment %} {% extends "network/layout.html" %} {% endcomment %}
+{% load static %}
+
+ {% if current_user != None %}
+
+    {% comment %} {% block content %} {% endcomment %}
+        <div class="container">     
+            <div class="row">
+                <div class="col-auto p-0">
+                    <div class="d-inline">
+                        <img class="rounded-circle " style="width: 50px; height: 50px" src="{{ current_user.profile.image.url }}" />
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="new_tweet_form">
+                        <form method="post" action="{% url 'post-create' %}" >
+                            {% csrf_token %}
+                            <input type="hidden" name="current_postid" value="{{ current_post.id }}" />
+                            <fieldset class="form-group">
+                                <textarea name="text_new_tweet" class="form-control mt-1" rows="3" placeholder="Whats's Happening?">{{current_post.content}}</textarea>
+                            </fieldset>
+                            <hr>
+                            <div class="form-group text-end">
+                                {% if current_post != None %}
+                                    <button class="btn btn-primary btn-rounded" type="submit"> Update </button>
+                                {% else %}
+                                     <button class="btn btn-primary btn-rounded" type="submit"> Tweet </button>
+                                {% endif %}
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
-    </form>
-</div>
-{% endblock content %}
+    {% comment %} {% endblock content %} {% endcomment %}
+{% endif %}
+
+
+
+
+
+{% comment %} {% load crispy_forms_tags %} {% endcomment %}
