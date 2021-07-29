@@ -1,3 +1,4 @@
+from network.PostResult import PostResult
 from django.utils import timezone
 #import pytz
 from django.shortcuts import render, get_object_or_404, redirect
@@ -24,27 +25,38 @@ from django import template
 from django.template import RequestContext, Template
 from network.templatetags import network_extras
 from django.views.decorators.csrf import csrf_exempt
-
+from django.db.models import Q
 register = template.Library()
 
 PAGINATION_COUNT = 3
 
-# gets all the posts from a user
+# gets all the posts from a user and from the given user follows
 def get_posts(user):
-    posts = Post.objects.filter(author_id=user.id).order_by('-date_posted')
-    return posts
+    posts = []
+    postResult = []
+    users_i_follow = User.objects.filter(follow_user__user=user)
+    posts_from_users_i_follow = Post.objects.filter(author__in=users_i_follow)
+    my_posts = Post.objects.filter(author_id=user.id)    
+    
+    posts.extend(my_posts)
+    posts.extend(posts_from_users_i_follow)
+    
+    for post in posts:
+        #liked = PostResult.UserLiked(user)
+        p = PostResult(post, post.LikedBy(user)) # checks if the current user liked the post 
+        postResult.append(p)
+ 
+    postResult.sort(key=lambda x: x.post.date_posted, reverse=True)
+    return postResult
 
 
 
 def home(request):    
-    #current_user = None
     post_list = []
-    #who_to_follow = []
 
     current_user = User.objects.filter(id=request.user.id).first()
     if (current_user != None):
         post_list = get_posts(current_user) 
-    #    who_to_follow = get_who_to_follow(current_user)
 
     return render(request, "network/home.html", {
         "post_list": post_list,
@@ -487,6 +499,45 @@ def update_post(request, postid):
     else:
         request.current_post = post
         return save_post(request)
+
+@csrf_exempt
+@login_required
+def like_unlike(request, postid):
+        
+    if request.method != "POST":
+        return JsonResponse({"error": "POST request required."}, status=400)
+    
+    if request.user.id is None:
+        return JsonResponse({"error": "No user logged in."}, status=400)
+    
+    if request.is_ajax() and request.method == 'POST':
+        postid_to_like = request.POST['postid_to_like']
+    
+    if postid_to_like is None: 
+        return JsonResponse({"error": "Id of the post to like/unlike not provided."}, status=400)
+
+    post_to_like = Post.objects.get(pk=postid_to_like)
+    if (post_to_like is None):
+        return JsonResponse({"error": "Can't find the post " + post_to_like + " to like"}, status=400)
+
+    already_liked = post_to_like.LikedBy(request.user)
+       
+    if not already_liked: # Not liked
+        new_like = Preference(user=request.user, post=post_to_like, value=1, date=timezone.now())
+        new_like.save()
+        return JsonResponse(
+            {
+                "operation": "liked", 
+                "message": f"The user {request.user.username} liked the Post {postid_to_like}!"
+            }, status=200)
+    else:
+        preference_to_delete = Preference.objects.get(user=request.user, post=post_to_like)
+        preference_to_delete.delete()
+        return JsonResponse(
+            {
+                "operation": "unliked", 
+                "Message": f"The user {request.user.username} disliked the Post {postid_to_like} !"
+            }, status=200)
 
 #render_to_string 
     # return render(request, "network/home.html", {

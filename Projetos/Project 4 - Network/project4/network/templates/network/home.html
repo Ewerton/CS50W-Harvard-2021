@@ -22,41 +22,45 @@
 				<hr>
 				{% comment %} {% post_list_template %} {% endcomment %}
 
-				{% for post in post_list %}
+				{% for postResult in post_list %}
 					<article class="media content-section hovered-tweet">
 						<div class="row">
 							{% comment %} Tweet Title {% endcomment %}
 							{% comment %} User Photo and Name {% endcomment %}
 							<div class="col-6">
-								<img class="rounded-circle m-1" style="width: 20px; height: 20px" src="{{ post.author.profile.image.url }}" />
-								<a class="ms-2 white-important" href="{% url 'user-posts' post.author %}">
-									{{ post.author }}
+								<img class="rounded-circle m-1" style="width: 20px; height: 20px" src="{{ postResult.post.author.profile.image.url }}" />
+								<a class="ms-2 white-important" href="{% url 'user-posts' postResult.post.author %}">
+									{{ postResult.post.author }}
 								</a>
 							</div>
 
 							{% comment %} Tweet Action Buttons {% endcomment %}
 							<div class="col-6 text-end">
-								{% if post.author == user %}
-									<div class="d-inline m-1">
-										<a href="javascript:void(0)" 
-											data-bs-toggle="tooltip" 
-											data-bs-placement="bottom" 
-											data-tweetid="{{post.id}}"
-											title="Delete" class="deletePost">
-												<i class="fas fa-trash-alt"></i>
-										</a>
+								{% if postResult.post.author == user %}
+									<div class="d-inline-flex">
+										<div class="d-inline-flex roundedLikeButtonContainer">
+											<a href="javascript:void(0)" 
+												data-bs-toggle="tooltip" 
+												data-bs-placement="bottom" 
+												data-tweetid="{{postResult.post.id}}"
+												title="Delete" class="deletePost">
+													<i class="fas fa-trash-alt"></i>
+											</a>
+										</div>	
 									</div>
-									<div class="d-inline m-1">
+									<div class="d-inline-flex">
 										{% comment %} <a href="{% url 'post-update' post.id %}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Update">
 											<i class="far fa-edit"></i>
 										</a> {% endcomment %}
-										<a href="javascript:void(0)" 
-											data-bs-toggle="tooltip" 
-											data-bs-placement="bottom" 
-											data-tweetid="{{post.id}}"
-											title="Update" class="updatePost">
-												<i class="far fa-edit"></i>
-										</a>
+										<div class="d-inline-flex roundedLikeButtonContainer">
+											<a href="javascript:void(0)" 
+												data-bs-toggle="tooltip" 
+												data-bs-placement="bottom" 
+												data-tweetid="{{postResult.post.id}}"
+												title="Update" class="updatePost">
+													<i class="far fa-edit"></i>
+											</a>
+										</div>
 									</div>
 								{% endif %}
 							</div>
@@ -65,11 +69,11 @@
 						{% comment %} Separator {% endcomment %}
 						<div class="mt-2 mb-2" style="width: 100%; height: 1px; background-color: rgba(255, 255, 255, 0.1)"></div>
 
-						{% comment %} Tweet Content {% endcomment %}
+						{% comment %} Tweet Content (Clicking view the details of the post) {% endcomment %}
 						<div class="row">
 							<div class="col-12">
-								<a style="color: rgba(255, 255, 255, 0.5) !important" href="{% url 'post-detail' post.id %}">
-									<p class="mb-4">{{ post.content }}</p>
+								<a style="color: rgba(255, 255, 255, 0.5) !important" href="{% url 'post-detail' postResult.post.id %}">
+									<p class="mb-4">{{ postResult.post.content }}</p>
 								</a>
 							</div>
 						</div>
@@ -77,48 +81,53 @@
 						{% comment %} Tweet Footer {% endcomment %}
 						<div class="row">
 							<div class="col-6">
-								<div class="d-inline-flex m-1">
-									<div class="d-inline-flex m-1">
-										<a href="#" onClick="document.getElementById('likebutton').submit()" >
-											<i class="fas fa-thumbs-up"></i>
+								<div class="d-inline-flex">
+									<div class="d-inline-flex roundedLikeButtonContainer pt-1">
+										<a href="javascript:void(0)" 
+											data-postid="{{postResult.post.id}}"
+											class="likePost">
+												{% if postResult.liked %}													
+													<i id="likeIcon{{postResult.post.id}}" class="fas fa-heart"></i>
+												{% else %}
+													<i id="likeIcon{{postResult.post.id}}" class="far fa-heart"></i>
+												{% endif %}
 										</a>
 									</div>
-									<div class="d-inline-flex m-1">
-										{{post.likes}} 
+									<div class="d-inline-flex">
+										<span class="pt-1 likeCount{{postResult.post.id}}">{{postResult.post.LikeCount}}</span>
 									</div>
-									
-									<form id="likebutton" method="POST" action="{% url 'postpreference' post.id 1 %}">
-										{% csrf_token %}
-											<input type="hidden" />
-									</form>
 								</div>
-								|
-								<div class="d-inline-flex m-1">
+								
+								{% comment %} I Will not implement dislike, for now {% endcomment %}
+								{% comment %} Maybe I implement repost later {% endcomment %}
+								{% comment %} <div class="d-inline-flex m-1">
 									<div class="d-inline-flex m-1">
 									<a href="#" onClick="document.getElementById('dislikebutton').submit()" >
 										<i class="fas fa-thumbs-down"></i>
 									</a>
 									</div>
 									<div class="d-inline-flex m-1">
-										{{post.dislikes}}
+										{{postResult.post.dislikes}}
 									</div>
-									<form id="dislikebutton" method="POST" action="{% url 'postpreference' post.id 2 %}">
+									<form id="dislikebutton" method="POST" action="{% url 'postpreference' postResult.post.id 2 %}">
 										{% csrf_token %}
 										<input type="hidden" />
 									</form>
-								</div>
-								|
-								<div class="d-inline-flex m-1">
-									<a href="/post/{{post.id}}/">
-										<i style="font-size: 16px" class="far fa-comment"></i> {{ post.number_of_comments }} comment(s) 
+								</div> {% endcomment %}
+								
+								<span class="m-1">|</span>
+								
+								<div class="d-inline m-1">
+									<a href="/post/{{postResult.post.id}}/">
+										<i class="far fa-comment"></i> {{ postResult.post.CommentsCount }} comment(s) 
 									</a>
 								</div>
 
 							</div>
 
-							<div class="col-6 ">
-								<div class="text-end m-2" >
-									<span class="align-middle">{{ post.date_posted | date:"H:i l, d.m.y" }}</span>							
+							<div class="col-6">
+								<div class="text-end" >
+									<span class="align-middle">{{ postResult.post.date_posted | date:"H:i l, d.m.y" }}</span>							
 								</div>	
 							</div>
 						</div>

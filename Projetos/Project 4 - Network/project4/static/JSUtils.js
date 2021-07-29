@@ -2,18 +2,23 @@ $(document).ready(function () {
 	// Handles the click to delete a post
 	$(".deletePost").click(function (event) {
 		var tweetId = $(this).data("tweetid");
-		DeleteTweet(tweetId);
+		DeletePost(tweetId);
 	});
 
 	// Handles the click to edit a post
 	$(".updatePost").click(function (event) {
 		var tweetId = $(this).data("tweetid");
-		UpdateTweet(tweetId);
+		UpdatePost(tweetId);
 	});
 
 	$(".newPost").click(function (event) {
-		// var tweetId = $(this).data("tweetid");
-		NewTweet();
+		NewPost();
+	});
+
+	// Handles the click to edit a post
+	$(".likePost").click(function (event) {
+		var postId = $(this).data("postid");
+		LikePost(postId);
 	});
 
 	// Handles the click to Follow a User
@@ -135,7 +140,7 @@ function FollowUser(userIdToFollow) {
 	});
 }
 
-function DeleteTweet(tweetId) {
+function DeletePost(tweetId) {
 	if (tweetId > 0) {
 		Swal.fire({
 			title: "Delete Tweet?",
@@ -161,7 +166,7 @@ function DeleteTweet(tweetId) {
 	}
 }
 
-function NewTweet(tweetId) {
+function NewPost(tweetId) {
 		$.ajax({
 			url: "/post/save",
 			type: "GET",
@@ -176,7 +181,7 @@ function NewTweet(tweetId) {
 	});
 }
 
-function UpdateTweet(tweetId) {
+function UpdatePost(tweetId) {
 	if (tweetId > 0) {
 		$.ajax({
 			url: "/post/" + tweetId + "/update",
@@ -191,6 +196,49 @@ function UpdateTweet(tweetId) {
 			},
 		});
 	}
+}
+
+function LikePost(postId) {
+	if (postId > 0) {
+		$.ajax({
+			url: "/post/" + postId + "/like/",
+			type: "POST",
+			data: { postid_to_like: postId },
+			success: function (data) {
+				if (data.operation === "liked") {
+					SetLiked(postId);
+				}
+				if (data.operation === "unliked") {
+					SetUnliked(postId);
+				}
+			},
+			error: function (data) {
+				console.log("Error: " + data.responseText);
+			},
+		});
+	}
+}
+
+function SetLiked(postId){
+	var likeIcon = $("#likeIcon"+postId);
+	likeIcon.removeClass("far");
+	likeIcon.addClass("fas");
+
+	var likeCountSpan = $(".likeCount" + postId);
+	likeCount = parseInt(likeCountSpan.text());
+	likeCount ++;
+	likeCountSpan.text(likeCount);
+}
+
+function SetUnliked(postId){
+	var likeIcon = $("#likeIcon"+postId);
+	likeIcon.removeClass("fas");
+	likeIcon.addClass("far");
+
+	var likeCountSpan = $(".likeCount" + postId);
+	likeCount = parseInt(likeCountSpan.text());
+	likeCount --;
+	likeCountSpan.text(likeCount);
 }
 
 /**** Utilities function ****/

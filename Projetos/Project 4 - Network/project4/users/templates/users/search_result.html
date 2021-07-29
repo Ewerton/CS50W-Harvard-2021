@@ -12,24 +12,29 @@
             <div class="profile-section mb-4">
                 <div class="row p-2">
                     <div class="col-auto">
-                        <img class="rounded-circle mr-2" style="width: 40px; height: 40px" src="{{ result.User.profile.image.url }}" />
+                        <img class="rounded-circle mr-2" style="width: 40px; height: 40px" src="{{ result.user.profile.image.url }}" />
                     </div>
                     <div class="col align-self-center">
-                        <a class="mr-2 white-important" href="{% url 'user-posts' result.User.username %}"> {{ result.User.username }} </a>
+                        <a class="mr-2 white-important" href="{% url 'user-posts' result.user.username %}"> {{ result.user.username }} </a>
                         <div>
                             {{result.User.email}}
                         </div>
                     </div>
                     <div class="col-2 align-self-center me-4">
-                       <button class="btn btn-sm btn-outline-primary btn-rounded"  name="btnFollow"
-                                    data-useridtofollow="{{result.User.id}}" 
-                                    data-loggeduserid="{{logged_user.User.id}}" >
-                                    {% if result.following %} 
-                                        Unfollow
-                                    {% else %}
-                                        Follow                                        
-                                    {% endif %}
-                        </button>
+                        {% if result.following %} 
+                            <button class="btn btn-sm btn-primary btn-rounded"  name="btnFollow"
+                                    data-useridtofollow="{{result.user.id}}" 
+                                    data-loggeduserid="{{logged_user.user.id}}" >
+                                    Following
+                            </button>
+                        {% else %}
+                            <button class="btn btn-sm btn-outline-primary btn-rounded"  name="btnFollow"
+                                    data-useridtofollow="{{result.user.id}}" 
+                                    data-loggeduserid="{{logged_user.user.id}}" >
+                                    Follow
+                            </button>
+                        {% endif %}
+                      
                     </div>
                 </div>
             </div>

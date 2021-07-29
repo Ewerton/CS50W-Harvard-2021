@@ -274,3 +274,27 @@ textarea[name="text_new_tweet"]:focus {
 hr {
 	margin: 10px;
 }
+
+.roundedLikeButtonContainer{
+	border-radius: 50%;
+	background-color: transparent;
+	/* padding: 0.5em 0.2em 0.3em 0.5em; */
+	/* padding: 0.8em; */
+	width: 30px;
+	height: 30px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+.roundedLikeButtonContainer:hover{
+	background-color: #36405e;
+}
+
+.fas.fa-heart {
+	/* Filled red heart */ 
+    color: rgb(224, 36, 94)!important;
+}
+.far.fa-heart:hover {
+	/* Outlined blue heart.Turns red on hover */
+    color: rgb(224, 36, 94)!important;
+}

@@ -46,6 +46,7 @@ urlpatterns = [
     path('post/save/', views.save_post, name='post-create'),
     path('post/<int:postid>/update/', views.update_post, name='post-update'),
     path('post/<int:postid>/del/', views.delete_post, name='post-delete'),
+    path('post/<int:postid>/like/', views.like_unlike, name='post-like'), #used for the unlike operation
 ]
 
 # urlpatterns = [

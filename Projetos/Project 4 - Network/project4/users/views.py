@@ -171,7 +171,7 @@ def SearchView(request):
             if already_following:
                 res = SearchResult(item, True)               
             else:
-                res = SearchResult(item, True)           
+                res = SearchResult(item, False)           
             results.append(res)
 
         context = {
