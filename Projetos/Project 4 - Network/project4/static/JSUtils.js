@@ -1,3 +1,5 @@
+const home_url = "/"
+
 $(document).ready(function () {
 	// Handles the click to delete a post
 	$(".deletePost").click(function (event) {
@@ -155,7 +157,8 @@ function DeletePost(tweetId) {
 					type: "DELETE",
 					success: function (data) {
 						Swal.fire("Deleted!", "Your tweet has been deleted.", "success");
-						location.reload();
+						//location.reload();
+						window.location.href = home_url ; //reloads the home
 					},
 					error: function (data) {
 						console.log("Error: " + data.responseText);

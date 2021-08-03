@@ -30,6 +30,8 @@ register = template.Library()
 
 PAGINATION_COUNT = 3
 
+
+
 # gets all the posts from a user and from the given user follows
 def get_posts(user):
     posts = []
@@ -42,13 +44,16 @@ def get_posts(user):
     posts.extend(posts_from_users_i_follow)
     
     for post in posts:
-        #liked = PostResult.UserLiked(user)
-        p = PostResult(post, post.LikedBy(user)) # checks if the current user liked the post 
+        p = get_postresult(user, post) #p = PostResult(post, post.LikedBy(user)) # checks if the current user liked the post 
         postResult.append(p)
  
     postResult.sort(key=lambda x: x.post.date_posted, reverse=True)
     return postResult
 
+
+def get_postresult(user, post):
+     p = PostResult(post, post.LikedBy(user)) # checks if the current user liked the post 
+     return p
 
 
 def home(request):    
@@ -152,25 +157,25 @@ class UserPostListView(LoginRequiredMixin, ListView):
         return self.get(self, request, *args, **kwargs)
 
 
-class PostDetailView(DetailView):
-    model = Post
-    template_name = 'network/post_detail.html'
-    context_object_name = 'post'
+# class PostDetailView(DetailView):
+#     model = Post
+#     template_name = 'network/post_detail.html'
+#     context_object_name = 'post'
 
-    def get_context_data(self, **kwargs):
-        data = super().get_context_data(**kwargs)
-        comments_connected = Comment.objects.filter(post_connected=self.get_object()).order_by('-date_posted')
-        data['comments'] = comments_connected
-        data['form'] = NewCommentForm(instance=self.request.user)
-        return data
+#     def get_context_data(self, **kwargs):
+#         data = super().get_context_data(**kwargs)
+#         comments_connected = Comment.objects.filter(post=self.get_object()).order_by('-date_posted')
+#         data['comments'] = comments_connected
+#         data['form'] = NewCommentForm(instance=self.request.user)
+#         return data
 
-    def post(self, request, *args, **kwargs):
-        new_comment = Comment(content=request.POST.get('content'),
-                              author=self.request.user,
-                              post_connected=self.get_object())
-        new_comment.save()
+#     def post(self, request, *args, **kwargs):
+#         new_comment = Comment(content=request.POST.get('content'),
+#                               author=self.request.user,
+#                               post_connected=self.get_object())
+#         new_comment.save()
 
-        return self.get(self, request, *args, **kwargs)
+#         return self.get(self, request, *args, **kwargs)
 
 
 # class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
@@ -476,8 +481,7 @@ def save_post(request):
         else:
             post = Post.objects.create(content=post_text,
                                     date_posted=timezone.now(),
-                                    author=request.user, 
-                                    likes=0)
+                                    author=request.user)
             post.save()
         return redirect('home')
     else:    
@@ -539,10 +543,22 @@ def like_unlike(request, postid):
                 "Message": f"The user {request.user.username} disliked the Post {postid_to_like} !"
             }, status=200)
 
-#render_to_string 
-    # return render(request, "network/home.html", {
-    #     "post_list": post_list,
-    # })
+@login_required
+def post_detail(request, postid):
+    post = Post.objects.get(pk=postid) 
+    postResult = get_postresult(request.user, post)
+    comments = Comment.objects.filter(post=post).order_by('-date_posted')
+
+    # def post(self, request, *args, **kwargs):
+    #     new_comment = Comment(content=request.POST.get('content'),
+    #                           author=self.request.user,
+    #                           post_connected=self.get_object())
+    #     new_comment.save()
+
+    return render(request, "network/post_detail.html", {
+        "postResult": postResult,
+        "comments": comments
+    })
 
 
 # @api_view(['GET', 'POST', 'DELETE'])

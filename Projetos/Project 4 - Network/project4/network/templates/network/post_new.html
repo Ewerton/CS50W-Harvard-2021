@@ -1,14 +1,14 @@
 {% comment %} {% extends "network/layout.html" %} {% endcomment %}
 {% load static %}
 
- {% if current_user != None %}
+ {% if user != None %}
 
     {% comment %} {% block content %} {% endcomment %}
         <div class="container">     
             <div class="row">
                 <div class="col-auto p-0">
                     <div class="d-inline">
-                        <img class="rounded-circle " style="width: 50px; height: 50px" src="{{ current_user.profile.image.url }}" />
+                        <img class="rounded-circle " style="width: 50px; height: 50px" src="{{ user.profile.image.url }}" />
                     </div>
                 </div>
                 <div class="col">

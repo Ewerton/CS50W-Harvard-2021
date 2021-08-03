@@ -60,11 +60,19 @@ def save_post_template(context):
     if hasattr(request, 'current_post'):
         current_post = request.current_post
     return {
-        "current_user": current_user, 
+        "user": current_user, 
         "current_post": current_post 
         }
 
-
+# Render the form to add a new post
+@register.inclusion_tag('network/post.html', takes_context=True)
+def post_template(context, postResult):
+    request = context['request']
+    current_user = get_current_user(request)
+    return {
+        "postResult": postResult, 
+        "user": current_user, 
+        }
 
 
 # Utility functions
