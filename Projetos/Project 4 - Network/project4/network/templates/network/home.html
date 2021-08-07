@@ -3,6 +3,7 @@
 {% load static %} 
 {% block content %}
 
+<div class="container-fluid">
 	{% comment %} Title and Tweet count  Row {% endcomment %}
 	<div class="row">
 		<div class="col-6">
@@ -22,16 +23,14 @@
 				<hr>
 
 				{% for postResult in post_list %}
-
-					{% post_template postResult %}					
-
+					{% post_template postResult %}
 				{% empty %}
-					<article class="media content-section hovered-tweet">
+					<article class="media content-section hovered-post">
 						<h6>No posts yet...</h6>
 					</article>
 				{% endfor %}
 			{% else %}
-				<article class="media content-section hovered-tweet">
+				<article class="media content-section hovered-post">
 					<h6>you need to login to see posts...</h6>
 				</article>
 				<div class="pt-3">
@@ -81,5 +80,6 @@
 		</div>
 	</div>
 
+</div>
 {% endblock content %}
 

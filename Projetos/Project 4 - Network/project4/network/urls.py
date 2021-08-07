@@ -25,6 +25,9 @@ urlpatterns = [
     #path('', PostListView.as_view(), name='home'),
     path('', views.home, name='home'),
     path('about/',views.about, name='about'),
+    path('post/<int:postid>/', views.post_detail, name='post-detail'),
+    # path('post/<int:postid>/comment', views.post_comment, name='post-comment'),
+    
     # path('post/new/', PostCreateView.as_view(), name='post-create'),
     
     #path('post/<int:pk>/', PostDetailView.as_view(), name='post-detail'),
@@ -47,7 +50,7 @@ urlpatterns = [
     path('post/<int:postid>/update/', views.update_post, name='post-update'),
     path('post/<int:postid>/del/', views.delete_post, name='post-delete'),
     path('post/<int:postid>/like/', views.like_unlike, name='post-like'), #used for the unlike operation
-    path('post/<int:postid>/', views.post_detail, name='post-detail'),
+    path('comment/<int:commentId>/del/', views.delete_comment, name='comment-delete'),
 ]
 
 # urlpatterns = [

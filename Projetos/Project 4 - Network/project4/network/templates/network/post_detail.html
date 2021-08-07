@@ -8,52 +8,153 @@
 
 			{% post_template postResult %}	
 
-			<div class="row">
-				<div class="col-md-12">
-					My photo and reply button
-				</div>
-			</div>
+			<hr>
 
-		
+			{% comment %} Reply to this post {% endcomment %}
+			{% if user.profile != None %}
+				<form method="post" action="{% url 'post-detail' postResult.post.id %}" >	
+					<div class="row">
+						{% comment %} Commenter's image {% endcomment %}
+						<div class="col-1 p-1">
+							<div>
+								{% if user.profile != None %}
+									<img class="rounded-circle m-1" style="width: 50px; height: 50px" src="{{ user.profile.image.url }}"/>
+								{% else %}
+									<img class="rounded-circle m-1" style="width: 50px; height: 50px" src="{% static "profile_pics/default.png" %}"/>
+								{% endif %}
+							</div>
+						</div>						
+							
+						<div class="col-9">				
+							<div class="new_tweet_form">
+								{% csrf_token %}
+								{% comment %} <input type="hidden" name="current_postid" value="{{ current_post.id }}" /> {% endcomment %}
+								<fieldset class="form-group">
+									<textarea name="content" class="form-control mt-1" rows="2" placeholder="Post your reply"></textarea>
+								</fieldset>
+							</div>
+						</div>
+
+						<div class="col-2 d-flex flex-column">	
+							<div class="form-group text-end mt-auto">
+								<button class="btn btn-primary btn-rounded " type="submit"> Reply </button>
+							</div>
+						</div>							
+					</div>
+				</form>
+			{% endif %}
+
+			{% comment %} Separator {% endcomment %}
+			<div class="mt-2 mb-2" style="width: 100%; height: 10px; background-color: rgba(255, 255, 255, 0.1)"></div>
+
+			{% comment %} Comments List {% endcomment %}
 			<div class="row pl-3">
-				<div class="col-12 col-md-6 pl-0">
+				<div class="col-12 ">
 					<h3 class="white-important mb-3">Comments</h3>
 					{% for comment in comments %}
-						<article class="media content-section">
-							<div style="width: 100%; word-break: break-all" class="hovered-tweet-comment-in">
-								<div class="pb-2 row m-0" style="width: 100%; margin-right: 0 !important">
-									<div style="padding-left: 0px !important" class="col-8 no-padding d-flex align-items-center">
-										<img class="rounded-circle mr-2" style="width: 20px; height: 20px" src="{{ comment.author.profile.image.url }}" />
-										<a class="mr-2 white-important" href="{% url 'user-posts' comment.author.username %}">
-											{{ comment.author }}
-										</a>
+						<div class="ms-4">
+							<article class="media content-section hovered-post" data-postid="{{postResult.post.id}}">
+								<div class="row">
+									{% comment %} User Photo and Name {% endcomment %}
+									<div class="col-1 ">
+										<img class="rounded-circle m-1" style="width: 30px; height: 30px" src="{{ comment.author.profile.image.url }}" />
+									</div>
+
+									{% comment %} Tweet {% endcomment %}
+									<div class="col-11 ps-3">
+										{% comment %} Tweet Header {% endcomment %}
+										<div class="row">
+											<div class="col-10">
+												<a class="white-important" href="{% url 'user-posts' comment.author.username %}">
+													{{ comment.author }}
+												</a>
+												<span class="ps-1"> {{ comment.author.email }} <span>
+											</div>
+
+											{% comment %} Post Action Buttons {% endcomment %}
+											<div class="col-2 text-end pe-2">
+												{% if comment.author == user %}
+													<div class="d-inline-flex">
+														<div class="d-inline-flex roundedLikeButtonContainer">
+															<a href="javascript:void(0)" 
+																data-bs-toggle="tooltip" 
+																data-bs-placement="bottom" 
+																data-commentid="{{comment.id}}"
+																title="Delete" class="deleteComment">
+																	<i class="fas fa-trash-alt"></i>
+															</a>
+														</div>	
+													</div>
+													<div class="d-inline-flex">
+														{% comment %} For now, isnt possible to edit a comment {% endcomment %}
+														{% comment %} <div class="d-inline-flex roundedLikeButtonContainer">
+															<a href="javascript:void(0)" 
+																data-bs-toggle="tooltip" 
+																data-bs-placement="bottom" 
+																data-postid="{{comment.id}}"
+																title="Update" class="updateComment">
+																	<i class="far fa-edit"></i>
+															</a>
+														</div> {% endcomment %}
+													</div>
+												{% endif %}
+											</div>
+
+										</div>
+											
+										{% comment %} Comment Content {% endcomment %}
+										<div class="row">
+											<div class="col-12">
+												<p style="color: rgba(255, 255, 255, 0.5) !important" class="mb-4">{{ comment.content }}</p>
+											</div>
+										</div>
+
+										{% comment %} Tweet Footer {% endcomment %}
+										<div class="row">
+											<div class="col-6">
+												{% comment %} I will not implement the "like a comment" functionality right now {% endcomment %}
+												{% comment %} <div class="d-inline-flex">
+													<div class="d-inline-flex roundedLikeButtonContainer pt-1">
+														<a href="javascript:void(0)" 
+															data-postid="{{postResult.post.id}}"
+															class="likePost">
+																{% if postResult.liked %}													
+																	<i id="likeIcon{{postResult.post.id}}" class="fas fa-heart"></i>
+																{% else %}
+																	<i id="likeIcon{{postResult.post.id}}" class="far fa-heart"></i>
+																{% endif %}
+														</a>
+													</div>
+													<div class="d-inline-flex">
+														<span class="pt-1 likeCount{{postResult.post.id}}">{{postResult.post.LikeCount}}</span>
+													</div>
+												</div> {% endcomment %}
+												
+												{% comment %} <span class="m-1">|</span> {% endcomment %}
+												
+												{% comment %} I will not implement the "reply a reply" function right now {% endcomment %}
+												{% comment %} <div class="d-inline m-1">
+													<a href="/post/{{postResult.post.id}}/"
+														data-postid="{{postResult.post.id}}"
+														class="commentPost">
+														<i class="far fa-comment"></i> {{ postResult.post.CommentsCount }} comment(s) 
+													</a>
+												</div> {% endcomment %}
+											</div>
+
+											<div class="col-6">
+												<div class="text-end" >
+													<span class="align-middle">{{ postResult.post.date_posted | date:"H:i l, d.m.y" }}</span>							
+												</div>	
+											</div>
+										
+										</div>
 									</div>
 								</div>
-								<div class="mb-2" style="width: 100%; height: 1px; background-color: rgba(255, 255, 255, 0.1)" ></div>
-								<a style="color: rgba(255, 255, 255, 0.5) !important">
-									<p>{{ comment.content }}</p>
-
-									<small class="white-important d-flex full-width flex-row-reverse">
-										{{ comment.date_posted | date:"H:i l, d.m.y" }}
-									</small>
-								</a>
-							</div>
-						</article>
-					{% endfor %}
-				</div>
-			{% if user is not None %}
-				<div class="col-12 col-md-6 pl-0 pl-md-3 pr-3">
-					<h3 class="white-important mb-3">Add a comment</h3>
-					<form method="POST">
-						{% csrf_token %}
-						{% comment %} <fieldset class="form-group">{{ form | crispy }}</fieldset> {% endcomment %}
-						<fieldset class="form-group">{{ form }}</fieldset>
-						<div class="form-group">
-							<button class="btn btn-outline-primary" type="submit">Submit comment</button>
+							</article>	
 						</div>
-					</form>
+					{% endfor %}	
 				</div>
-			{% endif %}
 			</div>
 	</div>
 {% endblock content %}

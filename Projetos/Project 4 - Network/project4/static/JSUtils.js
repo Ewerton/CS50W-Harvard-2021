@@ -3,14 +3,14 @@ const home_url = "/"
 $(document).ready(function () {
 	// Handles the click to delete a post
 	$(".deletePost").click(function (event) {
-		var tweetId = $(this).data("tweetid");
-		DeletePost(tweetId);
+		var postId = $(this).data("postid");
+		DeletePost(postId);
 	});
 
 	// Handles the click to edit a post
 	$(".updatePost").click(function (event) {
-		var tweetId = $(this).data("tweetid");
-		UpdatePost(tweetId);
+		var postId = $(this).data("postid");
+		UpdatePost(postId);
 	});
 
 	$(".newPost").click(function (event) {
@@ -44,6 +44,18 @@ $(document).ready(function () {
 			}
 		}
 	);
+
+	$(".deleteComment").click(function (event) {
+		var commentId = $(this).data("commentid");
+		DeleteComment(commentId);
+	});
+
+	// Handles the click to edit a post
+	// For now, inst possible to edit a comment
+	// $(".updateComment").click(function (event) {
+	// 	var postId = $(this).data("postid");
+	// 	UpdateComment(postId);
+	// });
 
 	//reload_navbar();
 	//reload_user_profile();
@@ -142,10 +154,10 @@ function FollowUser(userIdToFollow) {
 	});
 }
 
-function DeletePost(tweetId) {
-	if (tweetId > 0) {
+function DeletePost(postId) {
+	if (postId > 0) {
 		Swal.fire({
-			title: "Delete Tweet?",
+			title: "Delete Post?",
 			text: "This can’t be undone and it will be removed from your profile, the timeline of any accounts that follow you, and from Twitter search results.",
 			showCancelButton: true,
 			confirmButtonColor: "#e02460",
@@ -153,10 +165,10 @@ function DeletePost(tweetId) {
 		}).then((result) => {
 			if (result.isConfirmed) {
 				$.ajax({
-					url: "/post/" + tweetId + "/del",
+					url: "/post/" + postId + "/del",
 					type: "DELETE",
 					success: function (data) {
-						Swal.fire("Deleted!", "Your tweet has been deleted.", "success");
+						Swal.fire("Deleted!", "Your post has been deleted.", "success");
 						//location.reload();
 						window.location.href = home_url ; //reloads the home
 					},
@@ -184,10 +196,10 @@ function NewPost(tweetId) {
 	});
 }
 
-function UpdatePost(tweetId) {
-	if (tweetId > 0) {
+function UpdatePost(postId) {
+	if (postId > 0) {
 		$.ajax({
-			url: "/post/" + tweetId + "/update",
+			url: "/post/" + postId + "/update",
 			type: "GET",
 			success: function (data) {
 				Swal.fire({
@@ -243,6 +255,51 @@ function SetUnliked(postId){
 	likeCount --;
 	likeCountSpan.text(likeCount);
 }
+
+
+function DeleteComment(commentId) {
+	if (commentId > 0) {
+		Swal.fire({
+			title: "Delete Comment?",
+			showCancelButton: true,
+			confirmButtonColor: "#e02460",
+			confirmButtonText: "Delete",
+		}).then((result) => {
+			if (result.isConfirmed) {
+				$.ajax({
+					url: "/comment/" + commentId + "/del",
+					type: "DELETE",
+					success: function (data) {
+						Swal.fire("Deleted!", "Your comment has been deleted.", "success");
+						location.reload();
+						//window.location.href = home_url ; //reloads the home
+					},
+					error: function (data) {
+						console.log("Error: " + data.responseText);
+					},
+				});
+			}
+		});
+	}
+}
+
+// For now, isnt possible to edit a comment
+// function UpdateComment(postId) {
+// 	if (postId > 0) {
+// 		$.ajax({
+// 			url: "/post/" + postId + "/update",
+// 			type: "GET",
+// 			success: function (data) {
+// 				Swal.fire({
+// 					html: data,
+// 					showCancelButton: false, 
+// 					showConfirmButton: false,
+// 					showCloseButton: true
+// 				  });
+// 			},
+// 		});
+// 	}
+// }
 
 /**** Utilities function ****/
 function addClass(elem, clazz) {

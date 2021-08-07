@@ -188,29 +188,29 @@ ul {
 	list-style: none !important;
 }
 
-.hovered-tweet {
+.hovered-post {
 	background-color: #90909017;
 	/* border-radius: 20px; */
 }
 
-.hovered-tweet {
+.hovered-post {
 	border: 1px solid transparent;
 }
 
-.hovered-tweet:hover {
+.hovered-post:hover {
 	-webkit-transition: background-color ease-in-out 0.2s;
 	-webkit-transition: border ease-in-out 0.2s;
 	background-color: #b6b6b62d !important;
 }
 
-.hovered-tweet-comment {
+.hovered-post-comment {
 	background-color: rgb(21, 24, 28) !important;
 	padding: 15px;
 	border-radius: 20px;
 	border: 1px solid grey;
 }
 
-.hovered-tweet-comment-in {
+.hovered-post-comment-in {
 	background-color: rgb(21, 24, 28) !important;
 	padding: 12px;
 	border-radius: 20px;
@@ -258,17 +258,17 @@ input[type="file"]::-webkit-file-upload-button {
   color: white !important;
 } */
 
-textarea[name="text_new_tweet"] {
-	color: #fff;
-	background-color: rgb(0, 0, 0);
-	border: none;
-	font-size: larger;
+textarea{
+	color: #fff !important;
+	background-color: rgb(0, 0, 0) !important;
+	border: none !important;
+	font-size: larger !important;
 }
 
-textarea[name="text_new_tweet"]:focus {
-	color: #fff;
-	background-color: rgb(0, 0, 0);
-	border: none;
+textarea:focus {
+	color: #fff !important;
+	background-color: rgb(0, 0, 0) !important;
+	border: none !important;
 }
 
 hr {

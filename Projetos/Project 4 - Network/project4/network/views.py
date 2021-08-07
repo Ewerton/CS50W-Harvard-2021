@@ -27,6 +27,7 @@ from network.templatetags import network_extras
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Q
 register = template.Library()
+from django.contrib import messages
 
 PAGINATION_COUNT = 3
 
@@ -547,18 +548,66 @@ def like_unlike(request, postid):
 def post_detail(request, postid):
     post = Post.objects.get(pk=postid) 
     postResult = get_postresult(request.user, post)
+
+    if request.method == "POST":
+        if (request.POST.get('content') != None):
+            new_comment = Comment(content=request.POST.get('content'),
+                                author=request.user,
+                                post=post)
+            new_comment.save()
+        else:
+            messages.error(request, f'Your reply can''t be empty.')
+
     comments = Comment.objects.filter(post=post).order_by('-date_posted')
-
-    # def post(self, request, *args, **kwargs):
-    #     new_comment = Comment(content=request.POST.get('content'),
-    #                           author=self.request.user,
-    #                           post_connected=self.get_object())
-    #     new_comment.save()
-
+    
     return render(request, "network/post_detail.html", {
         "postResult": postResult,
         "comments": comments
     })
+
+@login_required
+def post_comment(request, postid):
+    if request.method == "POST":
+        post = Post.objects.get(pk=postid) 
+        
+        
+
+        #postResult = get_postresult(request.user, post)
+        #comments = Comment.objects.filter(post=post).order_by('-date_posted')
+
+        # def post(self, request, *args, **kwargs):
+        #     new_comment = Comment(content=request.POST.get('content'),
+        #                           author=self.request.user,
+        #                           post_connected=self.get_object())
+        #     new_comment.save()
+
+    return render(request, "network/post_detail.html", {
+    #    "postResult": postResult,
+    #    "comments": comments
+    })
+
+@csrf_exempt
+@login_required
+def delete_comment(request, commentId):
+        
+    if request.method != "DELETE":
+        return JsonResponse({"error": "DELETE request required."}, status=400)
+    
+    if request.user.id is None:
+        return JsonResponse({"error": "No user logged in."}, status=400)
+    
+    if request.is_ajax() and request.method == 'DELETE':
+        comment = Comment.objects.get(pk=commentId)
+        comment.delete()
+
+        return JsonResponse(
+            {
+                "message": f"Post Deleted!"
+            }, 
+            status=200)
+
+
+
 
 
 # @api_view(['GET', 'POST', 'DELETE'])
