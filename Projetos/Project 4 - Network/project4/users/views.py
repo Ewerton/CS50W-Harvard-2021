@@ -89,7 +89,7 @@ def logout_view(request):
 
 
 @login_required
-def profile(request):
+def settings(request):
     current_user_profile = Profile.objects.get(user_id=request.user.id)
     
     if request.method == 'POST':
@@ -119,12 +119,12 @@ def profile(request):
             current_user_profile.save()
             messages.success(request, f'Account has been updated.')
         
-        return render(request, 'users/profile.html', {
+        return render(request, 'users/settings.html', {
             'uprof': current_user_profile
         })
         
     else:
-        return render(request, 'users/profile.html', {
+        return render(request, 'users/settings.html', {
             'uprof': current_user_profile
         })
 

@@ -19,6 +19,7 @@ class Post(models.Model):
 
     def LikedBy(self, user):
         return Preference.objects.filter(post_id=self.id, user_id=user.id, value=1).exists()
+    
     @property
     def LikeCount(self):
         return Preference.objects.filter(post_id=self.id, value=1).count()

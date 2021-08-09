@@ -1,3 +1,4 @@
+{% comment %} Renders an individual post {% endcomment %}
 <article class="media content-section hovered-post" data-postid="{{postResult.post.id}}">
     {% comment %} <div class="container-fluid"> {% endcomment %}
     <div class="row">
@@ -12,7 +13,7 @@
             {% comment %} Post Header {% endcomment %}
             <div class="row">
                 <div class="col-10">
-                     <a class="white-important" href="{% url 'user-posts' postResult.post.author %}">
+                    <a class="white-important" href="{% url 'user-posts' postResult.post.author %}">
                         {{ postResult.post.author }}
                     </a>
                     <span class="ps-1"> {{ postResult.post.author.email }} <span>
@@ -53,7 +54,7 @@
             {% comment %} Post Content (Clicking view the details of the post) {% endcomment %}
             <div class="row">
                 <div class="col-12">
-                    <a style="color: rgba(255, 255, 255, 0.5) !important" href="{% url 'post-detail' postResult.post.id %}">
+                    <a style="color: rgba(255, 255, 255, 0.5) !important" href="{% url 'post-detail' 1 %}">
                         <p class="mb-4">{{ postResult.post.content }}</p>
                     </a>
                 </div>

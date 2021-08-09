@@ -1,36 +1,34 @@
-{% comment %} {% extends "network/layout.html" %} {% endcomment %}
 {% load static %}
 
  {% if user != None %}
-
-    {% comment %} {% block content %} {% endcomment %}
-        <div class="container">     
-            <div class="row">
-                <div class="col-auto p-0">
-                    <div class="d-inline">
-                        <img class="rounded-circle " style="width: 50px; height: 50px" src="{{ user.profile.image.url }}" />
-                    </div>
+    <div class="container mb-2">     
+        <div class="row">
+            <div class="col-auto p-0">
+                <div class="d-inline">
+                    <img class="rounded-circle " style="width: 50px; height: 50px" src="{{ user.profile.image.url }}" />
                 </div>
-                <div class="col">
-                    <div class="new_tweet_form">
-                        <form method="post" action="{% url 'post-create' %}" >
-                            {% csrf_token %}
-                            <input type="hidden" name="current_postid" value="{{ current_post.id }}" />
-                            <fieldset class="form-group">
-                                <textarea name="text_new_tweet" class="form-control mt-1" rows="3" placeholder="Whats's Happening?">{{current_post.content}}</textarea>
-                            </fieldset>
-                            <hr>
-                            <div class="form-group text-end">
-                                {% if current_post != None %}
-                                    <button class="btn btn-primary btn-rounded" type="submit"> Update </button>
-                                {% else %}
-                                     <button class="btn btn-primary btn-rounded" type="submit"> Tweet </button>
-                                {% endif %}
-                            </div>
-                        </form>
-                    </div>
+            </div>
+            <div class="col">
+                <div class="new_tweet_form">
+                    <form method="post" action="{% url 'post-create' %}" >
+                        {% csrf_token %}
+                        <input type="hidden" name="current_postid" value="{{ current_post.id }}" />
+                        <fieldset class="form-group">
+                            <textarea name="text_new_tweet" class="form-control mt-1" rows="3" autofocus="autofocus" placeholder="Whats's Happening?">{{current_post.content}}</textarea>
+                        </fieldset>
+                        <hr>
+                        <div class="form-group text-end">
+                            {% if current_post != None %}
+                                <button class="btn btn-primary btn-rounded" type="submit"> Update </button>
+                            {% else %}
+                                    <button class="btn btn-primary btn-rounded" type="submit"> Tweet </button>
+                            {% endif %}
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
+    </div>
 {% endif %}
+		
 

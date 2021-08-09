@@ -1,3 +1,5 @@
+#from network.models import Post
+#from network.models import Post
 from django.db import models
 #from django.contrib.auth.models import User
 from PIL import Image
@@ -25,6 +27,7 @@ class Profile(models.Model):
     @property
     def following_count(self):
         return Follow.objects.filter(user=self.user).count()
+
 
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
         super().save()

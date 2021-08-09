@@ -271,7 +271,7 @@ function DeleteComment(commentId) {
 					type: "DELETE",
 					success: function (data) {
 						Swal.fire("Deleted!", "Your comment has been deleted.", "success");
-						location.reload();
+						location = window.location.href;
 						//window.location.href = home_url ; //reloads the home
 					},
 					error: function (data) {

@@ -296,3 +296,64 @@ hr {
 	/* Outlined blue heart.Turns red on hover */
     color: rgb(224, 36, 94)!important;
 }
+
+.fas.fa-arrow-left {
+	/* Filled red heart */ 
+    color: rgb(29, 161, 242)!important;
+	/* height: 50px; */
+}
+
+
+/*Profile Header*/
+.cover-photo {
+    position: relative;
+}
+
+.fb-timeline-img img {
+    width: 100%;
+	height:auto;
+	max-height:200px;
+    border-radius: 4px 4px 0 0;
+    -webkit-border-radius: 4px 4px 0 0;
+}
+
+.fb-name  {
+    bottom: 5px;
+    left: 175px;
+    /* position: absolute; */
+}
+
+.fb-name h2 a {
+    color: #FFFFFF;
+    text-rendering: optimizelegibility;
+    text-shadow: 0 0 3px rgba(0, 0, 0, 0.8);
+    font-size: 25px;
+}
+
+.fb-user-thumb {
+    float: left;
+    width: 70px;
+    margin-right:15px;
+}
+
+.profile-thumb img {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    -webkit-border-radius: 50%;
+    margin-top: -90px;
+	margin-left: 10px;
+    border: 3px solid #fff;
+	background-color: rgb(21, 24, 28);
+	border-color: rgb(0, 0, 0);
+}
+
+.profile-thumb {
+    /* float: left; */
+    position: relative;
+}
+
+.badge.badge-secondary{
+	color: rgb(110, 118, 125);;
+	background-color: rgb(32, 35, 39);
+}

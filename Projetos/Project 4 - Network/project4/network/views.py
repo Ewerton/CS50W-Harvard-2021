@@ -1,3 +1,5 @@
+from network.FollowResult import FollowResult
+from network.UserData import UserData
 from network.PostResult import PostResult
 from django.utils import timezone
 #import pytz
@@ -31,15 +33,16 @@ from django.contrib import messages
 
 PAGINATION_COUNT = 3
 
-
+def get_posts(user):
+    return Post.objects.filter(author_id=user.id)    
 
 # gets all the posts from a user and from the given user follows
-def get_posts(user):
+def get_posts_for_timeline(user):
     posts = []
     postResult = []
     users_i_follow = User.objects.filter(follow_user__user=user)
     posts_from_users_i_follow = Post.objects.filter(author__in=users_i_follow)
-    my_posts = Post.objects.filter(author_id=user.id)    
+    my_posts = get_posts(user)    
     
     posts.extend(my_posts)
     posts.extend(posts_from_users_i_follow)
@@ -56,13 +59,12 @@ def get_postresult(user, post):
      p = PostResult(post, post.LikedBy(user)) # checks if the current user liked the post 
      return p
 
-
 def home(request):    
     post_list = []
 
     current_user = User.objects.filter(id=request.user.id).first()
     if (current_user != None):
-        post_list = get_posts(current_user) 
+        post_list = get_posts_for_timeline(current_user) 
 
     return render(request, "network/home.html", {
         "post_list": post_list,
@@ -113,49 +115,49 @@ class PostListView(LoginRequiredMixin, ListView):
         return Post.objects.filter(author__in=follows).order_by('-date_posted')
 
 
-class UserPostListView(LoginRequiredMixin, ListView):
-    model = Post
-    template_name = 'blog/user_posts.html'
-    context_object_name = 'posts'
-    paginate_by = PAGINATION_COUNT
+# class UserPostListView(LoginRequiredMixin, ListView):
+#     model = Post
+#     template_name = 'blog/user_posts.html'
+#     context_object_name = 'posts'
+#     paginate_by = PAGINATION_COUNT
 
-    def visible_user(self):
-        return get_object_or_404(User, username=self.kwargs.get('username'))
+#     def visible_user(self):
+#         return get_object_or_404(User, username=self.kwargs.get('username'))
 
-    def get_context_data(self, **kwargs):
-        visible_user = self.visible_user()
-        logged_user = self.request.user
-        print(logged_user.username == '', file=sys.stderr)
+#     def get_context_data(self, **kwargs):
+#         visible_user = self.visible_user()
+#         logged_user = self.request.user
+#         print(logged_user.username == '', file=sys.stderr)
 
-        if logged_user.username == '' or logged_user is None:
-            can_follow = False
-        else:
-            can_follow = (Follow.objects.filter(user=logged_user,
-                                                follow_user=visible_user).count() == 0)
-        data = super().get_context_data(**kwargs)
+#         if logged_user.username == '' or logged_user is None:
+#             can_follow = False
+#         else:
+#             can_follow = (Follow.objects.filter(user=logged_user,
+#                                                 follow_user=visible_user).count() == 0)
+#         data = super().get_context_data(**kwargs)
 
-        data['user_profile'] = visible_user
-        data['can_follow'] = can_follow
-        return data
+#         data['user_profile'] = visible_user
+#         data['can_follow'] = can_follow
+#         return data
 
-    def get_queryset(self):
-        user = self.visible_user()
-        return Post.objects.filter(author=user).order_by('-date_posted')
+#     def get_queryset(self):
+#         user = self.visible_user()
+#         return Post.objects.filter(author=user).order_by('-date_posted')
 
-    def post(self, request, *args, **kwargs):
-        if request.user.id is not None:
-            follows_between = Follow.objects.filter(user=request.user,
-                                                    follow_user=self.visible_user())
+#     def post(self, request, *args, **kwargs):
+#         if request.user.id is not None:
+#             follows_between = Follow.objects.filter(user=request.user,
+#                                                     follow_user=self.visible_user())
 
-            if 'follow' in request.POST:
-                    new_relation = Follow(user=request.user, follow_user=self.visible_user())
-                    if follows_between.count() == 0:
-                        new_relation.save()
-            elif 'unfollow' in request.POST:
-                    if follows_between.count() > 0:
-                        follows_between.delete()
+#             if 'follow' in request.POST:
+#                     new_relation = Follow(user=request.user, follow_user=self.visible_user())
+#                     if follows_between.count() == 0:
+#                         new_relation.save()
+#             elif 'unfollow' in request.POST:
+#                     if follows_between.count() > 0:
+#                         follows_between.delete()
 
-        return self.get(self, request, *args, **kwargs)
+#         return self.get(self, request, *args, **kwargs)
 
 
 # class PostDetailView(DetailView):
@@ -224,40 +226,40 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         return data
 
 
-class FollowsListView(ListView):
-    model = Follow
-    template_name = 'network/follow.html'
-    context_object_name = 'follows'
+# class FollowsListView(ListView):
+#     model = Follow
+#     template_name = 'network/follow.html'
+#     context_object_name = 'follows'
 
-    def visible_user(self):
-        return get_object_or_404(User, username=self.kwargs.get('username'))
+#     def visible_user(self):
+#         return get_object_or_404(User, username=self.kwargs.get('username'))
 
-    def get_queryset(self):
-        user = self.visible_user()
-        return Follow.objects.filter(user=user).order_by('-date')
+#     def get_queryset(self):
+#         user = self.visible_user()
+#         return Follow.objects.filter(user=user).order_by('-date')
 
-    def get_context_data(self, *, object_list=None, **kwargs):
-        data = super().get_context_data(**kwargs)
-        data['follow'] = 'follows'
-        return data
+#     def get_context_data(self, *, object_list=None, **kwargs):
+#         data = super().get_context_data(**kwargs)
+#         data['follow'] = 'follows'
+#         return data
 
 
-class FollowersListView(ListView):
-    model = Follow
-    template_name = 'network/follow.html'
-    context_object_name = 'follows'
+# class FollowersListView(ListView):
+#     model = Follow
+#     template_name = 'network/follow.html'
+#     context_object_name = 'follows'
 
-    def visible_user(self):
-        return get_object_or_404(User, username=self.kwargs.get('username'))
+#     def visible_user(self):
+#         return get_object_or_404(User, username=self.kwargs.get('username'))
 
-    def get_queryset(self):
-        user = self.visible_user()
-        return Follow.objects.filter(follow_user=user).order_by('-date')
+#     def get_queryset(self):
+#         user = self.visible_user()
+#         return Follow.objects.filter(follow_user=user).order_by('-date')
 
-    def get_context_data(self, *, object_list=None, **kwargs):
-        data = super().get_context_data(**kwargs)
-        data['follow'] = 'followers'
-        return data
+#     def get_context_data(self, *, object_list=None, **kwargs):
+#         data = super().get_context_data(**kwargs)
+#         data['follow'] = 'followers'
+#         return data
 
 
 # Like Functionality====================================================================================
@@ -392,12 +394,6 @@ def post_list(request):
     pass
 
 
-
-# renders the show_results template
-def test_ajax(request):
-    context = Context({'request': request})
-    return render(request, 'network/results.html' , network_extras.show_results(context) )
-
 # renders the profile_card template
 @login_required
 def profilecard(request):
@@ -448,8 +444,8 @@ def follow_unfollow(request):
                 "Message": f"The user {request.user.username} is not following {user_to_follow.username} anymore!"
             },
             status=200)
-    
 
+### POSTS
 @csrf_exempt
 @login_required
 def delete_post(request, postid):
@@ -468,7 +464,6 @@ def delete_post(request, postid):
             }, 
             status=200)
 
-# render the post_new template
 @login_required
 def save_post(request):
     if request.method == "POST":
@@ -565,6 +560,7 @@ def post_detail(request, postid):
         "comments": comments
     })
 
+### COMMENTS ###
 @login_required
 def post_comment(request, postid):
     if request.method == "POST":
@@ -607,8 +603,49 @@ def delete_comment(request, commentId):
             status=200)
 
 
+### USERS
+@login_required
+def user_posts(request, username):
+    user_to_view = User.objects.get(username=username)
+    posts_results_from_user = []
+    
+    for post in get_posts(user_to_view):
+        p = get_postresult(request.user, post) #p = PostResult(post, post.LikedBy(user)) # checks if the current user liked the post 
+        posts_results_from_user.append(p)
+
+    user_data = UserData(user_to_view)
+
+    return render(request, "network/user_posts.html", {
+        "user_data": user_data,
+        "posts_results": posts_results_from_user
+    })
 
 
+def followers(request, username):
+    follow_result_list = []
+    followers = Follow.objects.filter(follow_user=request.user).order_by('-date')
+    for fol in followers:
+        do_you_follow = Follow.objects.filter(follow_user=fol.user, user=request.user).count() > 0 # checks I follow the user who follows me
+        f = FollowResult(fol.user, True, do_you_follow) 
+        follow_result_list.append(f)
+    
+    return render(request, "network/follow.html", {
+        "follow": "followers",
+        "follow_results": follow_result_list,
+    })
+   
+def following(request, username):
+    follow_result_list = []
+    following = Follow.objects.filter(user=request.user).order_by('-date')
+    for fol in following:
+        follow_you = Follow.objects.filter(follow_user=request.user, user=fol.follow_user).count() > 0 # checks if the followed user follows me
+        f = FollowResult(fol.follow_user, follow_you, True) 
+        follow_result_list.append(f)
+    
+    return render(request, "network/follow.html", {
+        "follow_type": "following",
+        "follow_results": follow_result_list,
+    })
 
 # @api_view(['GET', 'POST', 'DELETE'])
 # def post_list(request):

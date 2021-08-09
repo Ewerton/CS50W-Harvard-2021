@@ -7,14 +7,6 @@ from django.db.models import Count
 
 register = template.Library()
 
-
-
-@register.inclusion_tag('network/results.html', takes_context=True)
-def show_results(context):
-    request = context['request']
-    choices = ['a', 'b', 'c', request.user.username, datetime.now().strftime("%d/%m/%Y %H:%M:%S") ]
-    return {'choices': choices}
-
 @register.inclusion_tag('network/navbar.html', takes_context=True)
 def navbar_template(context):
     request = context['request']
@@ -22,10 +14,16 @@ def navbar_template(context):
     return {'user': current_user}
 
 @register.inclusion_tag('network/profile_card.html', takes_context=True)
-def profilecard_template(context):
+def profilecard_template(context, user):
     request = context['request']
     current_user = get_current_user(request)
-    return {"current_user": current_user }
+    user_to_view = user
+    can_current_user_follow = Follow.objects.filter(user=current_user, follow_user=user_to_view).count() == 0
+    return {
+            "user_to_view": user_to_view,    
+            "user": current_user,
+            "can_current_user_follow": can_current_user_follow  
+            }
 
 # Returns a list of user which posts frequently, except the current logged user
 @register.inclusion_tag('network/who_to_follow.html', takes_context=True)
@@ -49,7 +47,7 @@ def who_to_follow(context):
                 users_to_follow.append(user_to_follow)
     
     return {"users_to_follow": users_to_follow,
-            "logged_user": request.user }
+            "user": request.user }
 
 # Render the form to add a new post
 @register.inclusion_tag('network/post_new.html', takes_context=True)
@@ -67,13 +65,21 @@ def save_post_template(context):
 # Render the form to add a new post
 @register.inclusion_tag('network/post.html', takes_context=True)
 def post_template(context, postResult):
-    request = context['request']
-    current_user = get_current_user(request)
+    #request = context['request']
+    #current_user = get_current_user(request)
     return {
+        "user": context.request.user, 
         "postResult": postResult, 
-        "user": current_user, 
         }
 
+@register.inclusion_tag('network/postlist_template.html', takes_context=True)
+def postlist_template(context, posts_results):
+    #request = context['request']
+    #current_user = context.request.user
+    return {
+            "user": context.request.user,
+            "post_results": posts_results   
+            }
 
 # Utility functions
 def get_current_user(request):

@@ -1,17 +1,83 @@
 {% extends "network/layout.html" %} 
 {% block content %}
-<div class="container">
-	{% if follow == 'follows' %}
+
+    <div class="row ps-3">
+        <div class="col-1">
+            <a href="{% url 'home' %}">  
+                <i class="fas fa-arrow-left fa-lg pt-2"></i>
+            </a>
+        </div>
+        <div class="col-11">
+            <div class="row">
+                <div class="col-12">
+                    {% if follow_type == 'following' %}
+                        <h4 class="white-important mb-3">Following</h4>
+                    {% else %}
+                        <h4 class="white-important mb-3">Followers</h4>
+                    {% endif %} 
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% for item in follow_results %}
+        <div class="profile-section mb-4">
+            <div class="row p-2">
+                <div class="col-auto">
+                    <img class="rounded-circle mr-2 mt-1" style="width: 40px; height: 40px" src="{{ item.user.profile.image.url }}" />
+                </div>
+                <div class="col align-self-center">
+                    <a class="mr-2 white-important" href="{% url 'user-posts' item.user.username %}"> {{ item.user.username }} </a>
+                    <div>
+                        <div class="d-inline">{{item.user.email}}</div> 
+                        {% if item.follow_you %} 
+                            <span class="badge badge-secondary ms-2">Follows you</span>   
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-2 align-self-center me-4">
+                    {% if item.do_you_follow %} 
+                        <button class="btn btn-sm btn-primary btn-rounded"  name="btnFollow"
+                                data-useridtofollow="{{item.user.id}}" 
+                                data-loggeduserid="{{user.id}}" >
+                                Following
+                        </button>
+                    {% else %}
+                        <button class="btn btn-sm btn-outline-primary btn-rounded"  name="btnFollow"
+                                data-useridtofollow="{{item.user.id}}" 
+                                data-loggeduserid="{{user.id}}" >
+                                Follow
+                        </button>
+                    {% endif %}
+                    
+                </div>
+            </div>
+        </div>
+    {% empty %}
+        <article class="media content-section hovered-post">
+            {% if follow_type == 'following' %}
+                <h4 class="white-important mb-3">You arent following no one.</h4>
+            {% else %}
+                <h4 class="white-important mb-3">you have no followers.</h4>
+            {% endif %}
+        </article>
+    {% endfor %}
+{% endblock %}
+
+
+<hr
+{% comment %} <div class="container">
+	{% if follow_type == 'following' %}
         <div class="col-12 no-padding">
             <h3 class="white-important mb-3">Follows</h3>
             <div class="row pr-3 pl-3">
-                {% for follow in follows %}
+                {% for item in follow_results %}
                     <div class="col-6 col-md-3 pl-0">
                         <article class="media content-section">
                             <div>
-                                <img class="rounded-circle mr-2" style="width: 20px; height: 20px" src="{{ follow.follow_user.profile.image.url }}" />
-                                <a class="mr-2 white-important" href="{% url 'user-posts' follow.follow_user.username %}">
-                                    {{ follow.follow_user.username }}
+                                <img class="rounded-circle mr-2" style="width: 20px; height: 20px" src="{{ item.follow_obj.follow_user.profile.image.url }}" />
+                                <a class="mr-2 white-important" href="{% url 'user-posts' item.follow_obj.follow_user.user.username %}">
+                                    {{ item.follow_obj.follow_user.username }}
                                 </a>
                             </div>
                         </article>
@@ -20,17 +86,17 @@
             </div>
         </div>
 	{% endif %} 
-    {% if follow == 'followers' %}
+    {% if follow_type == 'followers' %}
         <div class="col-12 no-padding">
             <h3 class="white-important mb-3">Followers</h3>
             <div class="row pr-3 pl-3">
-                {% for follow in follows %}
+                {% for follow in follow_results %}
                     <div class="col-6 col-md-3 pl-0">
                         <article class="media content-section">
                             <div>
-                                <img class="rounded-circle mr-2" style="width: 20px; height: 20px" src="{{ follow.user.profile.image.url }}" />
-                                <a class="mr-2 white-important" href="{% url 'user-posts' follow.user.username %}">
-                                    {{ follow.user.username }}
+                                <img class="rounded-circle mr-2" style="width: 20px; height: 20px" src="{{ item.follow_obj.user.profile.image.url }}" />
+                                <a class="mr-2 white-important" href="{% url 'user-posts' item.follow_obj.user.username %}">
+                                    {{ item.follow_obj.user.username }}
                                 </a>
                             </div>
                         </article>
@@ -38,6 +104,5 @@
                 {% endfor %}
             </div>
         </div>
-</div>
-{% endif %} 
-{% endblock content %}
+</div> {% endcomment %}
+

@@ -31,7 +31,6 @@
 		<title>TweetClone</title>
 	</head>
 	<body >
-
 	<div class="container">
 		<main role="main" class="">
 			<div class="row">
@@ -51,7 +50,8 @@
 						<div class="col-12 pt-4">
 							{% if user.is_authenticated %} 
 								<div class="profilecard_placeholder">
-									{% profilecard_template %} 
+									{% comment %} {% profilecard_template %}  {% endcomment %}
+								Profile?
 								</div>								
 							{% endif %}
 						</div>

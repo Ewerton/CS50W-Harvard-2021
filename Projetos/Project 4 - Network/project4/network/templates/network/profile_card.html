@@ -1,79 +1,55 @@
 {% load static %}
 
- {% if current_user != None %}
-    <div class="profile-section">
-        <article class="content-section">
-            
-            {% comment %} Profile {% endcomment %}
-            <div class="row">
-                <div class="col-12">
-                    <h4 class="white-important p-2">Profile</h4>
-                </div>
-                <div class="col-12">
-                    <div class="row">
-                        <div class="col-auto">
-                            <div>
-                                {% if current_user.profile != None %}
-                                    <img class="rounded-circle mr-3 img-fluid" style="width: 90px; height: 90px" src="{{ current_user.profile.image.url }}"/>
-                                {% else %}
-                                    <img class="rounded-circle mr-3 img-fluid" style="width: 90px; height: 90px" src="{% static "profile_pics/default.png" %}"/>
-                                {% endif %}
-                            </div>
-                        </div>
-                        <div class="col-auto">
-                            <div>                               
-                                <h4 style="text-align: left" class="white-important">{{ current_user.username }}</h4>
-                            </div>
-                            <div>
-                                <h6 style="text-align: left" class="email-profile">{{ current_user.email }}</h6>
-                            </div>
-                        </div>
+<div class="row">
+	<div class="">
+		<div class="cover-photo">
+			<div class="fb-timeline-img">
+                <img src="{% static "profile_pics/default_profile_bg.jpg" %}" alt="">
+            </div>
+		</div>
+
+		<div class="panel-body">
+			<div class="profile-thumb roundedThumbContainer">
+				{% if user_to_view.profile != None %}
+				    <img src="{{ user_to_view.profile.image.url }}" />
+				{% else %} 
+                    <img src="{% static "profile_pics/default.png" %}" /> 
+                {% endif %}
+
+				<div class="float-end">
+                    {% comment %} If viewing my own profile page {% endcomment %}
+					{% if user_to_view == user %}
+					    <button class="btn btn-outline-primary btn-rounded mt-2" name="btnEditProfile" onclick="location.href='/profile'">Edit Profile</button>
+					{% else %}
+                        <button class="btn btn-primary btn-rounded mt-2" name="btnFollow" data-useridtofollow="{{user_to_view.id}}" data-loggeduserid="{{user.id}}" > 
+                            {% if can_current_user_follow %} Follow {% else %} Following {% endif %}
+                        </button>
+					{% endif %}
+				</div>
+
+				<div>
+					<h2 class="m-0">{{user_to_view.username}}</h2>
+					<span>{{user_to_view.email}}</span>
+				</div>
+
+				<div>
+					<div class="pt-3">
+						{% comment %} Other profile data to be added here {% endcomment %}
+						<i class="far fa-calendar-alt"></i>
+						Joined {{user_to_view.date_joined|date:"F Y"}}
+					</div>
+					<div class="d-inline pe-3">
+                        <a href="{% url 'user-following' user_to_view %}">
+                            <span class="white-important">{{user_to_view.profile.following_count}}</span> Following
+                        </a>
                     </div>
-                </div>
-            </div>
-        
-            {% comment %} Following / Followers {% endcomment %}
-            <div class="row mt-4"> 
-                <div class="col-6">
-                    <h5>Followers</h5>
-                </div>
-                <div class="col-6">
-                    <h5>Following</h5>
-                </div>	
-            </div>	
-            <div class="row">
-                <div class="col-6">                   
-                    <a href="{% url 'user-followers' current_user.username %}">
-                        <h3 class="white-important follow-click">{{ current_user.profile.followers }}</h3>
-                    </a>
-                </div>
-                <div class="col-6">
-                    <a href="{% url 'user-follows' current_user.username %}">
-                        <h3 class="white-important follow-click">{{ current_user.profile.following }}</h3>
-                    </a>
-                </div>   
-            </div>
-
-        
-            {% comment %} Tweet / Follow / Unfollow Buttons {% endcomment %}
-            <div class="row mt-4">
-                <div class="col-12 ">
-                    {% comment %} <a class="btn btn-primary btn-rounded" href="{% url 'post-create' %}"> Tweet </a> {% endcomment %}
-
-                    {% if current_user is not None and user_profile.id != user.id and user.username != '' %}
-                        <form method="POST">
-                            {% csrf_token %}
-                            <div class="form-group">
-                                <button style="margin-left: 18px" class="btn btn-sm btn-outline-primary"
-                                    name="{% if can_follow %}follow{% else %}unfollow{% endif %}" type="submit">
-                                    {% if can_follow %} FOLLOW {% else %} UNFOLLOW {% endif %}
-                                </button>
-                            </div>
-                        </form>
-                    {% endif %}
-                </div>
-            </div>
-        </article>	
-
-    </div>
-{% endif %}
+					<div class="d-inline pe-3">
+                        <a href="{% url 'user-followers' user_to_view %}">
+						    <span class="white-important">{{user_to_view.profile.followers_count}}</span> Followers
+                        </a>
+                    </div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

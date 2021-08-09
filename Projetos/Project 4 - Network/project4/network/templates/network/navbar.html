@@ -17,23 +17,12 @@
             </a>
         </div
     </li>
-    {% comment %} {% if user.is_authenticated %} 
-        <li class="nav-item">
-            <div class="nav-itemdiv">					
-                <a class="nav-link" href="{% url 'post-create' %}">
-                    <i class="far fa-edit"></i>
-                    <span class="navbar-text">Create a Post</span>
-                </a>
-            </div>
-        </li>
-    {% endif %} {% endcomment %}
-    
     {% if user.is_authenticated %} 
         <li class="nav-item">
             <div class="nav-itemdiv">						
-                <a class="nav-link" href="{% url 'profile' %}">
+                <a class="nav-link" href="{% url 'user-posts' user.username %}">
                     <i class="far fa-id-card"></i>
-                    <span class="navbar-text">Profile (ir para meu perfil)</span>
+                    <span class="navbar-text">Profile</span>
                 </a>
             </div>
         </li>
@@ -70,7 +59,7 @@
     {% if user.is_authenticated %} 
         <li class="nav-item">
             <div class="nav-itemdiv">						
-                <a class="nav-link" href="{% url 'profile' %}">
+                <a class="nav-link" href="{% url 'settings' %}">
                     <i class="fas fa-cog"></i>
                     <span class="navbar-text">Settings</span>
                 </a>

@@ -1,1 +1,33 @@
-{% extends "network/home.html" %}
+{% extends "network/layout.html" %} 
+{% load network_extras %}
+{% comment %} {% load static %}  {% endcomment %}
+{% block content %}
+
+    {% comment %} Title and Tweet count  Row {% endcomment %}
+    <div class="row ps-3">
+        <div class="col-1 pt-1 ">
+            <a href="{% url 'home' %}">  
+                <i class="fas fa-arrow-left fa-lg pt-2"></i>
+            </a>
+        </div>
+        <div class="col-11">
+            <div class="row">
+                <div class="col-12">
+                    <h4 class="white-important m-0 p-0">{{user_data.user.username}}</h4>
+                    <span class="">{{user_data.post_count}} Posts</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    {% comment %} Profile Header {% endcomment %}
+    {% profilecard_template user_data.user %}	
+
+    <hr>
+
+    {% comment %} Posts from the user {% endcomment %}
+    {% postlist_template posts_results %}	
+
+{% endblock content %}
+

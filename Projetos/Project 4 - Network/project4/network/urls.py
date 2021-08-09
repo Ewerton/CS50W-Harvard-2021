@@ -1,16 +1,17 @@
 from django.urls import path
 from .views import (
-    PostListView,
+    # PostListView,
     # PostDetailView,
     PostCreateView,
     PostUpdateView,
     # PostDeleteView,
-    UserPostListView,
-    FollowsListView,
-    FollowersListView,
+    #UserPostListView,
+    #FollowsListView,
+    #FollowersListView,
     home,
     postpreference,
-    post_list)
+    post_list,
+    user_posts)
 from .import views
 from django.urls import include
 from . import views
@@ -31,11 +32,11 @@ urlpatterns = [
     # path('post/new/', PostCreateView.as_view(), name='post-create'),
     
     #path('post/<int:pk>/', PostDetailView.as_view(), name='post-detail'),
-    path('user/<str:username>', UserPostListView.as_view(), name='user-posts'),
+    path('user/<str:username>', views.user_posts, name='user-posts'),
     
     # path('post/<int:pk>/del/', PostDeleteView.as_view(), name='post-delete'),
-    path('user/<str:username>/follows', FollowsListView.as_view(), name='user-follows'),
-    path('user/<str:username>/followers', FollowersListView.as_view(), name='user-followers'),
+  
+   
     path('post/<int:postid>/preference/<int:userpreference>', postpreference, name='postpreference'),
     #path('l/', include(router.urls)),
     #path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
@@ -51,6 +52,9 @@ urlpatterns = [
     path('post/<int:postid>/del/', views.delete_post, name='post-delete'),
     path('post/<int:postid>/like/', views.like_unlike, name='post-like'), #used for the unlike operation
     path('comment/<int:commentId>/del/', views.delete_comment, name='comment-delete'),
+
+    path('user/<str:username>/following', views.following, name='user-following'),
+    path('user/<str:username>/followers', views.followers, name='user-followers'),
 ]
 
 # urlpatterns = [
