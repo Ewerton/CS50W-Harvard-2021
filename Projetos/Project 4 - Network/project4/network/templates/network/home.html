@@ -5,20 +5,21 @@
 
 	{% comment %} Title and Tweet count  Row {% endcomment %}
 	<div class="row">
-		<div class="col-6">
-			<h4 class="white-important m-1">Tweets</h4>
+		<div class="col-12">
+			<h4 class="white-important m-1">Posts</h4>
 		</div>
 	</div>
-			
+
 	<hr>
 
 	{% comment %} Tweets Row {% endcomment %}
 	<div class="row">
-		<div class="col-12 scrollable">	
+		<div class="col-12 ">	
 			{% save_post_template %}	
 		
 			{% comment %} Posts from the user {% endcomment %}
-			{% postlist_template post_list %}	
+			{% postlist_template page_obj %}	
+
 		</div>
 	</div>
 

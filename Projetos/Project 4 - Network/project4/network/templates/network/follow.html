@@ -54,19 +54,20 @@
             </div>
         </div>
     {% empty %}
-        <article class="media content-section hovered-post">
+        <article class="media content-section hovered-post ">
             {% if follow_type == 'following' %}
-                <h4 class="white-important mb-3">You arent following no one.</h4>
+                <h6 class="white-important mb-3">You arent following no one.</h6>
             {% else %}
-                <h4 class="white-important mb-3">you have no followers.</h4>
+                <h6 class="white-important mb-3">You have no followers.</h6>
             {% endif %}
         </article>
     {% endfor %}
 {% endblock %}
 
 
-<hr
-{% comment %} <div class="container">
+<hr>
+
+<div class="container">
 	{% if follow_type == 'following' %}
         <div class="col-12 no-padding">
             <h3 class="white-important mb-3">Follows</h3>
@@ -104,5 +105,6 @@
                 {% endfor %}
             </div>
         </div>
-</div> {% endcomment %}
+    {% endif %} 
+</div>
 

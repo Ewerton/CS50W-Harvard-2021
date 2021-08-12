@@ -50,17 +50,8 @@ $(document).ready(function () {
 		DeleteComment(commentId);
 	});
 
-	// Handles the click to edit a post
-	// For now, inst possible to edit a comment
-	// $(".updateComment").click(function (event) {
-	// 	var postId = $(this).data("postid");
-	// 	UpdateComment(postId);
-	// });
-
-	//reload_navbar();
-	//reload_user_profile();
-	//reload_who_to_follow();
 });
+
 
 function SetFollowStyle(elem) {
 	// Applies the 'Following' style
@@ -106,17 +97,36 @@ function PreviewUploadedImage(input, imgElemID) {
 }
 
 function Reload_user_profile() {
-	$.ajax({
-		url: "/get_profilecard",
-		type: "GET",
-		success: function (data) {
-			$(".profilecard_placeholder").html(data);
-		},
-	});
+	var profilecardplaceholder = $(".profilecard_placeholder");
+	
+	if(profilecardplaceholder.length > 0) {
+		$.ajax({
+			url: "/get_profilecard",
+			type: "GET",
+			success: function (data) {
+				profilecardplaceholder.html(data);
+			},
+		});
+	}
 }
 
-
-function Reload_navbar() {}
+function Reload_PostList() {
+	var postlistplaceholder = $(".postlist_placeholder");
+	
+	if(postlistplaceholder.length > 0) {
+		
+		$.ajax({
+			url: "/get_postlist",
+			type: "GET",
+			success: function (data) {
+				postlistplaceholder.html(data);
+			},
+			error: function (data) {
+				console.log("Error: " + data.responseText);
+			},
+		});
+	}
+}
 
 function Reload_who_to_follow() {
 	$.ajax({
@@ -146,7 +156,7 @@ function FollowUser(userIdToFollow) {
 				SetFollowStyle(btn);
 			}
 
-			Reload_user_profile();
+			Reload_PostList();
 		},
 		error: function (data) {
 			console.log("Error: " + data.responseText);
@@ -158,7 +168,7 @@ function DeletePost(postId) {
 	if (postId > 0) {
 		Swal.fire({
 			title: "Delete Post?",
-			text: "This can’t be undone and it will be removed from your profile, the timeline of any accounts that follow you, and from Twitter search results.",
+			text: "This can’t be undone and it will be removed from your profile, the timeline of any accounts that follow you, and from search results.",
 			showCancelButton: true,
 			confirmButtonColor: "#e02460",
 			confirmButtonText: "Delete",
@@ -169,7 +179,6 @@ function DeletePost(postId) {
 					type: "DELETE",
 					success: function (data) {
 						Swal.fire("Deleted!", "Your post has been deleted.", "success");
-						//location.reload();
 						window.location.href = home_url ; //reloads the home
 					},
 					error: function (data) {
@@ -272,7 +281,6 @@ function DeleteComment(commentId) {
 					success: function (data) {
 						Swal.fire("Deleted!", "Your comment has been deleted.", "success");
 						location = window.location.href;
-						//window.location.href = home_url ; //reloads the home
 					},
 					error: function (data) {
 						console.log("Error: " + data.responseText);
@@ -282,24 +290,6 @@ function DeleteComment(commentId) {
 		});
 	}
 }
-
-// For now, isnt possible to edit a comment
-// function UpdateComment(postId) {
-// 	if (postId > 0) {
-// 		$.ajax({
-// 			url: "/post/" + postId + "/update",
-// 			type: "GET",
-// 			success: function (data) {
-// 				Swal.fire({
-// 					html: data,
-// 					showCancelButton: false, 
-// 					showConfirmButton: false,
-// 					showCloseButton: true
-// 				  });
-// 			},
-// 		});
-// 	}
-// }
 
 /**** Utilities function ****/
 function addClass(elem, clazz) {

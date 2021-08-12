@@ -1,6 +1,3 @@
-
-#from network.models import Preference
-
 #represents a Post and the metadata associated to it
 class FollowResult():
     

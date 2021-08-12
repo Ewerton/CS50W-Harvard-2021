@@ -94,18 +94,6 @@
 															</a>
 														</div>	
 													</div>
-													<div class="d-inline-flex">
-														{% comment %} For now, isnt possible to edit a comment {% endcomment %}
-														{% comment %} <div class="d-inline-flex roundedLikeButtonContainer">
-															<a href="javascript:void(0)" 
-																data-bs-toggle="tooltip" 
-																data-bs-placement="bottom" 
-																data-postid="{{comment.id}}"
-																title="Update" class="updateComment">
-																	<i class="far fa-edit"></i>
-															</a>
-														</div> {% endcomment %}
-													</div>
 												{% endif %}
 											</div>
 
@@ -121,34 +109,7 @@
 										{% comment %} Tweet Footer {% endcomment %}
 										<div class="row">
 											<div class="col-6">
-												{% comment %} I will not implement the "like a comment" functionality right now {% endcomment %}
-												{% comment %} <div class="d-inline-flex">
-													<div class="d-inline-flex roundedLikeButtonContainer pt-1">
-														<a href="javascript:void(0)" 
-															data-postid="{{postResult.post.id}}"
-															class="likePost">
-																{% if postResult.liked %}													
-																	<i id="likeIcon{{postResult.post.id}}" class="fas fa-heart"></i>
-																{% else %}
-																	<i id="likeIcon{{postResult.post.id}}" class="far fa-heart"></i>
-																{% endif %}
-														</a>
-													</div>
-													<div class="d-inline-flex">
-														<span class="pt-1 likeCount{{postResult.post.id}}">{{postResult.post.LikeCount}}</span>
-													</div>
-												</div> {% endcomment %}
 												
-												{% comment %} <span class="m-1">|</span> {% endcomment %}
-												
-												{% comment %} I will not implement the "reply a reply" function right now {% endcomment %}
-												{% comment %} <div class="d-inline m-1">
-													<a href="/post/{{postResult.post.id}}/"
-														data-postid="{{postResult.post.id}}"
-														class="commentPost">
-														<i class="far fa-comment"></i> {{ postResult.post.CommentsCount }} comment(s) 
-													</a>
-												</div> {% endcomment %}
 											</div>
 
 											<div class="col-6">

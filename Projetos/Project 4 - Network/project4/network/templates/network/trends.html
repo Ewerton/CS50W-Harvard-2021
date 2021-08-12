@@ -1,0 +1,13 @@
+<article class="t-section media content-section">
+    <div class="row">
+        <div class="col-12">
+            <h4 class="white-important mb-2 mt-2">Trends</h4>
+        </div>
+    </div>
+	<hr>
+    <div class="row ms-1">
+        {% for t in trends %}
+			<a class="me-3" target="_blank" href="{{ t.url }}">{{ t.name }}</a>
+		{% endfor %}
+    </div>
+</article>

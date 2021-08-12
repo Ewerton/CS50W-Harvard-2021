@@ -33,8 +33,6 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'network.apps.NetworkConfig',
     'users.apps.UsersConfig',
-    #'network', 
-    #'users',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -133,8 +131,6 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'network/static/'), #network app specific static files
     os.path.join(BASE_DIR, 'users/static/'), #network app specific static files
 ]
-
-# CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 LOGIN_REDIRECT_URL = 'home'
 LOGIN_URL = 'login'

@@ -1,6 +1,5 @@
 {% extends "network/layout.html" %} 
 {% load network_extras %}
-{% comment %} {% load static %}  {% endcomment %}
 {% block content %}
 
     {% comment %} Title and Tweet count  Row {% endcomment %}
@@ -27,7 +26,7 @@
     <hr>
 
     {% comment %} Posts from the user {% endcomment %}
-    {% postlist_template posts_results %}	
+    {% postlist_template page_obj %}	
 
 {% endblock content %}
 

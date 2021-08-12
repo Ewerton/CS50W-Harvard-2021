@@ -9,7 +9,6 @@ from django.conf import settings as project_settings
 from django.contrib.auth.models import AbstractUser
 
 class User(AbstractUser):
-    #contact = models.CharField(max_length=20, blank=True)#id = models.AutoField(primary_key=True)
     pass
 
 class Profile(models.Model):

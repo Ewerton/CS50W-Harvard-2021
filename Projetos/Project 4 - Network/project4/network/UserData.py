@@ -1,8 +1,8 @@
 
 from users.models import Follow
-from network.models import User, Post
+from network.models import Post
 
-#represents a Post and the metadata associated to it
+#represents a User and its associated data
 class UserData():
     
     def __init__(self, user):
