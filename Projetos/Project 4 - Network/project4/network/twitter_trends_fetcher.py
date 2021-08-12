@@ -13,10 +13,10 @@ class twitter_trend_fetcher():
 
     def get_trends_wordwide():
         # API Keys and Tokens (just for testing)
-        consumer_api_key = "XDQ9mOWHNEe5bNy0uYLibxEIC"
-        consumer_api_secret_key = "J2pf7FdFjKA5M6XfHdbNArx0U7X8P821xoRiYBtXQ3lj5QkEKR"
-        access_token = "167528516-bVkepC5tyUsfZNxPDJb0j0l67z01J6Hq7jcRDMBa"
-        access_token_secret = "ZVk8kDlun1XUXZc5d5vyVwAL0AzDrpmqfo5lHWqcU3N6i"
+        consumer_api_key = ""
+        consumer_api_secret_key = ""
+        access_token = ""
+        access_token_secret = ""
 
         # Authorization and Authentication
         auth = tweepy.OAuthHandler(consumer_api_key, consumer_api_secret_key)
