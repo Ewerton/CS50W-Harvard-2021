@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+{% load petbnb_extras %}
+
+{% block title %}Create customer profile{% endblock title %}
+
+
+
+{% block wrapper %}
+
+        <div class="main-wrapper">
+            {% secondary_navbar_template %}
+
+            <!-- ====================================
+                ——— MY PROFILE
+                ===================================== -->
+            <section class="bg-light py-5 height100vh">
+                <div class="container">
+ 
+                    <div class="row">
+ 
+                        <div class="col-md-7 col-lg-12">
+                            <form method="post" action="" enctype="multipart/form-data">
+ 
+                                <div class="card">
+                                    <div class="card-body p-6">
+                                        <h3 class="font-weight-normal mb-4">Add photo of my pet</h3>
+                                        <div class="row">
+                                            <div class="form-group col-12">
+                                                {% csrf_token %}
+                                                {{ form.as_p }}
+                                            </div>
+                                        </div>
+                                        <div class="mt-4">
+                                            <button class="btn btn-primary text-uppercase" type="submit">
+                                            Add
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+ 
+                        </div>
+ 
+                    </div>
+                </div>
+            </section>
+        </div>
+        <!-- element wrapper ends -->
+{% endblock wrapper %}
+
+
+
+{% block extra_script %}
+
+{% endblock extra_script %}

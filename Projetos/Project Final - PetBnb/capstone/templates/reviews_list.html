@@ -1,0 +1,80 @@
+{% load static %}
+{% load petbnb_extras %}
+
+<!-- Reviews -->
+<div class="reviews_wrapper">
+	<div class="my-6">
+		<h3 class="font-weight-normal mb-6">Reviews ({{total_reviews}})</h3>
+		{% for item in review_result_list %}
+		<div class="media pl-3 mb-3">
+			<div class="media-img">
+				<img
+					src="{{item.review.profile_client_author.user.get_photo.url}}"
+					data-src="{{item.review.profile_client_author.user.get_photo}}"
+					class="mr-3 media-object rounded-circle reviewer-avatar"
+					alt="Image User"
+				/>
+			</div>
+			<div class="media-body">
+				<div class="row">
+					<div class="col-10">
+						<h5 class="media-heading">{{item.review.profile_client_author.get_name}}</h5>
+					</div>
+					<div class="col-2 text-right">
+						{% if logged_user is not None %}
+							{% if logged_user.id == item.review.profile_client_author.user.id %}
+								<button type="button" class="btn btn-default btn-md btn-deletereview" name="deleteReview"
+									data-reviewid="{{item.review.id}}"
+									data-userReviewed="{{item.review.profile_server_reviewed_id}}"
+									href="javascript:0">
+										<i class="fas fa-trash-alt"></i>
+								</button>
+							{% endif %}
+						{% endif %} 
+					</div>
+				</div>
+				<span
+					class="star read-rating-default pl-0 pb-2"
+					data-rateyo-rating="{{item.review.rating}}"
+					data-rateyo-read-only="true"></span>
+
+				<!-- Comments -->
+				<p class="lead">{{item.review.comment}}</p>
+
+				<!-- Replyes -->
+				{% comment %} {% for reply in item.replies %}
+					<p class="bg-light ml-3 p-2 rounded">{{reply.comment}}</p>
+				{% endfor %}  {% endcomment %}
+				
+				{% comment %} {% if logged_user is not None %}
+					<div class="reply-wrapper">
+						<a class="d-inline-block mb-2 btn-reply" href="javascript:0">Reply</a>
+						<form class="form-reply my-3">
+							<textarea class="form-control mb-6" rows="3" placeholder="Enter your comment"></textarea>
+							<button
+								type="button"
+								name="submitReply"
+								data-reviewid="{{item.review.id}}"
+								class="btn btn-primary"
+							>
+								Submit
+							</button>
+						</form>
+					</div>
+				{% endif %} {% endcomment %}
+			</div>
+		</div>
+
+		{% empty %}
+		<article>
+			<span class="pl-4">No reviews yet...</span>
+		</article>
+		{% endfor %}
+
+		<hr />
+	</div>
+</div>
+
+
+
+

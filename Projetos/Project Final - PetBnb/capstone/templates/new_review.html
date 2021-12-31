@@ -1,0 +1,65 @@
+{% load static %}
+
+<!-- Add New Review -->
+{% if can_write_review %}
+<div class="my-6" id="add-review">
+	<h3 class="font-weight-normal mb-6">Add Review</h3>
+	<div class="pl-3">
+		<form>
+			<div class="row">
+				<div class="col-4">
+					<div class="media media-xs align-items-center pt-4">
+						<img
+							src="{{logged_user.get_photo.url}}"
+							data-src="{{logged_user.get_photo.url}}"
+							class="mr-2 media-object rounded-circle"
+							alt="Image User"
+						/>
+						<div class="media-body">
+							<span> You are posting as: </span>
+							<h5 class="media-heading mb-0">{{profile_client_logged_user.get_name}}</h5>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-4">
+					<div class="align-items-center">
+						<h5>Refers to booking:</h5>
+						<div class="select-bg-transparent select-border w-100">
+							<select class="select-location dropdown" name="dates_review" required>
+								{% for i in past_and_finished_bookings %}
+									<option value="{{i.id}}">{{ i.date_of_interest|date:"Y-m-d" }}</option>
+								{% endfor %}
+							</select>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-4">
+					<div class="justify-content-center">
+						<h5>Your rating:</h5>
+						<span class="star add-rating-default pl-0 pt-2"></span>
+					</div>
+				</div>
+			</div>
+
+			<div class="form-group mt-4 mb-6">
+				<textarea class="form-control" name="txtReview" rows="6" placeholder="Enter Your Comment"></textarea>
+			</div>
+			<div class="form-group">
+				<button
+					type="button"
+					name="sendReview"
+					data-userReviewing="{{profile_client_logged_user.id}}"
+					data-userReviewed="{{profileserver_being_reviewed.id}}"
+					class="btn btn-primary text-uppercase btn-submit-review"
+				>
+					Send Review
+				</button>
+			</div>
+		</form>
+	</div>
+</div>
+{% endif %}
+
+

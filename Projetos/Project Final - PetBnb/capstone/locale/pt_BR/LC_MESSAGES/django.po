@@ -1,0 +1,108 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-07-04 19:01-0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: user/models/base.py:10
+msgid "It was not possible to create the account, the email was not informed."
+msgstr ""
+
+#: user/models/base.py:28
+msgid "Unable to create superuser, is_superuser parameter not set to True."
+msgstr ""
+
+#: user/models/base.py:31
+msgid "Cannot create superuser, parameter is_active has not been set to True."
+msgstr ""
+
+#: user/models/user.py:27
+msgid "server"
+msgstr ""
+
+#: user/models/user.py:28
+msgid "client"
+msgstr ""
+
+#: user/models/user.py:32
+msgid "I want to register as"
+msgstr ""
+
+#: user/models/user.py:51
+msgid "Date joined"
+msgstr ""
+
+#: user/models/user.py:57
+msgid "User"
+msgstr ""
+
+#: user/models/user.py:58
+msgid "Users"
+msgstr ""
+
+#: user/templates/auth/password_reset_confirm.html:43
+msgid ""
+"Please enter your new password twice so we can verify you typed it in "
+"correctly."
+msgstr ""
+
+#: user/templates/auth/password_reset_confirm.html:49
+msgid "New password:"
+msgstr ""
+
+#: user/templates/auth/password_reset_confirm.html:54
+msgid "Confirm password:"
+msgstr ""
+
+#: user/templates/auth/password_reset_confirm.html:57
+msgid "Change my password"
+msgstr ""
+
+#: user/templates/auth/password_reset_confirm.html:63
+msgid ""
+"The password reset link was invalid, possibly because it has already been "
+"used.  Please request a new password reset."
+msgstr ""
+
+#: user/templates/auth/password_reset_email.html:3
+#, python-format
+msgid ""
+"\n"
+"\t\tVocê está recebendo este e-mail porque solicitou uma redefinição de "
+"senha para sua conta de usuário em %(site_name)s.\n"
+"\t"
+msgstr ""
+
+#: user/templates/auth/password_reset_email.html:7
+msgid "Please go to the following page and choose a new password:"
+msgstr ""
+
+#: user/templates/auth/password_reset_email.html:15
+msgid "Your username, in case you’ve forgotten:"
+msgstr ""
+
+#: user/templates/auth/password_reset_email.html:17
+msgid "Thanks for using our site!"
+msgstr ""
+
+#: user/templates/auth/password_reset_email.html:19
+#, python-format
+msgid ""
+"\n"
+"\t\tAtenciosamente, equipe do %(site_name)s\n"
+"\t"
+msgstr ""

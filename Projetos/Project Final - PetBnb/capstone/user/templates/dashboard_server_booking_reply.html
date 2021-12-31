@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+{% load petbnb_extras %}
+
+
+{% block title %}Dashboard{% endblock title %}
+
+
+{% block style %}
+    <link href='{% static 'plugins/owl-carousel/assets/owl.carousel.min.css' %}' rel='stylesheet'>
+    <link href='{% static 'plugins/owl-carousel/assets/owl.theme.default.min.css' %}' rel='stylesheet'>
+{% endblock style %}
+
+
+{% block wrapper %}
+
+<div class="main-wrapper">
+    {% secondary_navbar_template %}
+
+    <!-- ====================================
+        ——— DASHBOARD
+        ===================================== -->
+    <section class="bg-light pt-5 height100vh">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-7 col-lg-12">
+
+                    <div class="card">
+                        <div class="card-body p-6">
+                            <h3 class="font-weight-normal mb-4">Requester Data</h3>
+                            <div class="row">
+                                <div class="form-group col-md-6 mb-6">
+                                    <label>User name</label>
+                                    <input type="text" class="form-control" placeholder="Date of interest" value="{{object.profile_client.get_name}}" disabled >
+                                </div>
+                                <div class="form-group col-md-6 mb-6">
+                                    <label>Date of interest</label>
+                                    <input type="text" class="form-control" placeholder="Date of interest" value="{{object.date_of_interest}}" disabled >
+                                </div>
+
+                                {% if object.get_confirmed == 0 %}
+                                <div class="form-group col-md-12 mb-6">
+                                    <label>Status</label>
+                                    <input type="submit" class="form-control btn btn-warning text-wait" placeholder="" value="waiting confirmation" disabled >
+                                </div>
+                                {% else %}
+                                {% if object.get_confirmed == 1 %}
+                                <div class="form-group col-md-12 mb-6">
+                                    <label>Status</label>
+                                    <input type="submit" class="form-control btn btn-success text-wait" placeholder="" value="confirmed" disabled >
+                                </div>
+                                {% else %}
+                                <div class="form-group col-md-12 mb-6">
+                                    <label>Status</label>
+                                    <input type="submit" class="form-control btn btn-danger text-wait" placeholder="" value="refused" disabled >
+                                </div>
+                                {% endif %}
+
+                                {% endif %}
+ 
+                                <div class="form-group col-md-12">
+                                    <label>Pet Description</label>
+                                    <textarea class="form-control" rows="5" placeholder="Pet Description" disabled >{{ object.pet_description}}</textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body p-6">
+                            <h4 class="font-weight-normal mb-4">Pet photos</h4>
+                            <section>
+                                <div class="owl-carousel owl-theme listing-details-carousel nav-light-dark">
+                                    {% for url in object.get_url_pet_photo %}
+                                    <div class="single-item">
+                                        <img width="450px" height="250px" data-src="{{request.scheme}}://{{request.get_host}}/media/{{url.get_photo}}" src="{{request.scheme}}://{{request.get_host}}/media/{{url.get_photo}}" alt="Image" />
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+
+
+                    <form action="" method="POST" >
+                    {% csrf_token %}
+                    <div class="card">
+                        <div class="card-body p-6">
+                            <h3 class="font-weight-normal mb-4">Reply</h3>
+                            <div class="row">
+                                <div class="form-group {% if object.get_confirmed == 0 %} col-md-6 {% else %} col-md-12 {% endif %} mb-6">
+                                    <label>Decision</label>
+                                    <textarea class="form-control" rows="5" name="decision" placeholder="Decision" {% if object.get_confirmed != 0 %} disabled {% endif %}>{{ object.get_decision}}</textarea>
+                                </div>
+                                {% if object.get_confirmed == 0 %}
+                                <div class="form-group col-md-6 mb-6">
+                                    <label>Answer</label>
+                                    <select class="form-control" aria-label="" name="confirmed">
+                                      <option value="1">Confirmed</option>
+                                      <option value="2">Refused</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group col-md-6 mb-6">
+                                    <input type="submit" class="form-control btn btn-primary text-wait" placeholder="" value="Reply" >
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+ 
+                    </div>
+                     </form>
+
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock wrapper %}
+
+
+
+{% block extra_script %}
+    <script src='{% static 'plugins/fancybox/jquery.fancybox.min.js' %}'></script> 
+    <script src='{% static 'plugins/owl-carousel/owl.carousel.min.js' %}'></script>  
+    <script src='{% static 'plugins/DataTables/DataTables-1.10.18/js/jquery.dataTables.min.js' %}'></script>
+    <script src='{% static 'plugins/DataTables/Responsive-2.2.2/js/dataTables.responsive.min.js' %}'></script> 
+{% endblock extra_script %}
+
+
+ 

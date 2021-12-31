@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+{% load petbnb_extras %}
+
+
+{% block title %}Create customer profile{% endblock title %}
+
+
+
+{% block wrapper %}
+
+        <div class="main-wrapper">
+			{% secondary_navbar_template %}
+
+            <!-- ====================================
+                ——— MY PROFILE
+                ===================================== -->
+            <section class="bg-light py-5 height100vh">
+                <div class="container">
+ 
+                    <div class="row">
+ 
+                        <div class="col-md-7 col-lg-12">
+                            <form method="POST" action="">
+ 
+                                <div class="card">
+                                    <div class="card-body p-6">
+                                        <h3 class="font-weight-normal mb-4">Profile Server Remove Photos</h3>
+                                        <div class="row">
+                                            {% csrf_token %}
+                                            {% for photo in local_photos_list %}
+                                            <div class="col-md-3">
+                                                <div class="custom-control custom-checkbox image-checkbox">
+                                                    <input type="checkbox" class="custom-control-input"  name="photo_{{photo.0}}" id="id_photo_{{photo.0}}" value="{{photo.0}}">
+                                                    <label class="custom-control-label" for="id_photo_{{photo.0}}">
+                                                        <img src="{{request.scheme}}://{{request.get_host}}/media/{{photo.1}}" alt="#" class="img-fluid">
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            {% endfor %}
+
+                                        </div>
+ 
+                                        <div class="mt-4">
+                                            <button class="btn btn-danger text-uppercase" type="submit">
+                                            Delete
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+ 
+
+
+
+
+ 
+                    </div>
+                </div>
+            </section>
+        </div>
+        <!-- element wrapper ends -->
+{% endblock wrapper %}
+
+{% block extra_script %}
+{% endblock extra_script %}

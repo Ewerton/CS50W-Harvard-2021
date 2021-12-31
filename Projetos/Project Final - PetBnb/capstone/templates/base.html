@@ -1,0 +1,93 @@
+{% load static %}
+
+{% comment %} loads the inclusion tags {% endcomment %}
+{% load petbnb_extras %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+
+    <!-- SITE TITTLE -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}{% endblock title %}</title>
+  
+    <!-- PLUGINS CSS STYLE -->
+    <link href='{% static 'plugins/fontawesome-5.15.2/css/all.min.css' %}' rel='stylesheet'>
+    <link href='{% static 'plugins/fontawesome-5.15.2/css/fontawesome.min.css' %}' rel='stylesheet'>
+    <link href='{% static 'plugins/menuzord/css/menuzord.css' %}' rel='stylesheet'>
+    
+
+    <!-- GOOGLE FONT --><!-- font-family: 'Mulish', sans-serif; --><!-- font-family: 'Poppins', sans-serif; -->
+    <link href="https://fonts.googleapis.com/css2?family=Mulish:wght@200;300;400;600;700;800;900&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- CUSTOM CSS -->
+    <link href="{% static 'css/style.css' %}" rel="stylesheet" id="option_style">
+
+    <!-- FAVICON -->
+    <link href="{{'/media/img/favicon.png' }}" rel="shortcut icon">
+
+    {% block style %}
+    {% endblock style %}
+
+    {% block script %}
+    {% endblock script %}
+  </head>
+
+  <body id="body" class="up-scroll">
+
+    <!-- Preloader -->
+    {% block preloader %}
+      <div id="preloader" class="smooth-loader-wrapper">
+        <div class="smooth-loader">
+          <div class="loader1">
+            <div class="loader-target">
+              <div class="loader-target-main"></div>
+              <div class="loader-target-inner"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endblock preloader %}
+
+    <!-- Main Navbar -->
+    {% block header %}
+        {% navbar_template %}
+    {% endblock header %}
+
+    <!-- Main Content -->
+    {% block wrapper %}
+    {% endblock wrapper %}
+
+    <!-- footer -->
+    {% block footer %}    
+        {% footer_template %}
+    {% endblock footer %}
+
+
+     <!-- JAVASCRIPTS -->
+    <script src='{% static 'plugins/jquery/jquery-3.4.1.min.js' %}'></script>
+    <script src='{% static 'plugins/bootstrap/js/bootstrap.bundle.js' %}'></script>
+    <script src='{% static 'plugins/menuzord/js/menuzord.js' %}'></script>
+    <script src='{% static 'plugins/smoothscroll/SmoothScroll.js' %}'></script>
+    <script src='{% static 'plugins/lazyestload/lazyestload.js' %}'></script>
+    <script src='{% static 'plugins/dzsparallaxer/dzsparallaxer.js' %}'></script>
+    {% comment %} <script src='{% static 'plugins/fancybox/jquery.fancybox.min.js' %}'></script> {% endcomment %}
+    {% comment %} <script src='{% static 'plugins/owl-carousel/owl.carousel.min.js' %}'></script>  {% endcomment %}
+    {% comment %} <script src='{% static 'plugins/DataTables/DataTables-1.10.18/js/jquery.dataTables.min.js' %}'></script>
+    <script src='{% static 'plugins/DataTables/Responsive-2.2.2/js/dataTables.responsive.min.js' %}'></script> {% endcomment %}
+    <script src='{% static 'plugins/selectric/jquery.selectric.min.js' %}'></script> 
+    
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    {% block extra_script %}
+    {% endblock extra_script %}    
+
+    <script src='{% static 'js/general.js' %}'></script>
+
+
+
+  </body>
+</html>

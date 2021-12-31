@@ -1,0 +1,129 @@
+
+{% load static %}
+
+<header class="header">
+	{{profile_client.get_name}}
+	{{profile_server.get_name}}
+	<nav class="nav-menuzord navbar-sticky">
+		<div class="container clearfix">
+			<div id="menuzord" class="menuzord menuzord-responsive">
+				
+				<a href="/" class="menuzord-brand">
+					<div class="d-flex">
+						<img src="/media/img/PetBnbLogo.png" alt="PetBnB" class="logopetbnb" />
+						<span class="my-auto brandtextpetbnb">PETBNB</span>
+					</div>
+				</a>
+				
+				<div class="menu-right">
+					{% if current_profile %}
+						<div class="notification">
+							<a class="dropdown-toggle" href="javascript:void(0)" role="button" data-toggle="dropdown" data-display="static" aria-haspopup="true" aria-expanded="false" >
+								<i class="far fa-bell" aria-hidden="true"></i>
+								<span class="badge">{{notification_len}}</span>
+							</a>
+							<ul class="dropdown-menu">
+								
+								<!-- Notification items for the client -->
+								{% for object in profile_client_notification_items %}
+									<li>
+										<a href="{% url 'dashboard_client_booking_detail_view' object.id %}">
+											<div class="media media-xs align-items-center">
+												<div class="media-body">
+													<span class="font-weight-bold">{{object.profile_client.get_name}}</span>
+													<p class="mb-1">{{object.date_of_interest}}</p>
+												</div>
+											</div>
+										</a>
+									</li>
+								{% endfor %} 
+
+								<!-- Notification items for the server -->
+								{% for object in profile_server_notification_items %}
+									<li>
+										<a href="{% url 'dashboard_server_booking_reply' object.id %}">
+											<div class="media media-xs align-items-center">
+												<div class="media-body">
+													<span class="font-weight-bold">{{object.profile_client.get_name}}</span>
+													<p class="mb-1">{{object.date_of_interest}}</p>
+												</div>
+											</div>
+										</a>
+									</li>
+								{% endfor %}
+
+								<li>
+									<a href="javascript:void(0)"></a>
+								</li>								
+							</ul>
+						</div>
+						<div class="avatar">
+							<a class="dropdown-toggle" href="javascript:void(0)" role="button" data-toggle="dropdown" aria-haspopup="true" data-display="static" aria-expanded="false" >
+								<img class="avatar-img lazyestload" data-src="/media/{{user.get_photo}}" src="/media/{{user.get_photo}}" alt="Image" />
+								{% if current_profile_name == 'client' %}
+									<span class="avatar-name" >{{current_profile.get_name}}
+										<span class="small">Profile Client</span>
+									</span>
+								{% else %}
+									<span class="avatar-name" >{{current_profile.get_name}}
+										<span class="small">Profile Server</span>
+									</span>
+								{% endif %}
+							</a>
+							<ul class="dropdown-menu">
+								<li>
+									{% if current_profile_name == 'client' %}
+										<a class="d-flex flex-wrap align-items-center" href="{% url 'dashboard_server_booking_list_view'%}" >
+											<i class="fa fa-user mr-2" aria-hidden="true"></i>
+											<span>Server Profile</span>
+										</a>
+									{% else %}
+										<a class="d-flex flex-wrap align-items-center" href="{% url 'dashboard_client_booking_list_view'%}" >
+											<i class="fa fa-user mr-2" aria-hidden="true"></i>
+											<span>Client Profile</span>
+										</a>
+									{% endif %}
+								</li>
+								<hr>								
+								<li>									
+									<a class="d-flex flex-wrap align-items-center" href="{% url 'logout' %}" >
+										<i class="fas fa-sign-out-alt mr-2" aria-hidden="true"></i>
+										<span>Logout</span>
+									</a>
+								</li>
+							</ul>
+						</div>
+					{% endif %}	
+				</div> 	
+			
+				
+				<ul class="menuzord-menu menuzord-right">	
+					{% if not user.is_authenticated %}											
+						<li class="">
+							<a href="{% url 'register' %}">Register</a>
+						</li>
+						<li class="">
+							<a href="{% url 'login' %}">Login</a>
+						</li>
+					{% else %}
+						{% if is_dashboard %}
+							<li class="">
+								<a href="{% url 'home_template_view' %}">Search</a>
+							</li>
+						{% else %}
+							{% if current_profile %}
+								<li class="">								
+									<a href="{% url 'dashboard_client_booking_list_view' %}">Dashboard</a>
+									{% comment %} <a href="{% url 'dashboard_server_booking_list_view'%}">Dashboard Server</a>										 {% endcomment %}
+								</li>
+							{% endif %}		
+						{% endif %}
+
+					{% endif %}		
+				</ul>
+
+			</div>
+		</div>
+
+	</nav>
+</header>

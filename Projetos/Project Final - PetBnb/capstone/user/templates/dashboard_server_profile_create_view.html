@@ -1,0 +1,127 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+{% load petbnb_extras %}
+
+
+{% block title %}Create customer profile{% endblock title %}
+
+
+
+{% block wrapper %}
+
+        <div class="main-wrapper">
+            <!-- ====================================
+                ——— MY PROFILE
+                ===================================== -->
+            <section class="bg-light py-5 height100vh">
+                <div class="container">
+ 
+                    <div class="row">
+ 
+                        <div class="col-md-7 col-lg-12">
+                            {% comment %} <form method="post" action="">
+ 
+                                <div class="card">
+                                    <div class="card-body p-6">
+                                        <h3 class="font-weight-normal mb-4">Create server profile</h3>
+                                        <div class="row">
+                                            <div class="form-group col-12">
+                                                {% csrf_token %}
+                                                {{ form.as_p }}
+                                            </div>
+                                        </div>
+                                        <div class="mt-4">
+                                            <button class="btn btn-primary text-uppercase" type="submit">
+                                            Create
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form> {% endcomment %}
+ 
+                            <form method="post" action="">
+                                {% csrf_token %}
+    
+                                <!-- Form Errors -->
+                                {% if form.errors %}
+                                    <ul class="errors">
+                                        {% for error in form.errors %}
+                                            <li>{{ error }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
+    
+    
+                                <div class="card">
+                                    <div class="card-body p-6">
+                                        <h3 class="font-weight-normal mb-4">Create a host profile</h3>
+                                        <div class="row">
+                                            <div class="form-group col-12">
+                                                <label>Name</label>
+                                                {{ form.name }}
+                                            </div>
+    
+                                                <div class="form-group col-md-12">
+                                                <label>About You</label>
+                                                {{ form.description }}
+                                            </div>
+                                        
+                                            <div class="form-group col-md-12">
+                                                <label>Types of pets you accept.</label>
+                                                <div class="PetTypeCheckBoxes">
+                                                    {{ form.pet_type }}
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group col-md-12">
+                                                <label>Select Your Location</label>
+                                                <div class="map-sidebar border rounded mb-5">
+                                                    
+                                                    {% comment %} Default Map Location is Harvard College in Cambridge, MA {% endcomment %}
+                                                    <div id="select-coordinates-map" style="height: 300px" data-lat="{{ 42.37652734920459 }}" data-lag="{{ -71.11489376695644 }}"></div> 
+                                                    
+                                                    <div class="px-6 py-5">
+                                                        <ul class="list-unstyled mb-0">
+                                                            <li class="d-flex align-items-start">                                                        
+                                                                <div class="form-group col-md-6 mb-6 d-inline">
+                                                                    <i class="fa fa-map-marker mr-3 mt-1" aria-hidden="true"></i>
+                                                                    <label>Latitude</label>
+                                                                        {{ form.latitude }}
+                                                                </div>
+                                                                <div class="form-group col-md-6 mb-6">
+                                                                    <i class="fa fa-map-marker mr-3 mt-1" aria-hidden="true"></i>
+                                                                    <label>Longitude</label>
+                                                                        {{ form.longitude }}
+                                                                </div>
+                                                            </li>
+                                                        </ul>
+                                                    </div> 
+                                                </div>
+                                            </div>  
+    
+                                            <div class="mt-4">
+                                                <button class="btn btn-primary text-uppercase" type="submit">
+                                                Change
+                                                </button>
+                                            </div>
+    
+                                        </div>
+                                    </div>  
+                                    </div>  
+                            </form> 
+                        </div>
+ 
+                    </div>
+                </div>
+            </section>
+        </div>
+        <!-- element wrapper ends -->
+{% endblock wrapper %}
+
+
+
+{% block extra_script %}
+    <script src='https://maps.googleapis.com/maps/api/js?key=AIzaSyAOHvyJQvg4aVwM5UsCngAkmCFX89MQcs4'></script>
+    <script src='{% static 'js/map.js' %}'></script>
+{% endblock extra_script %}

@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+{% load petbnb_extras %}
+
+
+{% block title %}Add available date{% endblock title %}
+
+
+
+{% block wrapper %}
+<div class="main-wrapper">
+    {% secondary_navbar_template %}
+
+            <!-- ====================================
+                ——— MY PROFILE
+                ===================================== -->
+            <section class="bg-light py-5 height100vh">
+                <div class="container">
+                    <form method="post" action="" enctype="multipart/form-data">
+                        <div class="card">
+                            <div class="card-body p-6">
+                                <h3 class="font-weight-normal mb-4">Add available date</h3>                                     
+                                    <div class="form-group container-fluid">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                    {% csrf_token %}
+                                                {{ form.as_p }}
+                                            </div>
+                                            <div class="col-md-4 pt-6">
+                                                    <button class="btn btn-primary text-uppercase align-middle" type="submit">Add</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                            </div>                             
+                        </div>
+                     </form>
+                </div>
+            </section>
+        </div>
+        <!-- element wrapper ends -->
+{% endblock wrapper %}
+
+
+
+{% block extra_script %}
+    
+{% endblock extra_script %}

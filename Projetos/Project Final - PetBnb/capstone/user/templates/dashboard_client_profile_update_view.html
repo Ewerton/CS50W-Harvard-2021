@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+{% load petbnb_extras %}
+
+{% block title %}Create customer profile{% endblock title %}
+
+
+
+{% block wrapper %}
+	
+<div class="main-wrapper">
+    {% secondary_navbar_template %} 
+
+            <!-- ====================================
+                ——— MY PROFILE
+                ===================================== -->
+            <section class="bg-light py-5 height100vh">
+                <div class="container">
+ 
+                    <div class="row">
+                        <div class="col-md-5 col-lg-4">
+                            <div class="card card-profile">
+                                <div class="card-profile-img py-6">
+                                    <img class="rounded-circle lazyestload" data-src="{{request.scheme}}://{{request.get_host}}/media/{{user.get_photo}}" src="{{request.scheme}}://{{request.get_host}}/media/{{user.get_photo}}" alt="Image">
+                                </div>
+
+                                <form class="px-6" action="{% url 'user_upload_a_picture_update_view' %}" method="GET">
+                                    <div class="custom-file">
+                                        <input type="submit" class="custom-file-input" id="customFileLang"  >
+
+                                        <label class="custom-file-label" for="customFileLang">Upload a Picture</label>
+                                    </div>
+                                </form>
+                              <hr>
+                              <div class="card-body text-center">
+                                <p>{{profile_client.get_name}}</p>
+                              </div>
+                            </div>
+                        </div>
+ 
+                        <div class="col-md-7 col-lg-8">
+                            <form method="post" action="">
+ 
+                                <div class="card">
+                                    <div class="card-body p-6">
+                                        <h3 class="font-weight-normal mb-4">Update customer profile</h3>
+                                        <div class="row">
+                                            <div class="form-group col-12">
+                                                {% csrf_token %}
+                                                {{ form.as_p }}
+                                            </div>
+                                        </div>
+                                        <div class="mt-4">
+                                            <button class="btn btn-primary text-uppercase" type="submit">
+                                            Change
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+ 
+                        </div>
+ 
+                    </div>
+                </div>
+            </section>
+        </div>
+        <!-- element wrapper ends -->
+{% endblock wrapper %}
+
+
+
+{% block extra_script %}
+
+{% endblock extra_script %}

@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+{% load petbnb_extras %}
+
+
+{% block title %}Home - PetBnB{% endblock title %}
+
+
+{% block style %}
+<link href='{% static 'plugins/dzsparallaxer/dzsparallaxer.css' %}' rel='stylesheet'>
+<link href='{% static 'plugins/fancybox/jquery.fancybox.min.css' %}' rel='stylesheet'>
+<link href='{% static 'plugins/owl-carousel/assets/owl.carousel.min.css' %}' rel='stylesheet'>
+<link href='{% static 'plugins/owl-carousel/assets/owl.theme.default.min.css' %}' rel='stylesheet'>
+{% endblock style %}
+
+
+
+{% block wrapper %}
+  <div class="main-wrapper">
+
+    <!-- ====================================
+    ——— BANNER SECTION (SEARCH)
+    ===================================== -->
+    <section class="banner" style="background-image: url('{{request.scheme}}://{{request.get_host}}/media/img/background/banner-img1.jpg');">
+      <div class="container">
+        <div class="row text-center align-items-center justify-content-center">
+          <div class="col-12">
+            <!-- Banner Info -->
+            <div class="banner-info">
+              <img src="{{request.scheme}}://{{request.get_host}}/media/img/PetBnbLogo.png" alt="PetBnB" class="logopetbnb">
+              <h1 class="text-uppercase text-white mb-4">
+                PETBNB
+              </h1>
+              <p class="lead text-white">
+                find accommodations for your pets
+              </p>
+            </div>
+
+            <!-- Search Box -->
+            <div class="search-box-2">
+              <form class="form-row justify-content-center" method="GET" action="/search/">
+
+                <div class="form-group col-md-4 col-lg-3">
+                  <div class="input-group mb-2">
+                    <div class="input-group-prepend">
+                      <div class="input-group-text">Type of pet</div>
+                    </div>
+                    <select name="type_of_pet" class="form-control" required>
+                    {% for object in pet_type %}
+                        <option value="{{object.id}}">{{object.get_type}}</option>
+                    {% endfor %}
+                    </select>
+    
+                  </div>
+                </div>
+
+                <div class="form-group col-md-4 col-lg-3">
+                  <div class="input-group mb-2">
+                    <div class="input-group-prepend">
+                      <div class="input-group-text">Check-in</div>
+                    </div>
+                    <input type="date" name="check_in" class="form-control">
+                  </div>
+                </div>
+
+                <div class="form-group col-md-4 col-lg-3">
+                  <div class="input-group mb-2">
+                    <div class="input-group-prepend">
+                      <div class="input-group-text">Check-out</div>
+                    </div>
+                    <input type="date" name="check_out" class="form-control">
+                  </div>
+                </div>
+
+                <div class="form-group col-md-3 col-lg-2">
+                  <button type="submit" class="btn btn-block btn-primary">Search
+                    <i class="fas fa-search" aria-hidden="true"></i>
+                  </button>
+                </div>
+
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+</div> 
+
+{% endblock wrapper %}
+
+
+{% block footer %} 
+{% endblock footer %}
+
+
+{% block extra_script %}
+
+{% endblock extra_script %}

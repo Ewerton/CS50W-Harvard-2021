@@ -1,0 +1,143 @@
+{% extends 'base.html' %} 
+{% load i18n %} 
+{% load static %} 
+{% load petbnb_extras %} 
+
+{% block title %}Search{% endblock title %} 
+
+{% block style %} 
+    <link href='{% static 'plugins/selectric/selectric.css' %}' rel='stylesheet'> 
+{% endblock style %} 
+
+{% block wrapper %}
+    <div class="main-wrapper">
+        <!-- ====================================
+                    ——— CATEGORY GRID FULL
+                    ===================================== -->
+        <section class="py-7 py-md-10 height100vh">
+            <div class="container">
+                <div class="row">
+                    {% if not profileserver_list %}
+                        <form style="width: 100%" method="GET" action="/">
+                            <div class="form-group col-md-8 col-lg-7">
+                                <div class="input-group mb-2">
+                                    <div class="input-group-prepend">
+                                        <div class="input-group-text">We didn't find matching results for your search.</div>
+                                    </div>
+                                    <button type="submit" class="form-control btn btn-block btn-primary">Go back</button>
+                                </div>
+                            </div>
+                        </form>
+                    {% else %} 
+                        {% for profileserver in profileserver_list %}
+                            <div class="col-md-6 col-lg-4">
+                                <div class="card rounded-0 card-hover-overlay">
+                                    <div class="position-relative">
+                                        <img
+                                            class="card-img rounded-0 lazyestload"
+                                            data-src="{{request.scheme}}://{{request.get_host}}/media/{{profileserver.get_location_cover_photo}}"
+                                            src="{{request.scheme}}://{{request.get_host}}/media/{{profileserver.get_location_cover_photo}}"
+                                            alt="{{profileserver.get_name}}"
+                                        />
+                                        <div class="card-img-overlay">
+                                            <!--ul class="list-inline list-inline-rating">
+                                                            <li class="list-inline-item">
+                                                                <i class="fa fa-star" aria-hidden="true"></i>
+                                                            </li>
+                                                            <li class="list-inline-item">
+                                                                <i class="fa fa-star" aria-hidden="true"></i>
+                                                            </li>
+                                                            <li class="list-inline-item">
+                                                                <i class="fa fa-star" aria-hidden="true"></i>
+                                                            </li>
+                                                            <li class="list-inline-item">
+                                                                <i class="fa fa-star" aria-hidden="true"></i>
+                                                            </li>
+                                                            <li class="list-inline-item">
+                                                                <i class="far fa-star" aria-hidden="true"></i>
+                                                            </li>
+                                                        </ul-->
+                                            <h3>
+                                                <a href="{% url 'search_detail_view' profileserver.id %}">
+                                                    {{profileserver.get_name}}
+                                                </a>
+                                            </h3>
+                                            <p class="text-white">{{profileserver.get_pet_type}}</p>
+                                        </div>
+                                    </div>
+                                    <div class="card-footer bg-transparent">
+                                        <ul class="list-unstyled d-flex mb-0 py-2">
+                                            <li class="ml-auto">
+                                                <button class="btn btn-primary btn-sm text-uppercase" type="button" onclick="location.href = '{% url 'search_detail_view' profileserver.id %}'" > Details </button>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+
+                        {% if is_paginated %}
+                            <!-- Pagination -->
+                        <div class="d-flex justify-content-center" style="width: 100%">
+                            <section class="my-5">
+                                <nav>
+                                    <ul class="pagination">
+                                        
+                                        <!-- Previous Button-->
+                                        {% if page_obj.has_previous %}
+                                            <li class="page-item mr-2">
+                                                <a class="page-link" href="?type_of_pet={{request.GET.type_of_pet}}&check_in={{request.GET.check_in}}&check_out={{request.GET.check_out}}&page={{ page_obj.previous_page_number }}" >
+                                                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                                                </a>
+                                            </li>
+                                        {% else %}
+                                            <li class="page-item mr-2">
+                                                <a class="page-link disabled" href="javascript:void(0)">
+                                                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                                                </a>
+                                            </li>
+                                        {% endif %} 
+                                        
+                                        <!-- Paging Buttons -->
+                                        {% for num in page_obj.paginator.page_range %} 
+                                            {% ifequal num page_obj.number %}
+                                                <li class="page-item active mr-2">
+                                                    <a class="page-link" href="javascript:void(0)">{{ num }}</a>
+                                                </li>
+                                            {% else %}
+                                                <li class="page-item mr-2">
+                                                    <a class="page-link" href="?type_of_pet={{request.GET.type_of_pet}}&check_in={{request.GET.check_in}}&check_out={{request.GET.check_out}}&page={{ num }}" >{{ num }}</a>
+                                                </li>
+                                            {% endifequal %} 
+                                        {% endfor %} 
+                                        
+                                        <!-- Next Button -->
+                                        {% if page_obj.has_next %}
+                                            <li class="page-item">
+                                                <a class="page-link disabled" href="?type_of_pet={{request.GET.type_of_pet}}&check_in={{request.GET.check_in}}&check_out={{request.GET.check_out}}&page={{ page_obj.next_page_number }}" > 
+                                                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                                                </a>
+                                            </li>
+                                        {% else %}
+                                            <li class="page-item">
+                                                <a class="page-link disabled" href="javascript:void(0)">
+                                                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                                                </a>
+                                            </li>
+                                        {% endif %}
+
+                                    </ul>
+                                </nav>
+                            </section>
+                        </div>
+                        {% endif %}  <!-- End Pagination -->
+
+                    {% endif %} <!-- End if profileserver_list -->
+                
+                </div> <!-- End row -->
+            </div> <!-- End container -->
+
+        </section>
+    </div>
+{% endblock wrapper %} 
+

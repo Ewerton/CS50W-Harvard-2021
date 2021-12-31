@@ -1,0 +1,167 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+{% load petbnb_extras %}
+
+
+{% block title %}Search Detail{% endblock title %}
+
+
+
+{% block style %}
+<link href='{% static 'plugins/selectric/selectric.css' %}' rel='stylesheet'>
+<link href='{% static 'plugins/fancybox/jquery.fancybox.min.css' %}' rel='stylesheet'>
+<link href='{% static 'plugins/owl-carousel/assets/owl.carousel.min.css' %}' rel='stylesheet'>
+<link href='{% static 'plugins/owl-carousel/assets/owl.theme.default.min.css' %}' rel='stylesheet'>
+<link href='{% static 'plugins/map/css/map.css' %}' rel='stylesheet'>
+<link href='{% static 'plugins/rateyo/jquery.rateyo.min.css' %}' rel='stylesheet'>
+<link href='{% static 'plugins/daterangepicker/daterangepicker.css' %}' rel='stylesheet'>
+{% endblock style %}
+
+
+{% block wrapper %}
+        <div class="main-wrapper">
+            
+            <!-- ====================================
+                ——— LISTING SINGLE HEADING
+                ===================================== -->
+            <section class="py-7 pt-md-9 pb-md-8">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-8">
+                            <div class="mb-2 mb-lg-0">
+                                <h1 class="single-listing-title">{{object.get_name}}</h1>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </section>
+            <!-- ====================================
+                ——— LISTING DETAILS CAROUSEL
+                ===================================== -->
+            <section>
+                <div class="owl-carousel owl-theme listing-details-carousel nav-light-dark">
+                    {% for photo in local_photos_list %}
+                    <div class="single-item">
+                        <a class="overlay-dark" href="javascript:void(0)" data-fancybox="gallery" data-caption="Caption for single image">
+                            <img width="550px" height="350px" class="lazyestload" data-src="{{request.scheme}}://{{request.get_host}}/media/{{photo}}" src="{{request.scheme}}://{{request.get_host}}/media/{{photo}}" alt="Image" />
+                        </a>
+                    </div>
+                    {% endfor %}
+                </div>
+            </section>
+            <!-- ====================================
+                ——— MAIN CONTENT
+                ===================================== -->
+            <section class="pt-7 pb-4 pt-md-9 pb-md-8">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-7 col-lg-8">
+                            <!-- Listing Main Content -->
+                            <div class="single-listing-content mb-6">
+                                <h3 class="font-weight-normal mb-6">About</h3>
+                                <p class="mb-6">
+                                    {{object.get_description}}
+                                </p>
+                            </div>
+                            <hr>
+                            <!-- Features -->
+                            <div class="my-6">
+                                <h3 class="font-weight-normal mb-6">Allowed pets</h3>
+                                <ul class="list-unstyled mb-6">
+                                    <li class="d-inline-block mr-4 mb-2">
+                                        {{object.get_pet_type}}
+                                    </li>
+                                </ul>
+                                <hr>
+                            </div>
+                            
+                            <!-- Reviews List -->
+                            {% reviews_list_template object %}	
+
+                             <!-- Post New Review -->
+                            {% new_review_template object %}	
+                            
+                        </div>
+                        <!--======= Sidebar =======-->
+                        <div class="col-md-5 col-lg-4 pl-xl-8">
+                            <!-- Single listing Map -->
+                            <div class="map-sidebar border rounded mb-5">
+                                <div id="single-listing-map" data-lat="{{object.get_latitude}}" data-lag="{{object.get_longitude}}"></div>
+                                <div class="px-6 py-5">
+                                    <ul class="list-unstyled mb-0">
+                                        <li class="d-flex align-items-start">
+                                            <i class="fa fa-map-marker mr-3 mt-1" aria-hidden="true"></i>
+                                            {% comment %} GetFormattedAddressFromCoordinates from Map.js {% endcomment %}
+                                            <span id="spnFullAddress"></span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+
+                            <!-- Booking Availabilities -->
+                            <form class="mb-5" method="GET" action="" id="availability">
+                                <h3 class="mb-3 font-weight-normal">Availabilities</h3>
+ 
+                                <div class="form-group mb-6">
+                                    <div class="select-bg-transparent select-border w-100">
+                                        <select class="select-location" name="availability" required>
+                                            {% for i in object.availability.all %}
+                                                <option value="{{i.id}}">{{ i.date|date:"Y-m-d" }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+ 
+                                <div class="form-group mb-6">
+                                    {% if viewing_its_own_page %}
+                                        <button type="submit" class="btn btn-primary" disabled > Booking Now </button>
+                                    {% else %}
+                                        <button type="submit" class="btn btn-primary" > Booking Now </button>
+                                    {% endif %}
+                                </div>
+                                
+                            </form>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+        </div>
+        <!-- element wrapper ends -->
+{% endblock wrapper %}
+
+
+ 
+
+{% block extra_script %}
+    <script src='{% static 'plugins/selectric/jquery.selectric.min.js' %}'></script> 
+    {% comment %} <script src='{% static 'plugins/smoothscroll/SmoothScroll.js' %}'></script> {% endcomment %}
+    
+    <script src='{% static 'plugins/owl-carousel/owl.carousel.min.js' %}'></script>
+    <script src='{% static 'plugins/fancybox/jquery.fancybox.min.js' %}'></script>
+
+    <script src='{% static 'plugins/daterangepicker/moment.min.js' %}'></script>
+    <script src='{% static 'plugins/daterangepicker/daterangepicker.js' %}'></script>
+    <script src='{% static 'plugins/owl-carousel/owl.carousel.min.js' %}'></script>
+
+    <script src='{% static 'plugins/rateyo/jquery.rateyo.min.js' %}'></script>
+    <script src='{% static 'plugins/velocity/velocity.min.js' %}'></script>
+    <script src='https://maps.googleapis.com/maps/api/js?key=AIzaSyAOHvyJQvg4aVwM5UsCngAkmCFX89MQcs4'></script>
+    <script src='{% static 'js/map.js' %}'></script>
+
+
+
+
+<script>
+    $( "#availability" ).submit(function( event ) {
+        data = $( "#availability" ).serialize()
+
+        location.href = '{{request.scheme}}://{{request.get_host}}/booking/' + data.split('=')[1] + '/'
+
+        event.preventDefault();
+    });
+</script>
+{% endblock extra_script %}

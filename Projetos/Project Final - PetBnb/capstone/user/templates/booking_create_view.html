@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+
+
+{% block title %}Booking create{% endblock title %}
+
+{% block style %}
+    <link href='{% static 'plugins/DataTables/DataTables-1.10.18/css/jquery.dataTables.min.css' %}' rel='stylesheet'>   
+    <link href='{% static 'plugins/DataTables/Responsive-2.2.2/css/responsive.dataTables.min.css' %}' rel='stylesheet'>
+{% endblock style %}
+
+{% block wrapper %}
+
+    <div class="main-wrapper">
+        <!-- ====================================
+            ——— MY PROFILE
+            ===================================== -->
+        <section class="bg-light py-5 height100vh">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-7 col-lg-12">
+                        <form method="POST" action="">
+                            <div class="card">
+                                <div class="card-body p-6">
+                                    <h3 class="font-weight-normal mb-4">Booking detail</h3>
+                                    <div class="border rounded px-6 py-5 mb-5">
+                                        <div class="row">
+                                            <div class="col-12">
+                                                {% csrf_token %}
+                                                <table id="tblBookingDetail" class="display nowrap table-data-default" style="width:100%">
+                                                    <thead>
+                                                        <tr class="table-row-bg-white">
+                                                            <th>Local</th>
+                                                            <th>Date of interest</th>
+                                                            <th>Accepted pets</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr class="table-row-bg-white">
+                                                            <td class="td-media">
+                                                                <div class="media media-table">
+                                                                    <a class="media-img" href="{% url 'search_detail_view' profile_server.id %}">
+                                                                    <img class="img-fluid rounded mr-2 lazyestload" data-src="{{request.scheme}}://{{request.get_host}}/media/{{profile_server.get_location_cover_photo}}" src="{{request.scheme}}://{{request.get_host}}/media/{{profile_server.get_location_cover_photo}}" alt="{{profile_server.get_location_cover_photo}}">
+                                                                    </a>
+                                                                    <div class="media-body">
+                                                                        <h3 class="media-title">
+                                                                            <a href="{% url 'search_detail_view' profile_server.id %}">{{profile_server.get_name}}</a>
+                                                                        </h3>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <span class="d-block">{{availability.date}}</span>
+                                                            </td>
+                                                            <td>
+                                                                <span class="d-block">{{profile_server.get_pet_type}}</span>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="card-body p-6">
+                                    <h3 class="font-weight-normal mb-4">Select Pet photos</h3>
+                                    <div class="border rounded px-6 py-5 mb-5">
+                                        <div class="row">
+                                            {% csrf_token %}
+                                            {% for photo in profile_client.get_url_list_pet_photo %}
+                                            <div class="col-md-3">
+                                                <div class="custom-control custom-checkbox image-checkbox">
+                                                    <input type="checkbox" class="custom-control-input"  name="pet_photo_{{photo.0}}" id="id_pet_photo_{{photo.0}}" value="{{photo.0}}">
+                                                    <label class="custom-control-label" for="id_pet_photo_{{photo.0}}">
+                                                    <img  width="255" style="padding: 0.5cm" src="{{request.scheme}}://{{request.get_host}}/media/{{photo.1}}" alt="#" class="img-fluid">
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="card-body p-6">
+                                    <h3 class="font-weight-normal mb-4">About your pet</h3>
+                                    <div class="border rounded px-6 py-5 mb-5">
+                                        <div class="row">
+                                            <div class="form-group col-md-12">
+                                                <textarea class="form-control" rows="5" name="pet_description" placeholder="About your pet"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="mt-4">
+                                        <button class="btn btn-primary text-uppercase" type="submit">
+                                        Create
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+<!-- element wrapper ends -->
+{% endblock wrapper %}
+
+{% block extra_script %}
+    <script src='{% static 'plugins/DataTables/DataTables-1.10.18/js/jquery.dataTables.min.js' %}'></script>
+    <script src='{% static 'plugins/DataTables/Responsive-2.2.2/js/dataTables.responsive.min.js' %}'></script> 
+{% endblock extra_script %}

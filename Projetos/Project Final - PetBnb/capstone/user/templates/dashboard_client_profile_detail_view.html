@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+
+
+{% block title %}Dashboard{% endblock title %}
+
+
+{% block style %}
+    <link href='{% static 'plugins/owl-carousel/assets/owl.carousel.min.css' %}' rel='stylesheet'>
+    <link href='{% static 'plugins/owl-carousel/assets/owl.theme.default.min.css' %}' rel='stylesheet'>
+{% endblock style %}
+
+
+{% block wrapper %}
+
+<div class="main-wrapper">
+    <nav class="navbar navbar-expand-md navbar-dark">
+        <div class="container">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+            </button>
+			
+			<div class="collapse navbar-collapse" id="navbarSupportedContent">
+				<ul class="navbar-nav mr-auto">
+					<li class="nav-item">
+						<a class="nav-link" href="{% url 'dashboard_client_booking_list_view' %}">
+						<i class="fa fa-bookmark" aria-hidden="true"></i> My bookings </a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link " href="{% url 'dashboard_client_photo_of_my_pet_list_view' %}">
+						<i class="fas fa-image" aria-hidden="true"></i> photo of my pet </a>
+					</li>
+					 <li class="nav-item">
+						<a class="nav-link active" href="{% url 'dashboard_client_profile_detail_view' %}">
+						<i class="fa fa-bookmark" aria-hidden="true"></i> My profile </a>
+					</li>
+				</ul>
+			</div>
+			
+ 
+        </div>
+    </nav>
+    <!-- ====================================
+        ——— DASHBOARD
+        ===================================== -->
+    <section class="bg-light pt-5 height100vh">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-7 col-lg-12">
+                    <form method="GET" action="{% url 'dashboard_client_profile_update_view' %}">
+                        <div class="card">
+                            <div class="card-body p-6">
+                                <h3 class="font-weight-normal mb-4">Your profile client</h3>
+                                <div class="row">
+                                    <div class="form-group col-md-12">
+                                        <label>Name</label>
+                                        <input type="text" class="form-control" placeholder="Name" value="{{profile_client.get_name}}" disabled >
+                                    </div>                            
+                                <div class="mt-4">
+                                    <button class="btn btn-primary text-uppercase" type="submit">
+                                    Change
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock wrapper %}
+
+
+
+{% block extra_script %}
+
+{% endblock extra_script %}
+
+
+ 

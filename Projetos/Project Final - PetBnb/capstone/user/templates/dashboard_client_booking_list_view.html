@@ -1,0 +1,212 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+{% load petbnb_extras %}
+
+{% block title %}Client Dashboard{% endblock title %}
+
+
+{% block style %}
+    <link href='{% static 'plugins/DataTables/DataTables-1.10.18/css/jquery.dataTables.min.css' %}' rel='stylesheet'>   
+    <link href='{% static 'plugins/DataTables/Responsive-2.2.2/css/responsive.dataTables.min.css' %}' rel='stylesheet'>
+{% endblock style %}
+
+
+
+{% block wrapper %}
+
+<div class="main-wrapper">    
+    
+    {% secondary_navbar_template %}
+    
+    <!-- ====================================
+        ——— DASHBOARD
+        ===================================== -->
+    <section class="bg-light pt-5 height100vh">
+        <div class="container">
+            {% if booking_list %}
+                <table id="tblServerReservations" class="display nowrap table-data-default" style="width:100%">
+                    <thead>
+                        <tr class="table-row-bg-white">
+                            <th>Local</th>
+                            <th>Date of interest</th>
+                            <th>Status</th>
+                            <th data-priority="2"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for booking in  booking_list %}
+                            {% if booking.get_confirmed == 0 %}
+                                <tr class="table-row-bg-white">
+                                    <td class="td-media">
+                                        <div class="media media-table" style="padding: 0.3cm">
+                                            <a class="media-img" href="{% url 'search_detail_view' booking.profile_server.id %}">
+                                            <img class="img-fluid rounded mr-2 lazyestload" data-src="{{request.scheme}}://{{request.get_host}}/media/{{booking.profile_server.get_location_cover_photo}}" src="{{request.scheme}}://{{request.get_host}}/media/{{booking.profile_server.get_location_cover_photo}}" alt="{{booking.profile_server.get_location_cover_photo}}">
+                                            </a>
+                                            <div class="media-body">
+                                                <h3 class="media-title">
+                                                    <a href="{% url 'search_detail_view' booking.profile_server.id %}">{{booking.profile_server.get_name}}</a>
+                                                </h3>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span class="d-block">{{booking.get_date_of_interest}}</span>
+                                    </td>
+                                    <td>
+                                        <span class="badge badge-warning px-2 py-1 text-white">waiting confirmation</span>
+                                    </td>
+                                    <td>
+                                        <div class="dropdown">
+                                            <a class="dropdown-toggle icon-burger-mini" href="javascript:void(0)" role="button" id="dropdownMenuLink" data-toggle="dropdown"
+                                                aria-haspopup="true" aria-expanded="false" data-display="static">
+                                            </a>
+                                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
+                                                <a class="dropdown-item" href="{% url 'dashboard_client_booking_detail_view' booking.id %}">Details</a>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% else %}
+                                {% if booking.get_confirmed == 1 %}
+                                    <tr class="table-row-bg-white">
+                                        <td class="td-media">
+                                            <div class="media media-table" style="padding: 0.3cm">
+                                                <a class="media-img" href="{% url 'search_detail_view' booking.profile_server.id %}">
+                                                <img class="img-fluid rounded mr-2 lazyestload" data-src="{{request.scheme}}://{{request.get_host}}/media/{{booking.profile_server.get_location_cover_photo}}" src="{{request.scheme}}://{{request.get_host}}/media/{{booking.profile_server.get_location_cover_photo}}" alt="{{booking.profile_server.get_location_cover_photo}}">
+                                                </a>
+                                                <div class="media-body">
+                                                    <h3 class="media-title">
+                                                        <a href="#">{{booking.profile_server.get_name}}</a>
+                                                    </h3>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <span class="d-block">{{booking.get_date_of_interest}}</span>
+                                        </td>
+                                        <td>
+                                            <span class="badge badge-success px-2 py-1 text-white">confirmed</span>
+                                        </td>
+                                        <td>
+                                            <div class="dropdown">
+                                                <a class="dropdown-toggle icon-burger-mini" href="javascript:void(0)" role="button" id="dropdownMenuLink" data-toggle="dropdown"
+                                                    aria-haspopup="true" aria-expanded="false" data-display="static">
+                                                </a>
+                                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
+                                                    <a class="dropdown-item" href="{% url 'dashboard_client_booking_detail_view' booking.id %}">Details</a>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% else %}
+                                    <tr class="table-row-bg-white">
+                                        <td class="td-media">
+                                            <div class="media media-table" style="padding: 0.3cm">
+                                                <a class="media-img" href="{% url 'search_detail_view' booking.profile_server.id %}">
+                                                <img class="img-fluid rounded mr-2 lazyestload" data-src="{{request.scheme}}://{{request.get_host}}/media/{{booking.profile_server.get_location_cover_photo}}" src="{{request.scheme}}://{{request.get_host}}/media/{{booking.profile_server.get_location_cover_photo}}" alt="{{booking.profile_server.get_location_cover_photo}}">
+                                                </a>
+                                                <div class="media-body">
+                                                    <h3 class="media-title">
+                                                        <a href="#">{{booking.profile_server.get_name}}</a>
+                                                    </h3>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <span class="d-block">{{booking.get_date_of_interest}}</span>
+                                        </td>
+                                        <td>
+                                            <span class="badge badge-danger px-2 py-1 text-white">refused</span>
+                                        </td>
+                                        <td>
+                                            <div class="dropdown">
+                                                <a class="dropdown-toggle icon-burger-mini" href="javascript:void(0)" role="button" id="dropdownMenuLink" data-toggle="dropdown"
+                                                    aria-haspopup="true" aria-expanded="false" data-display="static">
+                                                </a>
+                                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
+                                                    <a class="dropdown-item" href="{% url 'dashboard_client_booking_detail_view' booking.id %}">Details</a>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                            {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <div class="card">
+                    <div class="card-body p-6">
+                        <h4 class="font-weight-normal mb-4">When you make a reservation, it will be listed here.</h4>
+                    </div>
+                </div>
+            {% endif %}
+            
+            {% if is_paginated %}
+            <!-- ====================================
+                ——— pagination
+                ===================================== -->
+                <div class="d-flex justify-content-center" style="width: 100%">
+                    <section class="my-5">
+                        <nav>
+                            <ul class="pagination">
+                                {% if page_obj.has_previous %}
+                                    <li class="page-item mr-2">
+                                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}">
+                                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                                        </a>
+                                    </li>
+                                {% else %}
+                                    <li class="page-item mr-2">
+                                        <a class="page-link disabled" href="javascript:void(0)">
+                                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                                        </a>
+                                    </li>
+                                {% endif %}
+                                {% for num in page_obj.paginator.page_range %}
+                                    {% ifequal num page_obj.number %}
+                                        <li class="page-item active mr-2"><a class="page-link" href="javascript:void(0)">{{ num }}</a></li>
+                                    {% else %}
+                                        <li class="page-item mr-2"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+                                    {% endifequal %}
+                                {% endfor %}
+                                {% if page_obj.has_next %}
+                                    <li class="page-item">
+                                        <a class="page-link disabled" href="?page={{ page_obj.next_page_number }}">
+                                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                                        </a>
+                                    </li>
+                                {% else %}
+                                    <li class="page-item">
+                                        <a class="page-link disabled" href="javascript:void(0)">
+                                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                                        </a>
+                                    </li>
+                                {% endif %}
+                            </ul>
+                        </nav>
+                    </section>
+                </div>
+        
+            {% endif %}
+            <br /><br /><br />
+        </div>
+    </section>
+    <style media="screen">
+        .table td, .table th {
+        vertical-align: middle;
+        }
+    </style>
+</div>
+{% endblock wrapper %}
+
+
+
+{% block extra_script %}
+    <script src='{% static 'plugins/DataTables/DataTables-1.10.18/js/jquery.dataTables.min.js' %}'></script>
+    <script src='{% static 'plugins/DataTables/Responsive-2.2.2/js/dataTables.responsive.min.js' %}'></script>
+{% endblock extra_script %}
+
+
+ 

@@ -1,0 +1,66 @@
+<!-- Secondary Navbar (for client or server) -->
+{% if is_dashboard %}
+	{% if is_viewing_as_client %}
+		<!-- render a Navbar for the CLIENT profile -->
+		<nav class="navbar navbar-expand-md navbar-dark">
+			<div class="container">
+				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+					aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+				</button>
+				<div class="collapse navbar-collapse" id="navbarSupportedContent">
+					<ul class="navbar-nav mr-auto">
+						<li class="nav-item">
+							<a class="nav-link" href="{% url 'dashboard_client_booking_list_view' %}">
+							<i class="fa fa-bookmark" aria-hidden="true"></i> My bookings </a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="{% url 'dashboard_client_photo_of_my_pet_list_view' %}">
+							<i class="fas fa-image" aria-hidden="true"></i> photo of my pet </a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="{% url 'dashboard_client_profile_detail_view' %}">
+							<i class="fa fa-bookmark" aria-hidden="true"></i> My profile </a>
+						</li>
+					</ul>
+				</div>
+			</div>
+    	</nav>
+
+	{% else %}
+		<!-- render a Navbar for the SERVER profile -->
+		<nav class="navbar navbar-expand-md navbar-dark">
+			<div class="container">
+				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+					aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+				</button>
+				<div class="collapse navbar-collapse" id="navbarSupportedContent">
+					<ul class="navbar-nav mr-auto">
+						<li class="nav-item">
+							<a class="nav-link" href="{% url 'dashboard_server_booking_list_view' %}">
+							<i class="fas fa-bookmark" aria-hidden="true"></i>Reservation requests</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="{% url 'dashboard_server_local_photos_list_view' %}">
+							<i class="fas fa-image" aria-hidden="true"></i> Local photos </a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link " href="{% url 'dashboard_server_profile_detail_view' %}">
+							<i class="fa fa-bookmark" aria-hidden="true"></i> My profile </a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link " href="{% url 'dashboard_server_availability_list_view' %}">
+							<i class="fas fa-bookmark" aria-hidden="true"></i> My Availability </a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="{% url 'search_detail_view' profile_server.id %}">
+							{% comment %} <a class="nav-link " href="{% url 'dashboard_server_availability_list_view' %}"> {% endcomment %}
+							<i class="fas fa-bookmark" aria-hidden="true"></i> My Hosting Page</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+    	</nav>
+	{% endif %}
+{% endif %}

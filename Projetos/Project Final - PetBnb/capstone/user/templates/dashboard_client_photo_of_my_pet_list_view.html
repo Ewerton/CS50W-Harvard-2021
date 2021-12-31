@@ -1,0 +1,127 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+{% load petbnb_extras %}
+
+
+{% block title %}Dashboard{% endblock title %}
+
+
+{% block style %}
+    <link href='{% static 'plugins/owl-carousel/assets/owl.carousel.min.css' %}' rel='stylesheet'>
+    <link href='{% static 'plugins/owl-carousel/assets/owl.theme.default.min.css' %}' rel='stylesheet'>
+{% endblock style %}
+
+
+{% block wrapper %}
+
+        <div class="main-wrapper">
+            {% secondary_navbar_template %}
+
+            <!-- ====================================
+                ——— DASHBOARD
+                ===================================== -->
+            <section class="bg-light pt-5 height100vh">
+                <div class="container">
+                     <nav class="bg-transparent breadcrumb breadcrumb-2 px-0 mb-5" aria-label="breadcrumb">
+                        <button class="btn btn-primary text-uppercase" type="button" onclick="location.href = '{% url 'dashboard_client_profile_photo_add_create_view'%}'">
+                        Add photo
+                        </button>
+                    </nav>
+
+                    {% if not photo_list %}
+                    <div class="card">
+                        <div class="card-body p-6">
+                            <h4 class="font-weight-normal mb-4">When you add photos of your pet, they will appear here.</h4>
+                        </div>
+                    </div>
+                    {% endif %}
+
+
+                    <div class="row">
+
+                        {% for photo in photo_list %}
+                        <div class="col-md-6 col-lg-4">
+                            <div class="card rounded-0 card-hover-overlay">
+                                <div class="position-relative">
+                                    <img class="card-img rounded-0 lazyestload" data-src="{{request.scheme}}://{{request.get_host}}/media/{{photo.get_photo}}" src="{{request.scheme}}://{{request.get_host}}/media/{{photo.get_photo}}" alt="Card image cap">
+                                </div>
+                                <div class="card-footer bg-transparent">
+                                    <ul class="list-unstyled d-flex mb-0 py-2">
+                                        <li>
+                                            <button class="btn btn-sm btn-danger text-uppercase" type="submit" onclick="location.href = '{% url 'dashboard_client_profile_photo_delete' photo.id %} '">
+                                            Delete
+
+                                            
+                                            </button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+
+ 
+
+                    </div>
+
+                    {% if is_paginated %}
+                    <!-- ====================================
+                        ——— pagination
+                        ===================================== -->
+                    <div class="d-flex justify-content-center" style="width: 100%">
+                        <section class="my-5">
+                            <nav>
+                                <ul class="pagination">
+                                {% if page_obj.has_previous %}
+                                    <li class="page-item mr-2">
+                                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}">
+                                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                                        </a>
+                                    </li>
+                                {% else %}
+                                    <li class="page-item mr-2">
+                                        <a class="page-link disabled" href="javascript:void(0)">
+                                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                                        </a>
+                                    </li>
+                                {% endif %}
+                                {% for num in page_obj.paginator.page_range %}
+                                    {% ifequal num page_obj.number %}
+
+                                    <li class="page-item active mr-2"><a class="page-link" href="javascript:void(0)">{{ num }}</a></li>
+                                    {% else %}
+                                    <li class="page-item mr-2"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+                                    {% endifequal %}
+                                {% endfor %}
+                                {% if page_obj.has_next %}
+                                    <li class="page-item">
+                                        <a class="page-link disabled" href="?page={{ page_obj.next_page_number }}">
+                                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                                        </a>
+                                    </li>
+                                {% else %}
+                                    <li class="page-item">
+                                        <a class="page-link disabled" href="javascript:void(0)">
+                                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                                        </a>
+                                    </li>
+                                {% endif %}
+                                </ul>
+                            </nav>
+                        </section>
+                    </div>
+                    {% endif %}
+                </div>
+            </section>
+        </div>
+{% endblock wrapper %}
+
+
+
+{% block extra_script %}
+
+{% endblock extra_script %}
+
+
+ 
